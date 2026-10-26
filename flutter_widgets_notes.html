@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flutter Widgets — Complete Reference</title>
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:        #0a0e1a;
+  --surface:   #111827;
+  --surface2:  #1a2236;
+  --surface3:  #202d42;
+  --border:    #2a3a52;
+  --border2:   #1f2f45;
+
+  /* Flutter brand palette */
+  --flutter:   #54c5f8;
+  --dart:      #00b4ab;
+  --indigo:    #6366f1;
+  --violet:    #a78bfa;
+  --rose:      #fb7185;
+  --amber:     #fbbf24;
+  --emerald:   #34d399;
+  --sky:       #38bdf8;
+  --slate:     #94a3b8;
+
+  --text:      #e2e8f0;
+  --text2:     #94a3b8;
+  --text3:     #64748b;
+
+  --mono: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+  --sans: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.75;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 260px;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%, rgba(84,197,248,.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 30%, rgba(99,102,241,.10) 0%, transparent 55%),
+    linear-gradient(180deg, #0d1526 0%, #0a0e1a 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 52px 48px 44px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '</>';
+  position: absolute; right: 60px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 9rem;
+  font-family: var(--mono);
+  color: rgba(84,197,248,.04);
+  font-weight: 900;
+  pointer-events: none;
+  letter-spacing: -8px;
+}
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.chip {
+  font-size: 11px; font-weight: 700; letter-spacing: .6px;
+  text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid;
+}
+.chip.flutter { color: var(--flutter); border-color: rgba(84,197,248,.35); background: rgba(84,197,248,.07); }
+.chip.dart    { color: var(--dart);    border-color: rgba(0,180,171,.35);   background: rgba(0,180,171,.07); }
+.chip.ui      { color: var(--violet);  border-color: rgba(167,139,250,.35); background: rgba(167,139,250,.07); }
+.chip.layout  { color: var(--amber);   border-color: rgba(251,191,36,.35);  background: rgba(251,191,36,.07); }
+
+.hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.hero h1 span { color: var(--flutter); }
+.hero p { color: var(--text2); max-width: 560px; font-size: 1rem; }
+
+/* ── PAGE GRID ── */
+.page { max-width: 1180px; margin: 0 auto; padding: 40px 24px 100px; }
+
+/* ── CATEGORY TABS (labels) ── */
+.cat-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text3);
+  margin: 36px 0 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+}
+.cat-label .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+
+/* ── WIDGET CARD ── */
+.widget-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  transition: border-color .2s;
+}
+.widget-card:hover { border-color: var(--border); }
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border2);
+  background: var(--surface2);
+}
+.widget-icon {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0; margin-top: 1px;
+}
+.card-meta { flex: 1; min-width: 0; }
+.card-meta h3 {
+  font-size: 1.05rem; font-weight: 700; color: #fff;
+  margin-bottom: 3px;
+}
+.card-meta p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.tag {
+  font-size: 10.5px; font-weight: 600; padding: 2px 8px;
+  border-radius: 5px; letter-spacing: .3px;
+}
+.tag.stateless { background: rgba(52,211,153,.12); color: var(--emerald); }
+.tag.stateful  { background: rgba(251,113,133,.12); color: var(--rose); }
+.tag.layout    { background: rgba(251,191,36,.12);  color: var(--amber); }
+.tag.input     { background: rgba(99,102,241,.12);  color: var(--indigo); }
+.tag.display   { background: rgba(56,189,248,.12);  color: var(--sky); }
+.tag.nav       { background: rgba(167,139,250,.12); color: var(--violet); }
+.tag.gesture   { background: rgba(0,180,171,.12);   color: var(--dart); }
+.tag.scroll    { background: rgba(84,197,248,.12);  color: var(--flutter); }
+
+.card-body { padding: 16px 20px 20px; }
+.card-body > p { color: var(--text2); font-size: 13.5px; margin-bottom: 12px; }
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background: #080d18;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+.code-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px;
+  background: #0d1526;
+  border-bottom: 1px solid var(--border);
+}
+.code-top .fname {
+  font-family: var(--mono);
+  font-size: 11.5px; color: var(--text3);
+  font-weight: 600;
+}
+.dots { display: flex; gap: 5px; }
+.d { width: 9px; height: 9px; border-radius: 50%; }
+.dr { background: #f78166; }
+.dy { background: #e3b341; }
+.dg { background: #3fb950; }
+pre {
+  font-family: var(--mono);
+  font-size: 12.8px;
+  line-height: 1.7;
+  padding: 14px 16px;
+  overflow-x: auto;
+  color: #cdd9e5;
+}
+/* Syntax */
+.kw  { color: #ff7b72; }
+.cl  { color: #79c0ff; }
+.fn  { color: #d2a8ff; }
+.st  { color: #a5d6ff; }
+.cm  { color: #6a737d; font-style: italic; }
+.nt  { color: #ffa657; }
+.nm  { color: #79c0ff; }
+.p   { color: #e2e8f0; }
+.pr  { color: #54c5f8; } /* property */
+
+/* ── PROPS TABLE ── */
+.props-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  text-transform: uppercase; color: var(--text3);
+  margin: 14px 0 8px;
+}
+table.props {
+  width: 100%; border-collapse: collapse; font-size: 12.5px;
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+table.props th {
+  background: var(--surface3);
+  color: var(--text3); text-transform: uppercase;
+  font-size: 10.5px; letter-spacing: .5px;
+  padding: 8px 12px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+table.props td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border2);
+  color: var(--text2);
+  vertical-align: top;
+}
+table.props tr:last-child td { border-bottom: none; }
+table.props td:first-child { font-family: var(--mono); color: var(--flutter); font-size: 12px; }
+table.props td:nth-child(2) { color: var(--violet); font-family: var(--mono); font-size: 12px; }
+
+/* ── TIP BOX ── */
+.tip {
+  display: flex; gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 10px;
+  color: var(--text2);
+}
+.tip.info   { background: rgba(56,189,248,.07);  border-left: 2px solid var(--sky); }
+.tip.warn   { background: rgba(251,191,36,.07);  border-left: 2px solid var(--amber); }
+.tip.good   { background: rgba(52,211,153,.07);  border-left: 2px solid var(--emerald); }
+.tip em { color: var(--text); font-style: normal; font-weight: 600; }
+
+/* ── GRID LAYOUT FOR CARDS ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+@media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── QUICK REF TABLE ── */
+.quick-ref {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.quick-ref-head {
+  padding: 14px 20px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border2);
+  font-weight: 700; font-size: 14px; color: var(--flutter);
+  display: flex; align-items: center; gap: 8px;
+}
+table.quick {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+table.quick td {
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--border2);
+  color: var(--text2);
+}
+table.quick tr:last-child td { border-bottom: none; }
+table.quick td:first-child { font-family: var(--mono); color: var(--flutter); font-weight: 700; width: 38%; }
+table.quick td:nth-child(2) { color: var(--amber); width: 22%; font-family: var(--mono); font-size: 12px; }
+table.quick tr:hover td { background: rgba(255,255,255,.02); }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 30px;
+  color: var(--text3);
+  font-size: 12.5px;
+  border-top: 1px solid var(--border2);
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="chip-row">
+    <span class="chip flutter">Flutter</span>
+    <span class="chip dart">Dart</span>
+    <span class="chip layout">Layout Widgets</span>
+    <span class="chip ui">UI Widgets</span>
+  </div>
+  <h1>Flutter <span>Widgets</span> — Complete Reference</h1>
+  <p>Every essential widget with working code examples, key properties, and when to use each one. From basic Text to advanced gestures and navigation.</p>
+</div>
+
+<div class="page">
+
+<!-- ═══ QUICK REFERENCE ═══ -->
+<div class="quick-ref">
+  <div class="quick-ref-head">⚡ Quick Reference — Widget Cheat Sheet</div>
+  <table class="quick">
+    <tr><td>Text</td><td>display</td><td>Show styled text on screen</td></tr>
+    <tr><td>Container</td><td>layout</td><td>Box with padding, margin, color, decoration</td></tr>
+    <tr><td>Row / Column</td><td>layout</td><td>Horizontal / vertical arrangement</td></tr>
+    <tr><td>Stack</td><td>layout</td><td>Overlapping widgets (like CSS position)</td></tr>
+    <tr><td>ListView</td><td>scroll</td><td>Scrollable vertical list</td></tr>
+    <tr><td>GridView</td><td>scroll</td><td>Scrollable grid of items</td></tr>
+    <tr><td>Scaffold</td><td>layout</td><td>App page frame (appBar, body, FAB)</td></tr>
+    <tr><td>AppBar</td><td>nav</td><td>Top navigation bar</td></tr>
+    <tr><td>ElevatedButton</td><td>input</td><td>Material raised button</td></tr>
+    <tr><td>TextField</td><td>input</td><td>Text input field</td></tr>
+    <tr><td>Image</td><td>display</td><td>Show image from network or assets</td></tr>
+    <tr><td>Icon</td><td>display</td><td>Material icon</td></tr>
+    <tr><td>Card</td><td>display</td><td>Elevated card with shadow</td></tr>
+    <tr><td>AlertDialog</td><td>overlay</td><td>Pop-up dialog box</td></tr>
+    <tr><td>BottomNavigationBar</td><td>nav</td><td>Bottom tab bar</td></tr>
+    <tr><td>Drawer</td><td>nav</td><td>Side navigation drawer</td></tr>
+    <tr><td>GestureDetector</td><td>gesture</td><td>Detect tap, drag, swipe</td></tr>
+    <tr><td>InkWell</td><td>gesture</td><td>Ripple tap effect</td></tr>
+    <tr><td>FutureBuilder</td><td>async</td><td>Build UI from Future (API data)</td></tr>
+    <tr><td>StreamBuilder</td><td>async</td><td>Build UI from live Stream</td></tr>
+    <tr><td>SingleChildScrollView</td><td>scroll</td><td>Scroll any widget that overflows</td></tr>
+    <tr><td>Expanded / Flexible</td><td>layout</td><td>Fill remaining space in Row/Column</td></tr>
+    <tr><td>SizedBox</td><td>layout</td><td>Fixed-size box / spacer</td></tr>
+    <tr><td>Padding</td><td>layout</td><td>Add padding around a widget</td></tr>
+    <tr><td>Align / Center</td><td>layout</td><td>Position child within parent</td></tr>
+    <tr><td>Wrap</td><td>layout</td><td>Wrap to next line when overflowing</td></tr>
+    <tr><td>CircularProgressIndicator</td><td>display</td><td>Loading spinner</td></tr>
+    <tr><td>Snackbar</td><td>overlay</td><td>Bottom toast message</td></tr>
+    <tr><td>DropdownButton</td><td>input</td><td>Dropdown selector</td></tr>
+    <tr><td>Checkbox / Switch / Radio</td><td>input</td><td>Toggle controls</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: BASIC DISPLAY -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--sky)"></span> Basic Display Widgets</div>
+
+<!-- Text -->
+<div class="widget-card" id="text">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(56,189,248,.12)">📝</div>
+    <div class="card-meta">
+      <h3>Text</h3>
+      <p>Displays a string of text with optional styling. The most fundamental Flutter widget.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Display</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">text_widget.dart</span></div>
+      <pre><span class="cm">// ── Basic text ──</span>
+<span class="cl">Text</span>(<span class="st">'Hello, Flutter!'</span>)
+
+<span class="cm">// ── Styled text ──</span>
+<span class="cl">Text</span>(
+  <span class="st">'Styled Text'</span>,
+  style: <span class="cl">TextStyle</span>(
+    fontSize:   <span class="nm">24</span>,
+    fontWeight: <span class="cl">FontWeight</span>.bold,
+    color:      <span class="cl">Colors</span>.blue,
+    letterSpacing: <span class="nm">1.5</span>,
+    decoration: <span class="cl">TextDecoration</span>.underline,
+  ),
+  textAlign:  <span class="cl">TextAlign</span>.center,
+  maxLines:   <span class="nm">2</span>,
+  overflow:   <span class="cl">TextOverflow</span>.ellipsis,
+)
+
+<span class="cm">// ── RichText: multiple styles in one line ──</span>
+<span class="cl">RichText</span>(
+  text: <span class="cl">TextSpan</span>(
+    children: [
+      <span class="cl">TextSpan</span>(text: <span class="st">'Hello '</span>,
+        style: <span class="cl">TextStyle</span>(color: <span class="cl">Colors</span>.black, fontSize: <span class="nm">16</span>)),
+      <span class="cl">TextSpan</span>(text: <span class="st">'Flutter'</span>,
+        style: <span class="cl">TextStyle</span>(color: <span class="cl">Colors</span>.blue,
+                          fontWeight: <span class="cl">FontWeight</span>.bold, fontSize: <span class="nm">16</span>)),
+    ],
+  ),
+)</pre>
+    </div>
+    <div class="tip info"><span>💡</span><div>Use <em>overflow: TextOverflow.ellipsis</em> with <em>maxLines</em> to prevent text from overflowing its container.</div></div>
+  </div>
+</div>
+
+<!-- Icon & Image side by side -->
+<div class="two-col">
+
+<!-- Icon -->
+<div class="widget-card" id="icon">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(167,139,250,.12)">🔷</div>
+    <div class="card-meta">
+      <h3>Icon</h3>
+      <p>Renders a Material icon from the Icons library.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Display</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">icon_widget.dart</span></div>
+      <pre><span class="cm">// ── Basic icon ──</span>
+<span class="cl">Icon</span>(<span class="cl">Icons</span>.favorite)
+
+<span class="cm">// ── Styled icon ──</span>
+<span class="cl">Icon</span>(
+  <span class="cl">Icons</span>.star,
+  color: <span class="cl">Colors</span>.amber,
+  size:  <span class="nm">36</span>,
+)
+
+<span class="cm">// ── Icon with tooltip ──</span>
+<span class="cl">Tooltip</span>(
+  message: <span class="st">'Add to favorites'</span>,
+  child: <span class="cl">Icon</span>(<span class="cl">Icons</span>.favorite_border,
+    color: <span class="cl">Colors</span>.pink),
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Image -->
+<div class="widget-card" id="image">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(52,211,153,.12)">🖼️</div>
+    <div class="card-meta">
+      <h3>Image</h3>
+      <p>Displays images from network, assets, file, or memory.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Display</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">image_widget.dart</span></div>
+      <pre><span class="cm">// ── Network image ──</span>
+<span class="cl">Image</span>.network(
+  <span class="st">'https://example.com/photo.jpg'</span>,
+  width:  <span class="nm">200</span>,
+  height: <span class="nm">150</span>,
+  fit:    <span class="cl">BoxFit</span>.cover,
+  loadingBuilder: (ctx, child, progress) =>
+    progress == <span class="kw">null</span> ? child
+      : <span class="cl">CircularProgressIndicator</span>(),
+)
+
+<span class="cm">// ── Asset image ──</span>
+<span class="cl">Image</span>.asset(
+  <span class="st">'assets/images/logo.png'</span>,
+  width: <span class="nm">100</span>,
+)
+
+<span class="cm">// ── Circular image ──</span>
+<span class="cl">ClipRRect</span>(
+  borderRadius: <span class="cl">BorderRadius</span>.circular(<span class="nm">50</span>),
+  child: <span class="cl">Image</span>.network(url,
+    width: <span class="nm">100</span>, height: <span class="nm">100</span>, fit: <span class="cl">BoxFit</span>.cover),
+)</pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two-col -->
+
+<!-- Card & CircularProgressIndicator -->
+<div class="two-col">
+
+<!-- Card -->
+<div class="widget-card" id="card">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(99,102,241,.12)">🃏</div>
+    <div class="card-meta">
+      <h3>Card</h3>
+      <p>A material card with rounded corners and elevation shadow.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Display</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">card_widget.dart</span></div>
+      <pre><span class="cl">Card</span>(
+  elevation: <span class="nm">4</span>,
+  shape: <span class="cl">RoundedRectangleBorder</span>(
+    borderRadius: <span class="cl">BorderRadius</span>.circular(<span class="nm">12</span>),
+  ),
+  color: <span class="cl">Colors</span>.white,
+  child: <span class="cl">Padding</span>(
+    padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">16</span>),
+    child: <span class="cl">Column</span>(
+      crossAxisAlignment:
+        <span class="cl">CrossAxisAlignment</span>.start,
+      children: [
+        <span class="cl">Text</span>(<span class="st">'Card Title'</span>,
+          style: <span class="cl">TextStyle</span>(
+            fontWeight: <span class="cl">FontWeight</span>.bold,
+            fontSize: <span class="nm">18</span>)),
+        <span class="cl">SizedBox</span>(height: <span class="nm">8</span>),
+        <span class="cl">Text</span>(<span class="st">'Card description text.'</span>),
+      ],
+    ),
+  ),
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CircularProgressIndicator -->
+<div class="widget-card" id="progress">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(84,197,248,.12)">⏳</div>
+    <div class="card-meta">
+      <h3>CircularProgressIndicator</h3>
+      <p>Spinning loading indicator. Also has linear variant.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Display</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">progress_widget.dart</span></div>
+      <pre><span class="cm">// ── Indeterminate (spinning) ──</span>
+<span class="kw">if</span> (_isLoading)
+  <span class="cl">CircularProgressIndicator</span>(
+    color: <span class="cl">Colors</span>.blue,
+    strokeWidth: <span class="nm">3</span>,
+  )
+
+<span class="cm">// ── With value (0.0 to 1.0) ──</span>
+<span class="cl">CircularProgressIndicator</span>(
+  value: <span class="nm">0.7</span>, <span class="cm">// 70% complete</span>
+  backgroundColor: <span class="cl">Colors</span>.grey[<span class="nm">200</span>],
+  color: <span class="cl">Colors</span>.green,
+)
+
+<span class="cm">// ── Linear progress ──</span>
+<span class="cl">LinearProgressIndicator</span>(
+  value: _progress,
+  backgroundColor: <span class="cl">Colors</span>.grey[<span class="nm">200</span>],
+  color: <span class="cl">Colors</span>.blue,
+)</pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two-col -->
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: LAYOUT -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--amber)"></span> Layout Widgets</div>
+
+<!-- Scaffold -->
+<div class="widget-card" id="scaffold">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,191,36,.12)">🏗️</div>
+    <div class="card-meta">
+      <h3>Scaffold</h3>
+      <p>The base structure for a Flutter screen. Provides appBar, body, drawer, bottomNavigationBar, and FloatingActionButton slots.</p>
+      <div class="tag-row"><span class="tag stateful">StatefulWidget</span><span class="tag layout">Layout</span><span class="tag nav">Navigation</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">scaffold_screen.dart</span></div>
+      <pre><span class="kw">class</span> <span class="cl">HomeScreen</span> <span class="kw">extends</span> <span class="cl">StatelessWidget</span> {
+  <span class="kw">const</span> <span class="cl">HomeScreen</span>({<span class="kw">super</span>.key});
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      <span class="cm">// ── Top bar ──</span>
+      appBar: <span class="cl">AppBar</span>(
+        title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'My App'</span>),
+        backgroundColor: <span class="cl">Colors</span>.blue,
+        actions: [
+          <span class="cl">IconButton</span>(icon: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.search),
+            onPressed: () {}),
+        ],
+      ),
+
+      <span class="cm">// ── Side drawer ──</span>
+      drawer: <span class="cl">Drawer</span>(
+        child: <span class="cl">ListView</span>(children: [
+          <span class="kw">const</span> <span class="cl">DrawerHeader</span>(child: <span class="cl">Text</span>(<span class="st">'Menu'</span>)),
+          <span class="cl">ListTile</span>(title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Home'</span>),
+            onTap: () => <span class="cl">Navigator</span>.pop(context)),
+        ]),
+      ),
+
+      <span class="cm">// ── Main content ──</span>
+      body: <span class="kw">const</span> <span class="cl">Center</span>(child: <span class="cl">Text</span>(<span class="st">'Body here'</span>)),
+
+      <span class="cm">// ── Floating button ──</span>
+      floatingActionButton: <span class="cl">FloatingActionButton</span>(
+        onPressed: () {},
+        child: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.add),
+      ),
+
+      <span class="cm">// ── Bottom bar ──</span>
+      bottomNavigationBar: <span class="cl">BottomNavigationBar</span>(
+        currentIndex: <span class="nm">0</span>,
+        onTap: (i) {},
+        items: <span class="kw">const</span> [
+          <span class="cl">BottomNavigationBarItem</span>(
+            icon: <span class="cl">Icon</span>(<span class="cl">Icons</span>.home), label: <span class="st">'Home'</span>),
+          <span class="cl">BottomNavigationBarItem</span>(
+            icon: <span class="cl">Icon</span>(<span class="cl">Icons</span>.person), label: <span class="st">'Profile'</span>),
+        ],
+      ),
+    );
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Container -->
+<div class="widget-card" id="container">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,191,36,.12)">📦</div>
+    <div class="card-meta">
+      <h3>Container</h3>
+      <p>The Swiss-army-knife layout widget. Handles width, height, padding, margin, color, border, shadow, and shape all in one widget.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag layout">Layout</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">container_widget.dart</span></div>
+      <pre><span class="cm">// ── Full-featured container ──</span>
+<span class="cl">Container</span>(
+  width:   <span class="nm">200</span>,
+  height:  <span class="nm">100</span>,
+  margin:  <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">12</span>),
+  padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.symmetric(
+             horizontal: <span class="nm">16</span>, vertical: <span class="nm">8</span>),
+  decoration: <span class="cl">BoxDecoration</span>(
+    color:        <span class="cl">Colors</span>.blue,
+    borderRadius: <span class="cl">BorderRadius</span>.circular(<span class="nm">12</span>),
+    boxShadow: [
+      <span class="cl">BoxShadow</span>(
+        color:      <span class="cl">Colors</span>.black26,
+        blurRadius: <span class="nm">8</span>,
+        offset:     <span class="kw">const</span> <span class="cl">Offset</span>(<span class="nm">0</span>, <span class="nm">4</span>),
+      ),
+    ],
+    <span class="cm">// Gradient instead of solid color</span>
+    gradient: <span class="kw">const</span> <span class="cl">LinearGradient</span>(
+      colors: [<span class="cl">Colors</span>.blue, <span class="cl">Colors</span>.purple],
+    ),
+    border: <span class="cl">Border</span>.all(color: <span class="cl">Colors</span>.white30),
+  ),
+  child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Styled Box'</span>,
+    style: <span class="cl">TextStyle</span>(color: <span class="cl">Colors</span>.white)),
+)
+
+<span class="cm">// ── As a spacer (no child) ──</span>
+<span class="cl">Container</span>(height: <span class="nm">20</span>) <span class="cm">// vertical gap</span></pre>
+    </div>
+    <div class="tip warn"><span>⚠️</span><div>Don't use both <em>color</em> and <em>decoration</em> at the same time — put color inside <em>BoxDecoration</em>.</div></div>
+  </div>
+</div>
+
+<!-- Row & Column -->
+<div class="widget-card" id="row-column">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,191,36,.12)">↔️</div>
+    <div class="card-meta">
+      <h3>Row &amp; Column</h3>
+      <p><b>Row</b> arranges children horizontally. <b>Column</b> arranges them vertically. Both use <code>mainAxisAlignment</code> and <code>crossAxisAlignment</code> for positioning.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag layout">Layout</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">row_column.dart</span></div>
+      <pre><span class="cm">// ── Row: horizontal ──</span>
+<span class="cl">Row</span>(
+  mainAxisAlignment:  <span class="cl">MainAxisAlignment</span>.spaceBetween,
+  crossAxisAlignment: <span class="cl">CrossAxisAlignment</span>.center,
+  children: [
+    <span class="cl">Icon</span>(<span class="cl">Icons</span>.person),
+    <span class="cl">Text</span>(<span class="st">'Rahim'</span>),
+    <span class="cl">Icon</span>(<span class="cl">Icons</span>.arrow_forward),
+  ],
+)
+
+<span class="cm">// ── Column: vertical ──</span>
+<span class="cl">Column</span>(
+  mainAxisAlignment:  <span class="cl">MainAxisAlignment</span>.center,
+  crossAxisAlignment: <span class="cl">CrossAxisAlignment</span>.start,
+  children: [
+    <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Title'</span>,
+      style: <span class="cl">TextStyle</span>(fontSize: <span class="nm">20</span>,
+                        fontWeight: <span class="cl">FontWeight</span>.bold)),
+    <span class="kw">const</span> <span class="cl">SizedBox</span>(height: <span class="nm">8</span>),
+    <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Subtitle text here'</span>),
+    <span class="kw">const</span> <span class="cl">SizedBox</span>(height: <span class="nm">16</span>),
+    <span class="cl">ElevatedButton</span>(
+      onPressed: () {},
+      child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Action'</span>)),
+  ],
+)
+
+<span class="cm">// ── MainAxisAlignment options ──</span>
+<span class="cm">// .start   .end   .center</span>
+<span class="cm">// .spaceBetween  .spaceAround  .spaceEvenly</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- Stack, Expanded, SizedBox in row -->
+<div class="two-col">
+
+<!-- Stack -->
+<div class="widget-card" id="stack">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,191,36,.12)">🗂️</div>
+    <div class="card-meta">
+      <h3>Stack &amp; Positioned</h3>
+      <p>Overlaps widgets on top of each other. Use Positioned to place children at exact coordinates.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag layout">Layout</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">stack_widget.dart</span></div>
+      <pre><span class="cl">Stack</span>(
+  alignment: <span class="cl">Alignment</span>.center,
+  children: [
+    <span class="cm">// ── Bottom layer: background ──</span>
+    <span class="cl">Container</span>(
+      width: <span class="nm">200</span>, height: <span class="nm">120</span>,
+      color: <span class="cl">Colors</span>.blue,
+    ),
+
+    <span class="cm">// ── Middle: text ──</span>
+    <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Center Text'</span>,
+      style: <span class="cl">TextStyle</span>(color: <span class="cl">Colors</span>.white)),
+
+    <span class="cm">// ── Top: positioned badge ──</span>
+    <span class="cl">Positioned</span>(
+      top:   <span class="nm">8</span>,
+      right: <span class="nm">8</span>,
+      child: <span class="cl">Container</span>(
+        padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">4</span>),
+        decoration: <span class="cl">BoxDecoration</span>(
+          color: <span class="cl">Colors</span>.red,
+          borderRadius: <span class="cl">BorderRadius</span>.circular(<span class="nm">10</span>)),
+        child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'NEW'</span>,
+          style: <span class="cl">TextStyle</span>(color: <span class="cl">Colors</span>.white,
+                            fontSize: <span class="nm">10</span>)),
+      ),
+    ),
+  ],
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Expanded & Flexible -->
+<div class="widget-card" id="expanded">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,191,36,.12)">↕️</div>
+    <div class="card-meta">
+      <h3>Expanded &amp; Flexible</h3>
+      <p>Used inside Row/Column to distribute available space proportionally.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag layout">Layout</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">expanded_widget.dart</span></div>
+      <pre><span class="cm">// ── Expanded: takes all remaining space ──</span>
+<span class="cl">Row</span>(children: [
+  <span class="cl">Icon</span>(<span class="cl">Icons</span>.person),         <span class="cm">// fixed</span>
+  <span class="cl">Expanded</span>(                    <span class="cm">// takes rest</span>
+    child: <span class="cl">Text</span>(<span class="st">'Long name here'</span>,
+      overflow: <span class="cl">TextOverflow</span>.ellipsis)),
+  <span class="cl">Icon</span>(<span class="cl">Icons</span>.arrow_forward),  <span class="cm">// fixed</span>
+])
+
+<span class="cm">// ── Flexible with flex ratio ──</span>
+<span class="cl">Row</span>(children: [
+  <span class="cl">Expanded</span>(flex: <span class="nm">2</span>,            <span class="cm">// 2/3 of space</span>
+    child: <span class="cl">Container</span>(color: <span class="cl">Colors</span>.blue)),
+  <span class="cl">Expanded</span>(flex: <span class="nm">1</span>,            <span class="cm">// 1/3 of space</span>
+    child: <span class="cl">Container</span>(color: <span class="cl">Colors</span>.green)),
+])
+
+<span class="cm">// ── Flexible: may be smaller than max ──</span>
+<span class="cl">Flexible</span>(
+  child: <span class="cl">Text</span>(<span class="st">'Wraps if content is small'</span>),
+)</pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two-col -->
+
+<!-- Wrap, Padding, Align -->
+<div class="two-col">
+<div class="widget-card" id="wrap">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,191,36,.12)">🔄</div>
+    <div class="card-meta">
+      <h3>Wrap</h3>
+      <p>Like Row/Column but wraps to the next line when out of space. Perfect for tags and chips.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag layout">Layout</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">wrap_widget.dart</span></div>
+      <pre><span class="cl">Wrap</span>(
+  spacing:     <span class="nm">8</span>,   <span class="cm">// gap between items</span>
+  runSpacing:  <span class="nm">8</span>,   <span class="cm">// gap between rows</span>
+  alignment:   <span class="cl">WrapAlignment</span>.start,
+  children: [<span class="st">'Flutter'</span>, <span class="st">'Dart'</span>, <span class="st">'API'</span>,
+             <span class="st">'Widget'</span>, <span class="st">'State'</span>]
+    .map((tag) => <span class="cl">Chip</span>(
+      label: <span class="cl">Text</span>(tag),
+      backgroundColor: <span class="cl">Colors</span>.blue[<span class="nm">100</span>],
+    )).toList(),
+)</pre>
+    </div>
+  </div>
+</div>
+
+<div class="widget-card" id="sizebox">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,191,36,.12)">📏</div>
+    <div class="card-meta">
+      <h3>SizedBox &amp; Padding</h3>
+      <p>SizedBox gives fixed dimensions or acts as a spacer. Padding adds spacing around a widget.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag layout">Layout</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">sizebox_padding.dart</span></div>
+      <pre><span class="cm">// ── SizedBox as spacer ──</span>
+<span class="cl">Column</span>(children: [
+  <span class="cl">Text</span>(<span class="st">'First'</span>),
+  <span class="kw">const</span> <span class="cl">SizedBox</span>(height: <span class="nm">16</span>), <span class="cm">// vertical gap</span>
+  <span class="cl">Text</span>(<span class="st">'Second'</span>),
+])
+
+<span class="cm">// ── SizedBox with fixed size ──</span>
+<span class="cl">SizedBox</span>(
+  width: <span class="nm">200</span>, height: <span class="nm">50</span>,
+  child: <span class="cl">ElevatedButton</span>(
+    onPressed: () {},
+    child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Full Width Btn'</span>)),
+)
+
+<span class="cm">// ── Padding ──</span>
+<span class="cl">Padding</span>(
+  padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">16</span>),
+  child: <span class="cl">Text</span>(<span class="st">'Padded text'</span>),
+)
+
+<span class="cm">// ── Center / Align ──</span>
+<span class="cl">Align</span>(
+  alignment: <span class="cl">Alignment</span>.bottomRight,
+  child: <span class="cl">Text</span>(<span class="st">'Bottom right'</span>),
+)</pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two-col -->
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: SCROLL WIDGETS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--flutter)"></span> Scroll Widgets</div>
+
+<!-- ListView -->
+<div class="widget-card" id="listview">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(84,197,248,.12)">📋</div>
+    <div class="card-meta">
+      <h3>ListView &amp; ListView.builder</h3>
+      <p>Scrollable list of widgets. <b>ListView.builder</b> lazily builds only visible items — use it for dynamic lists from API data.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag scroll">Scroll</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">listview_widget.dart</span></div>
+      <pre><span class="cm">// ── Static list (small fixed list) ──</span>
+<span class="cl">ListView</span>(
+  padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">12</span>),
+  children: <span class="kw">const</span> [
+    <span class="cl">ListTile</span>(
+      leading:  <span class="cl">Icon</span>(<span class="cl">Icons</span>.person),
+      title:    <span class="cl">Text</span>(<span class="st">'Rahim Ahmed'</span>),
+      subtitle: <span class="cl">Text</span>(<span class="st">'Developer'</span>),
+      trailing: <span class="cl">Icon</span>(<span class="cl">Icons</span>.arrow_forward_ios),
+    ),
+    <span class="cl">Divider</span>(),
+    <span class="cl">ListTile</span>(title: <span class="cl">Text</span>(<span class="st">'Another item'</span>)),
+  ],
+)
+
+<span class="cm">// ── builder: for API / dynamic data ──</span>
+<span class="cl">ListView</span>.builder(
+  itemCount:   tasks.length,
+  itemBuilder: (context, index) {
+    <span class="kw">final</span> task = tasks[index];
+    <span class="kw">return</span> <span class="cl">Card</span>(
+      margin: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.symmetric(
+        horizontal: <span class="nm">12</span>, vertical: <span class="nm">6</span>),
+      child: <span class="cl">ListTile</span>(
+        title:    <span class="cl">Text</span>(task.title ?? <span class="st">''</span>),
+        subtitle: <span class="cl">Text</span>(task.status ?? <span class="st">''</span>),
+        trailing: <span class="cl">IconButton</span>(
+          icon: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.delete,
+            color: <span class="cl">Colors</span>.red),
+          onPressed: () => <span class="fn">_delete</span>(task.sId!),
+        ),
+      ),
+    );
+  },
+)
+
+<span class="cm">// ── separated: adds dividers automatically ──</span>
+<span class="cl">ListView</span>.separated(
+  itemCount:     items.length,
+  separatorBuilder: (_, __) => <span class="kw">const</span> <span class="cl">Divider</span>(),
+  itemBuilder:   (ctx, i) => <span class="cl">ListTile</span>(
+    title: <span class="cl">Text</span>(items[i])),
+)</pre>
+    </div>
+    <div class="tip good"><span>✅</span><div>Always use <em>ListView.builder</em> for lists from an API. It's memory-efficient and only renders visible items.</div></div>
+  </div>
+</div>
+
+<!-- GridView -->
+<div class="widget-card" id="gridview">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(84,197,248,.12)">⊞</div>
+    <div class="card-meta">
+      <h3>GridView</h3>
+      <p>Scrollable 2D grid. Use <code>GridView.builder</code> for dynamic grids and <code>SliverGridDelegate</code> to control column count and spacing.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag scroll">Scroll</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">gridview_widget.dart</span></div>
+      <pre><span class="cm">// ── Fixed crossAxisCount ──</span>
+<span class="cl">GridView</span>.count(
+  crossAxisCount: <span class="nm">2</span>,
+  crossAxisSpacing: <span class="nm">8</span>,
+  mainAxisSpacing:  <span class="nm">8</span>,
+  padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">12</span>),
+  children: List.generate(<span class="nm">6</span>, (i) =>
+    <span class="cl">Container</span>(
+      color: <span class="cl">Colors</span>.blue[<span class="nm">100</span> * (i + <span class="nm">1</span>)],
+      child: <span class="cl">Center</span>(child: <span class="cl">Text</span>(<span class="st">'Item </span><span class="va">$i</span><span class="st">'</span>)),
+    )),
+)
+
+<span class="cm">// ── builder (dynamic from API) ──</span>
+<span class="cl">GridView</span>.builder(
+  gridDelegate: <span class="kw">const</span> <span class="cl">SliverGridDelegateWithFixedCrossAxisCount</span>(
+    crossAxisCount:     <span class="nm">3</span>,
+    crossAxisSpacing:   <span class="nm">8</span>,
+    mainAxisSpacing:    <span class="nm">8</span>,
+    childAspectRatio:   <span class="nm">1.0</span>,
+  ),
+  itemCount:   products.length,
+  itemBuilder: (ctx, i) => <span class="cl">ProductCard</span>(products[i]),
+)
+
+<span class="cm">// ── Adaptive: auto fits based on screen width ──</span>
+<span class="cl">GridView</span>.builder(
+  gridDelegate: <span class="kw">const</span> <span class="cl">SliverGridDelegateWithMaxCrossAxisExtent</span>(
+    maxCrossAxisExtent: <span class="nm">150</span>, <span class="cm">// each tile max 150px</span>
+    mainAxisSpacing:    <span class="nm">8</span>,
+    crossAxisSpacing:   <span class="nm">8</span>,
+  ),
+  itemCount:   items.length,
+  itemBuilder: (ctx, i) => <span class="cl">Text</span>(items[i]),
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- SingleChildScrollView -->
+<div class="widget-card" id="scsv">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(84,197,248,.12)">📜</div>
+    <div class="card-meta">
+      <h3>SingleChildScrollView</h3>
+      <p>Makes any widget scrollable when it overflows — typically used for forms and profile screens with one column of content.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag scroll">Scroll</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">scroll_widget.dart</span></div>
+      <pre><span class="cl">SingleChildScrollView</span>(
+  padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">16</span>),
+  child: <span class="cl">Column</span>(
+    crossAxisAlignment: <span class="cl">CrossAxisAlignment</span>.start,
+    children: [
+      <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Profile'</span>,
+        style: <span class="cl">TextStyle</span>(fontSize: <span class="nm">24</span>,
+                          fontWeight: <span class="cl">FontWeight</span>.bold)),
+      <span class="kw">const</span> <span class="cl">SizedBox</span>(height: <span class="nm">16</span>),
+      <span class="kw">const</span> <span class="cl">TextField</span>(decoration:
+        <span class="cl">InputDecoration</span>(labelText: <span class="st">'Name'</span>)),
+      <span class="kw">const</span> <span class="cl">SizedBox</span>(height: <span class="nm">12</span>),
+      <span class="kw">const</span> <span class="cl">TextField</span>(decoration:
+        <span class="cl">InputDecoration</span>(labelText: <span class="st">'Email'</span>)),
+      <span class="cm">// ... many more fields</span>
+    ],
+  ),
+)</pre>
+    </div>
+    <div class="tip warn"><span>⚠️</span><div>Never put a <em>ListView</em> or <em>Column</em> with unbounded height directly inside <em>SingleChildScrollView</em> without a fixed height — wrap with <em>shrinkWrap: true</em> or use <em>Expanded</em>.</div></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: INPUT WIDGETS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--indigo)"></span> Input Widgets</div>
+
+<!-- TextField -->
+<div class="widget-card" id="textfield">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(99,102,241,.12)">✏️</div>
+    <div class="card-meta">
+      <h3>TextField</h3>
+      <p>User text input. Use with <code>TextEditingController</code> to read, clear, and validate entered text.</p>
+      <div class="tag-row"><span class="tag stateful">StatefulWidget</span><span class="tag input">Input</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">textfield_widget.dart</span></div>
+      <pre><span class="cm">// ── In State class ──</span>
+<span class="kw">final</span> _emailCtrl    = <span class="cl">TextEditingController</span>();
+<span class="kw">final</span> _passwordCtrl = <span class="cl">TextEditingController</span>();
+<span class="kw">final</span> _formKey      = <span class="cl">GlobalKey</span>&lt;<span class="cl">FormState</span>&gt;();
+
+<span class="cm">// ── Email field ──</span>
+<span class="cl">TextField</span>(
+  controller:  _emailCtrl,
+  keyboardType: <span class="cl">TextInputType</span>.emailAddress,
+  decoration: <span class="kw">const</span> <span class="cl">InputDecoration</span>(
+    labelText:   <span class="st">'Email'</span>,
+    hintText:    <span class="st">'you@example.com'</span>,
+    prefixIcon:  <span class="cl">Icon</span>(<span class="cl">Icons</span>.email),
+    border:      <span class="cl">OutlineInputBorder</span>(),
+  ),
+)
+
+<span class="cm">// ── Password field ──</span>
+<span class="cl">TextField</span>(
+  controller:  _passwordCtrl,
+  obscureText: _isHidden,
+  decoration: <span class="cl">InputDecoration</span>(
+    labelText:  <span class="st">'Password'</span>,
+    border:     <span class="kw">const</span> <span class="cl">OutlineInputBorder</span>(),
+    suffixIcon: <span class="cl">IconButton</span>(
+      icon: <span class="cl">Icon</span>(_isHidden
+        ? <span class="cl">Icons</span>.visibility_off
+        : <span class="cl">Icons</span>.visibility),
+      onPressed: () =>
+        setState(() => _isHidden = !_isHidden),
+    ),
+  ),
+)
+
+<span class="cm">// ── Form + TextFormField (with validation) ──</span>
+<span class="cl">Form</span>(
+  key: _formKey,
+  child: <span class="cl">TextFormField</span>(
+    validator: (val) {
+      <span class="kw">if</span> (val == <span class="kw">null</span> || val.isEmpty)
+        <span class="kw">return</span> <span class="st">'Required'</span>;
+      <span class="kw">if</span> (!val.contains(<span class="st">'@'</span>))
+        <span class="kw">return</span> <span class="st">'Enter valid email'</span>;
+      <span class="kw">return null</span>;
+    },
+    decoration: <span class="kw">const</span> <span class="cl">InputDecoration</span>(
+      labelText: <span class="st">'Email'</span>),
+  ),
+)
+
+<span class="cm">// ── On submit: validate then read value ──</span>
+<span class="kw">void</span> <span class="fn">_submit</span>() {
+  <span class="kw">if</span> (_formKey.currentState!.validate()) {
+    <span class="kw">final</span> email = _emailCtrl.text.trim();
+    <span class="fn">print</span>(email);
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Buttons -->
+<div class="widget-card" id="buttons">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(99,102,241,.12)">🔘</div>
+    <div class="card-meta">
+      <h3>Buttons — ElevatedButton, TextButton, OutlinedButton, IconButton</h3>
+      <p>Material 3 button variants for different visual hierarchy levels.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag input">Input</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">buttons_widget.dart</span></div>
+      <pre><span class="cm">// ── ElevatedButton (primary action) ──</span>
+<span class="cl">ElevatedButton</span>(
+  onPressed: () => <span class="fn">print</span>(<span class="st">'Pressed!'</span>),
+  style: <span class="cl">ElevatedButton</span>.styleFrom(
+    backgroundColor: <span class="cl">Colors</span>.blue,
+    foregroundColor: <span class="cl">Colors</span>.white,
+    padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.symmetric(
+      horizontal: <span class="nm">24</span>, vertical: <span class="nm">12</span>),
+    shape: <span class="cl">RoundedRectangleBorder</span>(
+      borderRadius: <span class="cl">BorderRadius</span>.circular(<span class="nm">8</span>)),
+  ),
+  child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Submit'</span>),
+)
+
+<span class="cm">// ── TextButton (low emphasis) ──</span>
+<span class="cl">TextButton</span>(
+  onPressed: () {},
+  child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Forgot Password?'</span>),
+)
+
+<span class="cm">// ── OutlinedButton (medium emphasis) ──</span>
+<span class="cl">OutlinedButton</span>(
+  onPressed: () {},
+  child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Cancel'</span>),
+)
+
+<span class="cm">// ── ElevatedButton with Icon ──</span>
+<span class="cl">ElevatedButton</span>.icon(
+  onPressed: () {},
+  icon:  <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.upload),
+  label: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Upload File'</span>),
+)
+
+<span class="cm">// ── IconButton ──</span>
+<span class="cl">IconButton</span>(
+  icon:      <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.favorite),
+  color:     <span class="cl">Colors</span>.red,
+  iconSize:  <span class="nm">30</span>,
+  onPressed: () {},
+)
+
+<span class="cm">// ── FloatingActionButton ──</span>
+<span class="cl">FloatingActionButton</span>(
+  onPressed: () {},
+  child: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.add),
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- Checkbox, Switch, Radio -->
+<div class="two-col">
+<div class="widget-card" id="checkbox">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(99,102,241,.12)">☑️</div>
+    <div class="card-meta">
+      <h3>Checkbox &amp; Switch</h3>
+      <p>Toggle controls. Both require a stateful parent to manage the boolean state.</p>
+      <div class="tag-row"><span class="tag stateful">StatefulWidget</span><span class="tag input">Input</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">checkbox_switch.dart</span></div>
+      <pre><span class="nt">bool</span> _checked = <span class="kw">false</span>;
+<span class="nt">bool</span> _enabled = <span class="kw">true</span>;
+
+<span class="cm">// ── Checkbox ──</span>
+<span class="cl">CheckboxListTile</span>(
+  title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Remember me'</span>),
+  value:    _checked,
+  onChanged: (val) =>
+    setState(() => _checked = val!),
+)
+
+<span class="cm">// ── Switch ──</span>
+<span class="cl">SwitchListTile</span>(
+  title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Notifications'</span>),
+  value:    _enabled,
+  onChanged: (val) =>
+    setState(() => _enabled = val),
+)
+
+<span class="cm">// ── Radio Group ──</span>
+<span class="nt">String</span> _selected = <span class="st">'Flutter'</span>;
+
+[<span class="st">'Flutter'</span>, <span class="st">'React Native'</span>].map((opt) =>
+  <span class="cl">RadioListTile</span>&lt;<span class="nt">String</span>&gt;(
+    title:    <span class="cl">Text</span>(opt),
+    value:    opt,
+    groupValue: _selected,
+    onChanged: (val) =>
+      setState(() => _selected = val!),
+  )).toList()</pre>
+    </div>
+  </div>
+</div>
+
+<div class="widget-card" id="dropdown">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(99,102,241,.12)">🔽</div>
+    <div class="card-meta">
+      <h3>DropdownButton &amp; DropdownButtonFormField</h3>
+      <p>Select one option from a dropdown list.</p>
+      <div class="tag-row"><span class="tag stateful">StatefulWidget</span><span class="tag input">Input</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">dropdown_widget.dart</span></div>
+      <pre><span class="nt">String</span>? _selectedStatus = <span class="st">'New'</span>;
+
+<span class="kw">final</span> statuses = [
+  <span class="st">'New'</span>, <span class="st">'InProgress'</span>,
+  <span class="st">'Completed'</span>, <span class="st">'Cancelled'</span>
+];
+
+<span class="cl">DropdownButton</span>&lt;<span class="nt">String</span>&gt;(
+  value: _selectedStatus,
+  isExpanded: <span class="kw">true</span>,
+  items: statuses.map((s) =>
+    <span class="cl">DropdownMenuItem</span>(value: s,
+      child: <span class="cl">Text</span>(s))
+  ).toList(),
+  onChanged: (val) =>
+    setState(() => _selectedStatus = val),
+)
+
+<span class="cm">// ── Inside Form ──</span>
+<span class="cl">DropdownButtonFormField</span>&lt;<span class="nt">String</span>&gt;(
+  value:    _selectedStatus,
+  decoration: <span class="kw">const</span> <span class="cl">InputDecoration</span>(
+    labelText: <span class="st">'Status'</span>,
+    border:    <span class="cl">OutlineInputBorder</span>()),
+  items: statuses.map((s) =>
+    <span class="cl">DropdownMenuItem</span>(value: s,
+      child: <span class="cl">Text</span>(s))
+  ).toList(),
+  onChanged: (val) =>
+    setState(() => _selectedStatus = val),
+)</pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two-col -->
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: GESTURE WIDGETS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--dart)"></span> Gesture &amp; Interaction Widgets</div>
+
+<div class="two-col">
+<!-- GestureDetector -->
+<div class="widget-card" id="gesture">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(0,180,171,.12)">👆</div>
+    <div class="card-meta">
+      <h3>GestureDetector</h3>
+      <p>Detects taps, double-taps, long press, drag, scale, and swipe on any widget.</p>
+      <div class="tag-row"><span class="tag gesture">Gesture</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">gesture_detector.dart</span></div>
+      <pre><span class="cl">GestureDetector</span>(
+  onTap:        () => <span class="fn">print</span>(<span class="st">'Single tap'</span>),
+  onDoubleTap:  () => <span class="fn">print</span>(<span class="st">'Double tap'</span>),
+  onLongPress:  () => <span class="fn">print</span>(<span class="st">'Long press'</span>),
+  onHorizontalDragEnd: (details) {
+    <span class="kw">if</span> (details.velocity.pixelsPerSecond.dx > <span class="nm">0</span>)
+      <span class="fn">print</span>(<span class="st">'Swiped right'</span>);
+    <span class="kw">else</span>
+      <span class="fn">print</span>(<span class="st">'Swiped left'</span>);
+  },
+  child: <span class="cl">Container</span>(
+    width: <span class="nm">100</span>, height: <span class="nm">100</span>,
+    color: <span class="cl">Colors</span>.blue,
+    child: <span class="kw">const</span> <span class="cl">Center</span>(
+      child: <span class="cl">Text</span>(<span class="st">'Tap me'</span>,
+        style: <span class="cl">TextStyle</span>(color: <span class="cl">Colors</span>.white))),
+  ),
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- InkWell -->
+<div class="widget-card" id="inkwell">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(0,180,171,.12)">💧</div>
+    <div class="card-meta">
+      <h3>InkWell</h3>
+      <p>Like GestureDetector but with the Material ripple ink splash effect on tap.</p>
+      <div class="tag-row"><span class="tag gesture">Gesture</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">inkwell_widget.dart</span></div>
+      <pre><span class="cm">// ── Must be inside Material ──</span>
+<span class="cl">Material</span>(
+  color: <span class="cl">Colors</span>.transparent,
+  child: <span class="cl">InkWell</span>(
+    borderRadius: <span class="cl">BorderRadius</span>.circular(<span class="nm">12</span>),
+    splashColor:  <span class="cl">Colors</span>.blue.withOpacity(<span class="nm">0.3</span>),
+    onTap:        () => <span class="fn">print</span>(<span class="st">'Ripple!'</span>),
+    onLongPress:  () => <span class="fn">print</span>(<span class="st">'Long press'</span>),
+    child: <span class="cl">Container</span>(
+      padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">16</span>),
+      decoration: <span class="cl">BoxDecoration</span>(
+        color:        <span class="cl">Colors</span>.blue[<span class="nm">50</span>],
+        borderRadius: <span class="cl">BorderRadius</span>.circular(<span class="nm">12</span>)),
+      child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Tap for ripple'</span>),
+    ),
+  ),
+)
+
+<span class="cm">// ── Tip: for cards use InkWell, not GestureDetector ──</span></pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two-col -->
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: OVERLAYS & DIALOGS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--rose)"></span> Overlays &amp; Dialogs</div>
+
+<!-- AlertDialog & SnackBar -->
+<div class="widget-card" id="dialog">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,113,133,.12)">💬</div>
+    <div class="card-meta">
+      <h3>AlertDialog, SnackBar &amp; BottomSheet</h3>
+      <p>Show pop-ups, toast messages, and bottom panels on user action.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Display</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">dialogs.dart</span></div>
+      <pre><span class="cm">// ──────── AlertDialog ────────</span>
+<span class="kw">void</span> <span class="fn">_showDialog</span>(<span class="cl">BuildContext</span> context) {
+  showDialog(
+    context: context,
+    builder: (_) => <span class="cl">AlertDialog</span>(
+      title:   <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Confirm Delete'</span>),
+      content: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'This action cannot be undone.'</span>),
+      actions: [
+        <span class="cl">TextButton</span>(
+          onPressed: () => <span class="cl">Navigator</span>.pop(context),
+          child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Cancel'</span>)),
+        <span class="cl">ElevatedButton</span>(
+          style: <span class="cl">ElevatedButton</span>.styleFrom(
+            backgroundColor: <span class="cl">Colors</span>.red),
+          onPressed: () {
+            <span class="cl">Navigator</span>.pop(context);
+            <span class="fn">_delete</span>();
+          },
+          child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Delete'</span>)),
+      ],
+    ),
+  );
+}
+
+<span class="cm">// ──────── SnackBar ────────</span>
+<span class="kw">void</span> <span class="fn">_showSnack</span>(<span class="cl">BuildContext</span> context) {
+  <span class="cl">ScaffoldMessenger</span>.of(context).showSnackBar(
+    <span class="cl">SnackBar</span>(
+      content: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Task created!'</span>),
+      backgroundColor: <span class="cl">Colors</span>.green,
+      duration: <span class="kw">const</span> <span class="cl">Duration</span>(seconds: <span class="nm">2</span>),
+      action: <span class="cl">SnackBarAction</span>(
+        label: <span class="st">'UNDO'</span>,
+        onPressed: () {},
+      ),
+    ),
+  );
+}
+
+<span class="cm">// ──────── ModalBottomSheet ────────</span>
+<span class="kw">void</span> <span class="fn">_showBottomSheet</span>(<span class="cl">BuildContext</span> context) {
+  showModalBottomSheet(
+    context: context,
+    shape: <span class="kw">const</span> <span class="cl">RoundedRectangleBorder</span>(
+      borderRadius: <span class="cl">BorderRadius</span>.vertical(
+        top: <span class="cl">Radius</span>.circular(<span class="nm">16</span>))),
+    builder: (_) => <span class="cl">Padding</span>(
+      padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">20</span>),
+      child: <span class="cl">Column</span>(mainAxisSize: <span class="cl">MainAxisSize</span>.min,
+        children: [
+          <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Options'</span>,
+            style: <span class="cl">TextStyle</span>(fontWeight: <span class="cl">FontWeight</span>.bold,
+                              fontSize: <span class="nm">18</span>)),
+          <span class="cl">ListTile</span>(leading: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.edit),
+            title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Edit'</span>), onTap: () {}),
+          <span class="cl">ListTile</span>(leading: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.delete,
+              color: <span class="cl">Colors</span>.red),
+            title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Delete'</span>), onTap: () {}),
+        ]),
+    ),
+  );
+}</pre>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: ASYNC WIDGETS -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--emerald)"></span> Async Widgets — API Integration</div>
+
+<!-- FutureBuilder -->
+<div class="widget-card" id="futurebuilder">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(52,211,153,.12)">🔮</div>
+    <div class="card-meta">
+      <h3>FutureBuilder</h3>
+      <p>Automatically builds different UI states (loading → error → data) based on the result of a Future, perfect for API calls.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Async</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">future_builder.dart</span></div>
+      <pre><span class="kw">class</span> <span class="cl">TaskListScreen</span> <span class="kw">extends</span> <span class="cl">StatelessWidget</span> {
+  <span class="kw">final</span> _repo = <span class="cl">TaskRepository</span>();
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      appBar: <span class="cl">AppBar</span>(title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Tasks'</span>)),
+      body: <span class="cl">FutureBuilder</span>&lt;<span class="cl">List</span>&lt;<span class="cl">TaskModel</span>&gt;?&gt;(
+        future: _repo.getAllTasks(),  <span class="cm">// Future here</span>
+        builder: (context, snapshot) {
+
+          <span class="cm">// ── Loading ──</span>
+          <span class="kw">if</span> (snapshot.connectionState ==
+              <span class="cl">ConnectionState</span>.waiting) {
+            <span class="kw">return</span> <span class="kw">const</span> <span class="cl">Center</span>(
+              child: <span class="cl">CircularProgressIndicator</span>());
+          }
+
+          <span class="cm">// ── Error ──</span>
+          <span class="kw">if</span> (snapshot.hasError || snapshot.data == <span class="kw">null</span>) {
+            <span class="kw">return</span> <span class="cl">Center</span>(
+              child: <span class="cl">Text</span>(<span class="st">'Error: </span><span class="va">${snapshot.error}</span><span class="st">'</span>));
+          }
+
+          <span class="cm">// ── Data ──</span>
+          <span class="kw">final</span> tasks = snapshot.data!;
+          <span class="kw">return</span> <span class="cl">ListView</span>.builder(
+            itemCount:   tasks.length,
+            itemBuilder: (ctx, i) =>
+              <span class="cl">ListTile</span>(title: <span class="cl">Text</span>(tasks[i].title ?? <span class="st">''</span>)),
+          );
+        },
+      ),
+    );
+  }
+}</pre>
+    </div>
+    <div class="tip info"><span>💡</span><div>Store the Future in a variable — never create a new Future inside <em>build()</em> or it will re-call the API on every rebuild.</div></div>
+  </div>
+</div>
+
+<!-- StreamBuilder -->
+<div class="widget-card" id="streambuilder">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(52,211,153,.12)">🌊</div>
+    <div class="card-meta">
+      <h3>StreamBuilder</h3>
+      <p>Rebuilds UI on every new event from a Stream — great for real-time data like chat, live scores, or Firebase.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span><span class="tag display">Async</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">stream_builder.dart</span></div>
+      <pre><span class="cm">// ── Create a stream (e.g. a counter every second) ──</span>
+<span class="kw">final</span> <span class="cl">Stream</span>&lt;<span class="nt">int</span>&gt; countStream =
+  <span class="cl">Stream</span>.periodic(<span class="kw">const</span> <span class="cl">Duration</span>(seconds: <span class="nm">1</span>),
+    (i) => i);
+
+<span class="cm">// ── Build UI from stream ──</span>
+<span class="cl">StreamBuilder</span>&lt;<span class="nt">int</span>&gt;(
+  stream: countStream,
+  builder: (context, snapshot) {
+    <span class="kw">if</span> (!snapshot.hasData) {
+      <span class="kw">return</span> <span class="kw">const</span> <span class="cl">CircularProgressIndicator</span>();
+    }
+    <span class="kw">return</span> <span class="cl">Text</span>(
+      <span class="st">'Count: </span><span class="va">${snapshot.data}</span><span class="st">'</span>,
+      style: <span class="kw">const</span> <span class="cl">TextStyle</span>(fontSize: <span class="nm">32</span>),
+    );
+  },
+)
+
+<span class="cm">// ── With Firebase Firestore ──</span>
+<span class="cl">StreamBuilder</span>&lt;<span class="cl">QuerySnapshot</span>&gt;(
+  stream: <span class="cl">FirebaseFirestore</span>.instance
+    .collection(<span class="st">'messages'</span>).snapshots(),
+  builder: (ctx, snapshot) {
+    <span class="kw">if</span> (!snapshot.hasData)
+      <span class="kw">return</span> <span class="kw">const</span> <span class="cl">CircularProgressIndicator</span>();
+    <span class="kw">final</span> docs = snapshot.data!.docs;
+    <span class="kw">return</span> <span class="cl">ListView</span>.builder(
+      itemCount: docs.length,
+      itemBuilder: (_, i) =>
+        <span class="cl">Text</span>(docs[i][<span class="st">'text'</span>]),
+    );
+  },
+)</pre>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: NAVIGATION -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--violet)"></span> Navigation Widgets</div>
+
+<div class="widget-card" id="navigation">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(167,139,250,.12)">🧭</div>
+    <div class="card-meta">
+      <h3>Navigator — push, pop, pushNamed, pushReplacement</h3>
+      <p>Manages screen navigation with a stack. Push to go forward, pop to go back.</p>
+      <div class="tag-row"><span class="tag nav">Navigation</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">navigation.dart</span></div>
+      <pre><span class="cm">// ── Push: go to new screen ──</span>
+<span class="cl">Navigator</span>.push(context,
+  <span class="cl">MaterialPageRoute</span>(
+    builder: (_) => <span class="kw">const</span> <span class="cl">DetailScreen</span>()));
+
+<span class="cm">// ── Push with data ──</span>
+<span class="cl">Navigator</span>.push(context,
+  <span class="cl">MaterialPageRoute</span>(
+    builder: (_) => <span class="cl">DetailScreen</span>(task: task)));
+
+<span class="cm">// ── Pop: go back ──</span>
+<span class="cl">Navigator</span>.pop(context);
+
+<span class="cm">// ── Pop with result ──</span>
+<span class="cl">Navigator</span>.pop(context, <span class="st">'updated'</span>);
+
+<span class="cm">// ── PushReplacement: replace current (login → home) ──</span>
+<span class="cl">Navigator</span>.pushReplacement(context,
+  <span class="cl">MaterialPageRoute</span>(builder: (_) => <span class="kw">const</span> <span class="cl">HomeScreen</span>()));
+
+<span class="cm">// ── PushNamedAndRemoveUntil: clear all (logout) ──</span>
+<span class="cl">Navigator</span>.pushNamedAndRemoveUntil(
+  context, <span class="st">'/login'</span>, (route) => <span class="kw">false</span>);
+
+<span class="cm">// ── Named routes setup in MaterialApp ──</span>
+<span class="cl">MaterialApp</span>(
+  initialRoute: <span class="st">'/'</span>,
+  routes: {
+    <span class="st">'/'</span>:       (_) => <span class="kw">const</span> <span class="cl">HomeScreen</span>(),
+    <span class="st">'/login'</span>:  (_) => <span class="kw">const</span> <span class="cl">LoginScreen</span>(),
+    <span class="st">'/detail'</span>: (_) => <span class="kw">const</span> <span class="cl">DetailScreen</span>(),
+  },
+)</pre>
+    </div>
+  </div>
+</div>
+
+<!-- TabBar -->
+<div class="widget-card" id="tabbar">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(167,139,250,.12)">📑</div>
+    <div class="card-meta">
+      <h3>TabBar &amp; TabBarView</h3>
+      <p>Horizontal tab navigation built into the AppBar with swipeable content pages.</p>
+      <div class="tag-row"><span class="tag stateful">StatefulWidget</span><span class="tag nav">Navigation</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">tabbar_widget.dart</span></div>
+      <pre><span class="kw">class</span> <span class="cl">TabScreen</span> <span class="kw">extends</span> <span class="cl">StatefulWidget</span> { ... }
+
+<span class="kw">class</span> <span class="cl">_TabScreenState</span> <span class="kw">extends</span> <span class="cl">State</span>&lt;<span class="cl">TabScreen</span>&gt;
+    <span class="kw">with</span> <span class="cl">SingleTickerProviderStateMixin</span> {
+
+  <span class="kw">late</span> <span class="cl">TabController</span> _tabController;
+
+  <span class="kw">@override</span>
+  <span class="nt">void</span> <span class="fn">initState</span>() {
+    <span class="kw">super</span>.initState();
+    _tabController = <span class="cl">TabController</span>(length: <span class="nm">4</span>, vsync: <span class="kw">this</span>);
+  }
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      appBar: <span class="cl">AppBar</span>(
+        title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Tasks'</span>),
+        bottom: <span class="cl">TabBar</span>(
+          controller: _tabController,
+          tabs: <span class="kw">const</span> [
+            <span class="cl">Tab</span>(text: <span class="st">'New'</span>),
+            <span class="cl">Tab</span>(text: <span class="st">'Progress'</span>),
+            <span class="cl">Tab</span>(text: <span class="st">'Done'</span>),
+            <span class="cl">Tab</span>(text: <span class="st">'Cancelled'</span>),
+          ],
+        ),
+      ),
+      body: <span class="cl">TabBarView</span>(
+        controller: _tabController,
+        children: <span class="kw">const</span> [
+          <span class="cl">NewTasksTab</span>(),
+          <span class="cl">ProgressTasksTab</span>(),
+          <span class="cl">DoneTasksTab</span>(),
+          <span class="cl">CancelledTab</span>(),
+        ],
+      ),
+    );
+  }
+
+  <span class="kw">@override</span>
+  <span class="nt">void</span> <span class="fn">dispose</span>() {
+    _tabController.dispose(); <span class="cm">// always dispose!</span>
+    <span class="kw">super</span>.dispose();
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════ -->
+<!-- CAT: SPECIAL -->
+<!-- ══════════════════════════════════════════ -->
+<div class="cat-label"><span class="dot" style="background:var(--rose)"></span> Special &amp; Utility Widgets</div>
+
+<div class="two-col">
+<!-- SafeArea -->
+<div class="widget-card" id="safearea">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,113,133,.12)">🛡️</div>
+    <div class="card-meta">
+      <h3>SafeArea &amp; MediaQuery</h3>
+      <p>SafeArea avoids system UI overlaps (notch, status bar). MediaQuery gives screen dimensions.</p>
+      <div class="tag-row"><span class="tag stateless">StatelessWidget</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">safe_area.dart</span></div>
+      <pre><span class="cm">// ── SafeArea ──</span>
+<span class="cl">SafeArea</span>(
+  child: <span class="cl">Column</span>(
+    children: [
+      <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Content below status bar'</span>),
+    ],
+  ),
+)
+
+<span class="cm">// ── MediaQuery: get screen size ──</span>
+<span class="kw">final</span> size   = <span class="cl">MediaQuery</span>.of(context).size;
+<span class="kw">final</span> width  = size.width;
+<span class="kw">final</span> height = size.height;
+
+<span class="cm">// ── Responsive container ──</span>
+<span class="cl">Container</span>(
+  width: width * <span class="nm">0.8</span>, <span class="cm">// 80% of screen</span>
+  height: <span class="nm">50</span>,
+  color: <span class="cl">Colors</span>.blue,
+)
+
+<span class="cm">// ── Check keyboard open ──</span>
+<span class="kw">final</span> bottom = <span class="cl">MediaQuery</span>.of(context).viewInsets.bottom;
+<span class="kw">final</span> keyboardOpen = bottom > <span class="nm">0</span>;</pre>
+    </div>
+  </div>
+</div>
+
+<!-- AnimatedContainer -->
+<div class="widget-card" id="animated">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,113,133,.12)">🎞️</div>
+    <div class="card-meta">
+      <h3>AnimatedContainer</h3>
+      <p>Like Container but smoothly animates changes to size, color, or shape when state changes.</p>
+      <div class="tag-row"><span class="tag stateful">StatefulWidget</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">animated_container.dart</span></div>
+      <pre><span class="nt">bool</span> _expanded = <span class="kw">false</span>;
+
+<span class="cl">GestureDetector</span>(
+  onTap: () =>
+    setState(() => _expanded = !_expanded),
+  child: <span class="cl">AnimatedContainer</span>(
+    duration: <span class="kw">const</span> <span class="cl">Duration</span>(milliseconds: <span class="nm">300</span>),
+    curve:    <span class="cl">Curves</span>.easeInOut,
+    width:  _expanded ? <span class="nm">200</span> : <span class="nm">100</span>,
+    height: _expanded ? <span class="nm">200</span> : <span class="nm">100</span>,
+    decoration: <span class="cl">BoxDecoration</span>(
+      color: _expanded
+        ? <span class="cl">Colors</span>.blue
+        : <span class="cl">Colors</span>.green,
+      borderRadius: <span class="cl">BorderRadius</span>.circular(
+        _expanded ? <span class="nm">100</span> : <span class="nm">12</span>),
+    ),
+  ),
+)</pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two-col -->
+
+<!-- Visibility & Conditional -->
+<div class="widget-card" id="visibility">
+  <div class="card-head">
+    <div class="widget-icon" style="background:rgba(251,113,133,.12)">👁️</div>
+    <div class="card-meta">
+      <h3>Visibility, Opacity &amp; Conditional Rendering</h3>
+      <p>Show/hide widgets based on state. Visibility preserves widget space; if/else removes it from the tree entirely.</p>
+      <div class="tag-row"><span class="tag stateful">StatefulWidget</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="code-block">
+      <div class="code-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fname">visibility.dart</span></div>
+      <pre><span class="cm">// ── Visibility: keeps space even when hidden ──</span>
+<span class="cl">Visibility</span>(
+  visible: _showBanner,
+  child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Error banner here'</span>),
+)
+
+<span class="cm">// ── if/else: removes widget completely ──</span>
+<span class="kw">if</span> (_isLoading)
+  <span class="kw">const</span> <span class="cl">CircularProgressIndicator</span>()
+<span class="kw">else</span>
+  <span class="cl">Text</span>(<span class="st">'Data: </span><span class="va">$_data</span><span class="st">'</span>),
+
+<span class="cm">// ── Ternary (inline) ──</span>
+_isLoggedIn
+  ? <span class="kw">const</span> <span class="cl">HomeScreen</span>()
+  : <span class="kw">const</span> <span class="cl">LoginScreen</span>(),
+
+<span class="cm">// ── Opacity ──</span>
+<span class="cl">Opacity</span>(
+  opacity: _isActive ? <span class="nm">1.0</span> : <span class="nm">0.4</span>,
+  child: <span class="cl">ElevatedButton</span>(
+    onPressed: _isActive ? <span class="fn">_submit</span> : <span class="kw">null</span>,
+    child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Submit'</span>)),
+)
+
+<span class="cm">// ── AnimatedOpacity (smooth fade) ──</span>
+<span class="cl">AnimatedOpacity</span>(
+  opacity:  _visible ? <span class="nm">1.0</span> : <span class="nm">0.0</span>,
+  duration: <span class="kw">const</span> <span class="cl">Duration</span>(milliseconds: <span class="nm">400</span>),
+  child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Fading widget'</span>),
+)</pre>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+<footer>Flutter Widgets Complete Reference &nbsp;|&nbsp; Layout · Display · Input · Gesture · Async · Navigation</footer>
+</body>
+</html>

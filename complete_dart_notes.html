@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete Dart Notes — Beginner to Advanced</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #0f766e;
+      --primary-soft: #ccfbf1;
+      --border: #e5e7eb;
+      --code-bg: #111827;
+      --code-text: #e5e7eb;
+      --warning: #fff7ed;
+      --warning-border: #fb923c;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    header {
+      background: linear-gradient(135deg, #0f766e, #115e59);
+      color: white;
+      padding: 48px 20px;
+    }
+    header .wrap, main, footer { max-width: 1100px; margin: auto; }
+    h1 { margin: 0 0 10px; font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.1; }
+    header p { max-width: 760px; margin: 0; color: #d1fae5; font-size: 1.05rem; }
+    main { padding: 28px 18px 60px; }
+    .toc, section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+    .toc h2, section h2 { margin-top: 0; color: var(--primary); }
+    .toc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 20px; }
+    .toc a { color: var(--text); text-decoration: none; padding: 8px 10px; border-radius: 8px; display: block; }
+    .toc a:hover { background: var(--primary-soft); color: #134e4a; }
+    h3 { margin-top: 28px; color: #134e4a; }
+    h4 { margin-top: 22px; }
+    p, li { font-size: 0.98rem; }
+    code {
+      font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+      background: #eef2ff;
+      color: #3730a3;
+      padding: 2px 6px;
+      border-radius: 5px;
+    }
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 18px;
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid #374151;
+      line-height: 1.55;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; }
+    .note, .warning {
+      padding: 14px 16px;
+      border-left: 4px solid var(--primary);
+      background: #ecfeff;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+    .warning { border-left-color: var(--warning-border); background: var(--warning); }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; overflow: hidden; border-radius: 10px; }
+    th, td { border: 1px solid var(--border); padding: 11px; text-align: left; vertical-align: top; }
+    th { background: #f0fdfa; color: #134e4a; }
+    .badge { display: inline-block; background: var(--primary-soft); color: #134e4a; padding: 4px 10px; border-radius: 999px; font-size: .82rem; font-weight: 600; }
+    .back { display: inline-block; margin-top: 18px; color: var(--primary); text-decoration: none; font-weight: 600; }
+    footer { padding: 30px 18px 50px; color: var(--muted); text-align: center; }
+    @media print {
+      body { background: white; }
+      header { background: white; color: black; padding: 20px 0; }
+      header p { color: #444; }
+      .toc, section { box-shadow: none; break-inside: avoid; }
+      pre { white-space: pre-wrap; word-break: break-word; }
+    }
+  </style>
+</head>
+<body>
+<header id="top">
+  <div class="wrap">
+    <span class="badge">Beginner → Advanced</span>
+    <h1>Complete Dart Notes</h1>
+    <p>A practical Dart study guide covering syntax, input/output, parsing, null safety, collections, OOP, asynchronous programming, JSON, generics, linked lists, stacks, queues, searching, sorting, and Flutter's FutureBuilder.</p>
+  </div>
+</header>
+
+<main>
+  <nav class="toc">
+    <h2>Table of Contents</h2>
+    <div class="toc-grid">
+      <a href="#intro">1. Dart Introduction</a>
+      <a href="#io">2. Input and Output</a>
+      <a href="#variables">3. Variables, final and const</a>
+      <a href="#types">4. Data Types and Parsing</a>
+      <a href="#operators">5. Operators</a>
+      <a href="#null">6. Null Safety</a>
+      <a href="#functions">7. Functions and Parameters</a>
+      <a href="#control">8. Conditions and Loops</a>
+      <a href="#enums">9. Enums</a>
+      <a href="#collections">10. List, Set and Map</a>
+      <a href="#collection-functions">11. Collection Functions</a>
+      <a href="#cascade">12. Cascade Operator</a>
+      <a href="#oop">13. Complete OOP</a>
+      <a href="#mixins">14. Mixins</a>
+      <a href="#factory">15. Factory Constructors</a>
+      <a href="#generics">16. Generics</a>
+      <a href="#json">17. JSON Parsing</a>
+      <a href="#async">18. Future and async/await</a>
+      <a href="#streams">19. Streams</a>
+      <a href="#futurebuilder">20. FutureBuilder</a>
+      <a href="#dsa">21. DSA Fundamentals</a>
+      <a href="#linked-list">22. Linked List</a>
+      <a href="#stack-queue">23. Stack and Queue</a>
+      <a href="#search">24. Searching</a>
+      <a href="#sorting">25. Sorting</a>
+      <a href="#complexity">26. Time Complexity</a>
+      <a href="#mini-project">27. Complete Mini Project</a>
+    </div>
+  </nav>
+
+  <section id="intro">
+    <h2>1. Dart Introduction</h2>
+    <p>Dart is an object-oriented programming language used to build mobile, web, desktop, and server applications. Flutter uses Dart as its primary language.</p>
+    <h3>Basic program</h3>
+    <pre><code>void main() {
+  print('Hello, Dart!');
+}</code></pre>
+    <p>The <code>main()</code> function is the starting point of a Dart program.</p>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="io">
+    <h2>2. Input and Output</h2>
+    <h3>Output with print()</h3>
+    <pre><code>void main() {
+  String name = 'Nahid';
+  int age = 24;
+
+  print('Name: $name');
+  print('Age: $age');
+  print('Next year age: ${age + 1}');
+}</code></pre>
+
+    <h3>Console input</h3>
+    <pre><code>import 'dart:io';
+
+void main() {
+  stdout.write('Enter your name: ');
+  String? name = stdin.readLineSync();
+
+  print('Welcome, ${name ?? 'Guest'}');
+}</code></pre>
+
+    <h3>Reading and parsing a number</h3>
+    <pre><code>import 'dart:io';
+
+void main() {
+  stdout.write('Enter first number: ');
+  int first = int.parse(stdin.readLineSync()!);
+
+  stdout.write('Enter second number: ');
+  int second = int.parse(stdin.readLineSync()!);
+
+  print('Sum = ${first + second}');
+}</code></pre>
+    <div class="warning"><strong>Important:</strong> <code>stdin.readLineSync()</code> returns <code>String?</code>. The <code>!</code> operator says the value is not null. In production code, prefer <code>tryParse()</code> for safer parsing.</div>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="variables">
+    <h2>3. Variables, final and const</h2>
+    <pre><code>void main() {
+  String name = 'Nahid';
+  int age = 24;
+  double cgpa = 3.50;
+  bool isDeveloper = true;
+  var city = 'Sylhet';
+  dynamic value = 10;
+
+  value = 'Now I am a string';
+
+  print(name);
+  print(age);
+  print(cgpa);
+  print(isDeveloper);
+  print(city);
+  print(value);
+}</code></pre>
+
+    <h3>final vs const</h3>
+    <table>
+      <tr><th>Keyword</th><th>Meaning</th><th>Example</th></tr>
+      <tr><td><code>final</code></td><td>Assigned once at runtime.</td><td><code>final now = DateTime.now();</code></td></tr>
+      <tr><td><code>const</code></td><td>Compile-time constant.</td><td><code>const pi = 3.1416;</code></td></tr>
+    </table>
+    <pre><code>void main() {
+  final currentTime = DateTime.now();
+  const appName = 'Dart Notes';
+
+  final List&lt;int&gt; numbers = [1, 2, 3];
+  numbers.add(4); // Allowed: the list object can change.
+
+  const List&lt;int&gt; fixedNumbers = [1, 2, 3];
+  // fixedNumbers.add(4); // Error: constant list cannot change.
+
+  print(currentTime);
+  print(appName);
+  print(numbers);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="types">
+    <h2>4. Data Types and Parsing</h2>
+    <p>Main built-in types include <code>int</code>, <code>double</code>, <code>num</code>, <code>String</code>, <code>bool</code>, <code>List</code>, <code>Set</code>, <code>Map</code>, <code>Record</code>, <code>Object</code>, and <code>dynamic</code>.</p>
+
+    <h3>String to number</h3>
+    <pre><code>void main() {
+  String ageText = '24';
+  String priceText = '99.50';
+
+  int age = int.parse(ageText);
+  double price = double.parse(priceText);
+
+  int? safeAge = int.tryParse('abc');
+  double? safePrice = double.tryParse('120.75');
+
+  print(age);
+  print(price);
+  print(safeAge);   // null
+  print(safePrice); // 120.75
+}</code></pre>
+
+    <h3>Number to String</h3>
+    <pre><code>void main() {
+  int amount = 100;
+  double rating = 4.5678;
+
+  String amountText = amount.toString();
+  String roundedRating = rating.toStringAsFixed(2);
+
+  print(amountText);
+  print(roundedRating); // 4.57
+}</code></pre>
+
+    <h3>Type checking and casting</h3>
+    <pre><code>void main() {
+  Object value = 'Flutter';
+
+  if (value is String) {
+    print(value.toUpperCase());
+  }
+
+  Object number = 20;
+  int converted = number as int;
+  print(converted + 5);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="operators">
+    <h2>5. Operators</h2>
+    <table>
+      <tr><th>Category</th><th>Operators</th></tr>
+      <tr><td>Arithmetic</td><td><code>+ - * / ~/ %</code></td></tr>
+      <tr><td>Comparison</td><td><code>== != &gt; &lt; &gt;= &lt;=</code></td></tr>
+      <tr><td>Logical</td><td><code>&amp;&amp; || !</code></td></tr>
+      <tr><td>Assignment</td><td><code>= += -= *= /= ??=</code></td></tr>
+      <tr><td>Conditional</td><td><code>condition ? value1 : value2</code></td></tr>
+      <tr><td>Null-aware</td><td><code>?? ?. ! ??=</code></td></tr>
+      <tr><td>Cascade</td><td><code>.. ?..</code></td></tr>
+    </table>
+    <pre><code>void main() {
+  int a = 10;
+  int b = 3;
+
+  print(a + b);  // 13
+  print(a / b);  // 3.333...
+  print(a ~/ b); // 3
+  print(a % b);  // 1
+
+  String result = a &gt; b ? 'a is larger' : 'b is larger';
+  print(result);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="null">
+    <h2>6. Null Safety</h2>
+    <p>A non-nullable variable cannot contain <code>null</code>. Add <code>?</code> to make a type nullable.</p>
+    <pre><code>void main() {
+  String name = 'Nahid';
+  String? middleName;
+
+  print(name);
+  print(middleName); // null
+}</code></pre>
+
+    <h3>Null-aware operators</h3>
+    <pre><code>void main() {
+  String? username;
+
+  String displayName = username ?? 'Guest';
+  print(displayName);
+
+  username ??= 'Default User';
+  print(username);
+
+  String? text = 'dart';
+  print(text?.toUpperCase());
+
+  String definitelyNotNull = text!;
+  print(definitelyNotNull);
+}</code></pre>
+
+    <h3>late keyword</h3>
+    <pre><code>class UserService {
+  late String token;
+
+  void login() {
+    token = 'abc123';
+  }
+
+  void showToken() {
+    print(token);
+  }
+}</code></pre>
+    <div class="warning"><strong>Caution:</strong> Reading a <code>late</code> variable before assigning it causes a runtime error.</div>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="functions">
+    <h2>7. Functions and Parameters</h2>
+    <h3>Basic function</h3>
+    <pre><code>int add(int a, int b) {
+  return a + b;
+}
+
+void main() {
+  print(add(10, 20));
+}</code></pre>
+
+    <h3>Arrow function</h3>
+    <pre><code>int square(int number) =&gt; number * number;</code></pre>
+
+    <h3>Positional parameters</h3>
+    <pre><code>void showUser(String name, int age) {
+  print('$name is $age years old.');
+}
+
+void main() {
+  showUser('Nahid', 24);
+}</code></pre>
+
+    <h3>Optional positional parameters</h3>
+    <pre><code>void greet(String name, [String message = 'Welcome']) {
+  print('$message, $name');
+}
+
+void main() {
+  greet('Nahid');
+  greet('Nahid', 'Hello');
+}</code></pre>
+
+    <h3>Named and required parameters</h3>
+    <pre><code>void createAccount({
+  required String name,
+  required String email,
+  int age = 18,
+}) {
+  print('Name: $name');
+  print('Email: $email');
+  print('Age: $age');
+}
+
+void main() {
+  createAccount(
+    name: 'Nahid',
+    email: 'nahid@example.com',
+    age: 24,
+  );
+}</code></pre>
+
+    <h3>Function as a parameter</h3>
+    <pre><code>void calculate(int a, int b, int Function(int, int) operation) {
+  print(operation(a, b));
+}
+
+int add(int a, int b) =&gt; a + b;
+
+void main() {
+  calculate(5, 3, add);
+  calculate(5, 3, (x, y) =&gt; x * y);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="control">
+    <h2>8. Conditions and Loops</h2>
+    <h3>if, else if, else</h3>
+    <pre><code>void main() {
+  int marks = 82;
+
+  if (marks &gt;= 80) {
+    print('A+');
+  } else if (marks &gt;= 70) {
+    print('A');
+  } else {
+    print('Needs improvement');
+  }
+}</code></pre>
+
+    <h3>switch</h3>
+    <pre><code>void main() {
+  String role = 'admin';
+
+  switch (role) {
+    case 'admin':
+      print('Full access');
+      break;
+    case 'user':
+      print('Limited access');
+      break;
+    default:
+      print('Unknown role');
+  }
+}</code></pre>
+
+    <h3>Loops</h3>
+    <pre><code>void main() {
+  for (int i = 1; i &lt;= 5; i++) {
+    print(i);
+  }
+
+  int count = 3;
+  while (count &gt; 0) {
+    print(count);
+    count--;
+  }
+
+  int number = 1;
+  do {
+    print(number);
+    number++;
+  } while (number &lt;= 3);
+
+  for (final item in ['Dart', 'Flutter', 'Firebase']) {
+    print(item);
+  }
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="enums">
+    <h2>9. Enums: Theory and Usage</h2>
+    <p>An enum defines a fixed set of named values. It is useful when a variable should accept only specific options.</p>
+    <pre><code>enum OrderStatus {
+  pending,
+  confirmed,
+  shipped,
+  delivered,
+  cancelled,
+}
+
+void main() {
+  OrderStatus status = OrderStatus.shipped;
+
+  if (status == OrderStatus.shipped) {
+    print('Your order is on the way.');
+  }
+
+  print(status.name); // shipped
+}</code></pre>
+
+    <h3>Enhanced enum</h3>
+    <pre><code>enum UserRole {
+  admin('Administrator', 3),
+  seller('Seller', 2),
+  customer('Customer', 1);
+
+  final String label;
+  final int permissionLevel;
+
+  const UserRole(this.label, this.permissionLevel);
+}
+
+void main() {
+  final role = UserRole.admin;
+
+  print(role.label);
+  print(role.permissionLevel);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="collections">
+    <h2>10. List, Set and Map</h2>
+    <div class="note"><strong>Dart does not have a separate built-in array type.</strong> A <code>List</code> is the usual array-like collection.</div>
+
+    <h3>List</h3>
+    <pre><code>void main() {
+  List&lt;String&gt; languages = ['Dart', 'Java', 'C++'];
+
+  languages.add('Python');
+  languages.insert(1, 'Kotlin');
+  languages.remove('Java');
+  languages.removeAt(0);
+
+  print(languages);
+  print(languages[0]);
+  print(languages.length);
+}</code></pre>
+
+    <h3>Set</h3>
+    <pre><code>void main() {
+  Set&lt;int&gt; numbers = {1, 2, 2, 3, 4};
+
+  numbers.add(5);
+  numbers.remove(1);
+
+  print(numbers); // duplicates are removed
+  print(numbers.contains(3));
+}</code></pre>
+
+    <h3>Map</h3>
+    <pre><code>void main() {
+  Map&lt;String, dynamic&gt; user = {
+    'name': 'Nahid',
+    'age': 24,
+    'isDeveloper': true,
+  };
+
+  user['city'] = 'Sylhet';
+  user['age'] = 25;
+
+  print(user['name']);
+  print(user.keys);
+  print(user.values);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="collection-functions">
+    <h2>11. Important List, Map and Set Functions</h2>
+    <pre><code>void main() {
+  final numbers = [1, 2, 3, 4, 5, 6];
+
+  final doubled = numbers.map((n) =&gt; n * 2).toList();
+  final evenNumbers = numbers.where((n) =&gt; n.isEven).toList();
+  final total = numbers.fold&lt;int&gt;(0, (sum, n) =&gt; sum + n);
+  final hasLargeNumber = numbers.any((n) =&gt; n &gt; 5);
+  final allPositive = numbers.every((n) =&gt; n &gt; 0);
+  final firstEven = numbers.firstWhere((n) =&gt; n.isEven);
+
+  print(doubled);
+  print(evenNumbers);
+  print(total);
+  print(hasLargeNumber);
+  print(allPositive);
+  print(firstEven);
+}</code></pre>
+
+    <h3>Map operations</h3>
+    <pre><code>void main() {
+  final prices = {
+    'Phone': 800,
+    'Laptop': 1200,
+    'Watch': 200,
+  };
+
+  prices.forEach((product, price) {
+    print('$product: \$$price');
+  });
+
+  final expensive = Map.fromEntries(
+    prices.entries.where((entry) =&gt; entry.value &gt; 500),
+  );
+
+  print(expensive);
+}</code></pre>
+
+    <h3>Collection if and collection for</h3>
+    <pre><code>void main() {
+  bool isAdmin = true;
+  final baseItems = ['Home', 'Profile'];
+
+  final menu = [
+    ...baseItems,
+    if (isAdmin) 'Admin Panel',
+    for (int i = 1; i &lt;= 3; i++) 'Item $i',
+  ];
+
+  print(menu);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="cascade">
+    <h2>12. Cascade Operator</h2>
+    <p>The cascade operator lets you perform multiple operations on the same object without repeating the object name.</p>
+    <pre><code>class User {
+  String name = '';
+  int age = 0;
+
+  void showInfo() {
+    print('$name is $age years old.');
+  }
+}
+
+void main() {
+  User user = User()
+    ..name = 'Nahid'
+    ..age = 24
+    ..showInfo();
+}</code></pre>
+
+    <h3>Null-shorting cascade</h3>
+    <pre><code>User? user;
+user?..name = 'Nahid'
+    ..age = 24;</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="oop">
+    <h2>13. Complete Object-Oriented Programming</h2>
+    <h3>Class and object</h3>
+    <pre><code>class Student {
+  String name;
+  int age;
+
+  Student(this.name, this.age);
+
+  void study() {
+    print('$name is studying.');
+  }
+}
+
+void main() {
+  Student student = Student('Nahid', 24);
+  student.study();
+}</code></pre>
+
+    <h3>Named constructor</h3>
+    <pre><code>class Product {
+  String name;
+  double price;
+
+  Product(this.name, this.price);
+
+  Product.free(this.name) : price = 0;
+}
+
+void main() {
+  final normal = Product('Phone', 800);
+  final free = Product.free('Gift');
+
+  print(normal.price);
+  print(free.price);
+}</code></pre>
+
+    <h3>Encapsulation</h3>
+    <pre><code>class BankAccount {
+  double _balance = 0;
+
+  double get balance =&gt; _balance;
+
+  void deposit(double amount) {
+    if (amount &gt; 0) {
+      _balance += amount;
+    }
+  }
+
+  bool withdraw(double amount) {
+    if (amount &lt;= _balance &amp;&amp; amount &gt; 0) {
+      _balance -= amount;
+      return true;
+    }
+    return false;
+  }
+}</code></pre>
+
+    <h3>Inheritance</h3>
+    <pre><code>class Animal {
+  void eat() {
+    print('Animal is eating');
+  }
+}
+
+class Dog extends Animal {
+  void bark() {
+    print('Dog is barking');
+  }
+}
+
+void main() {
+  final dog = Dog();
+  dog.eat();
+  dog.bark();
+}</code></pre>
+
+    <h3>Method overriding and polymorphism</h3>
+    <pre><code>abstract class Shape {
+  double area();
+}
+
+class Circle extends Shape {
+  final double radius;
+
+  Circle(this.radius);
+
+  @override
+  double area() =&gt; 3.1416 * radius * radius;
+}
+
+class Rectangle extends Shape {
+  final double width;
+  final double height;
+
+  Rectangle(this.width, this.height);
+
+  @override
+  double area() =&gt; width * height;
+}
+
+void printArea(Shape shape) {
+  print(shape.area());
+}
+
+void main() {
+  printArea(Circle(5));
+  printArea(Rectangle(4, 6));
+}</code></pre>
+
+    <h3>Interface using implements</h3>
+    <pre><code>abstract class Printable {
+  void printData();
+}
+
+class Invoice implements Printable {
+  final int id;
+
+  Invoice(this.id);
+
+  @override
+  void printData() {
+    print('Invoice ID: $id');
+  }
+}</code></pre>
+
+    <h3>Static members</h3>
+    <pre><code>class MathHelper {
+  static const double pi = 3.1416;
+
+  static int add(int a, int b) =&gt; a + b;
+}
+
+void main() {
+  print(MathHelper.pi);
+  print(MathHelper.add(2, 3));
+}</code></pre>
+
+    <h3>Composition</h3>
+    <pre><code>class Engine {
+  void start() =&gt; print('Engine started');
+}
+
+class Car {
+  final Engine engine;
+
+  Car(this.engine);
+
+  void start() {
+    engine.start();
+    print('Car is ready');
+  }
+}
+
+void main() {
+  Car(Engine()).start();
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="mixins">
+    <h2>14. Mixins</h2>
+    <p>A mixin allows reusable behavior to be shared among classes without traditional inheritance.</p>
+    <pre><code>mixin CanFly {
+  void fly() =&gt; print('Flying');
+}
+
+mixin CanSwim {
+  void swim() =&gt; print('Swimming');
+}
+
+class Duck with CanFly, CanSwim {
+  void walk() =&gt; print('Walking');
+}
+
+void main() {
+  final duck = Duck();
+  duck.fly();
+  duck.swim();
+  duck.walk();
+}</code></pre>
+
+    <h3>Mixin with on constraint</h3>
+    <pre><code>class Person {
+  final String name;
+  Person(this.name);
+}
+
+mixin Logger on Person {
+  void log(String message) {
+    print('[$name] $message');
+  }
+}
+
+class Developer extends Person with Logger {
+  Developer(super.name);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="factory">
+    <h2>15. Factory Constructors</h2>
+    <p>A factory constructor may return a cached object, a subtype, or an object created from JSON.</p>
+
+    <h3>Factory from JSON</h3>
+    <pre><code>class User {
+  final int id;
+  final String name;
+
+  User({required this.id, required this.name});
+
+  factory User.fromJson(Map&lt;String, dynamic&gt; json) {
+    return User(
+      id: json['id'] as int,
+      name: json['name'] as String,
+    );
+  }
+}</code></pre>
+
+    <h3>Factory singleton</h3>
+    <pre><code>class AppConfig {
+  static final AppConfig _instance = AppConfig._internal();
+
+  factory AppConfig() =&gt; _instance;
+
+  AppConfig._internal();
+}
+
+void main() {
+  final first = AppConfig();
+  final second = AppConfig();
+
+  print(identical(first, second)); // true
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="generics">
+    <h2>16. Generics</h2>
+    <p>Generics let you write reusable and type-safe classes, functions, and collections.</p>
+
+    <h3>Generic class</h3>
+    <pre><code>class Box&lt;T&gt; {
+  T value;
+
+  Box(this.value);
+
+  T getValue() =&gt; value;
+}
+
+void main() {
+  final intBox = Box&lt;int&gt;(100);
+  final stringBox = Box&lt;String&gt;('Dart');
+
+  print(intBox.getValue());
+  print(stringBox.getValue());
+}</code></pre>
+
+    <h3>Generic function</h3>
+    <pre><code>T firstItem&lt;T&gt;(List&lt;T&gt; items) {
+  if (items.isEmpty) {
+    throw StateError('List is empty');
+  }
+  return items.first;
+}
+
+void main() {
+  print(firstItem&lt;int&gt;([10, 20, 30]));
+  print(firstItem&lt;String&gt;(['A', 'B']));
+}</code></pre>
+
+    <h3>Generic API response</h3>
+    <pre><code>class ApiResponse&lt;T&gt; {
+  final bool success;
+  final String message;
+  final T? data;
+
+  ApiResponse({
+    required this.success,
+    required this.message,
+    this.data,
+  });
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="json">
+    <h2>17. JSON Parsing</h2>
+    <p>Use <code>dart:convert</code> for JSON encoding and decoding.</p>
+
+    <h3>Decode JSON string</h3>
+    <pre><code>import 'dart:convert';
+
+void main() {
+  String jsonText = '{"id":1,"name":"Nahid"}';
+
+  Map&lt;String, dynamic&gt; data = jsonDecode(jsonText);
+  print(data['name']);
+}</code></pre>
+
+    <h3>Model with fromJson and toJson</h3>
+    <pre><code>import 'dart:convert';
+
+class Product {
+  final int id;
+  final String title;
+  final double price;
+  final List&lt;String&gt; images;
+
+  Product({
+    required this.id,
+    required this.title,
+    required this.price,
+    required this.images,
+  });
+
+  factory Product.fromJson(Map&lt;String, dynamic&gt; json) {
+    return Product(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      price: (json['price'] as num).toDouble(),
+      images: List&lt;String&gt;.from(json['images'] ?? const []),
+    );
+  }
+
+  Map&lt;String, dynamic&gt; toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'images': images,
+    };
+  }
+}
+
+void main() {
+  const jsonText = '''
+  {
+    "id": 1,
+    "title": "Laptop",
+    "price": 1200.50,
+    "images": ["image1.jpg", "image2.jpg"]
+  }
+  ''';
+
+  final product = Product.fromJson(jsonDecode(jsonText));
+  print(product.title);
+
+  final encoded = jsonEncode(product.toJson());
+  print(encoded);
+}</code></pre>
+
+    <h3>Parse a list of objects</h3>
+    <pre><code>final List&lt;dynamic&gt; jsonList = jsonDecode(responseBody);
+
+final products = jsonList
+    .map((item) =&gt; Product.fromJson(item as Map&lt;String, dynamic&gt;))
+    .toList();</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="async">
+    <h2>18. Future, async and await</h2>
+    <p>A <code>Future</code> represents a value that will be available later.</p>
+    <pre><code>Future&lt;String&gt; fetchUserName() async {
+  await Future.delayed(const Duration(seconds: 2));
+  return 'Nahid';
+}
+
+Future&lt;void&gt; main() async {
+  print('Loading...');
+
+  try {
+    final name = await fetchUserName();
+    print(name);
+  } catch (error) {
+    print('Error: $error');
+  } finally {
+    print('Finished');
+  }
+}</code></pre>
+
+    <h3>Future with then and catchError</h3>
+    <pre><code>fetchUserName()
+    .then((name) =&gt; print(name))
+    .catchError((error) =&gt; print(error));</code></pre>
+
+    <h3>Running futures together</h3>
+    <pre><code>Future&lt;void&gt; loadData() async {
+  final results = await Future.wait([
+    Future.value('User'),
+    Future.value('Products'),
+    Future.value('Orders'),
+  ]);
+
+  print(results);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="streams">
+    <h2>19. Streams</h2>
+    <p>A stream provides multiple asynchronous values over time.</p>
+
+    <h3>Creating a stream</h3>
+    <pre><code>Stream&lt;int&gt; countStream() async* {
+  for (int i = 1; i &lt;= 5; i++) {
+    await Future.delayed(const Duration(seconds: 1));
+    yield i;
+  }
+}
+
+Future&lt;void&gt; main() async {
+  await for (final value in countStream()) {
+    print(value);
+  }
+}</code></pre>
+
+    <h3>Listening to a stream</h3>
+    <pre><code>final subscription = countStream().listen(
+  (value) =&gt; print('Value: $value'),
+  onError: (error) =&gt; print('Error: $error'),
+  onDone: () =&gt; print('Completed'),
+);
+
+// Later:
+subscription.pause();
+subscription.resume();
+subscription.cancel();</code></pre>
+
+    <h3>StreamController</h3>
+    <pre><code>import 'dart:async';
+
+void main() {
+  final controller = StreamController&lt;String&gt;();
+
+  controller.stream.listen(print);
+
+  controller.add('First message');
+  controller.add('Second message');
+  controller.close();
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="futurebuilder">
+    <h2>20. FutureBuilder <span class="badge">Flutter-specific</span></h2>
+    <p><code>FutureBuilder</code> is a Flutter widget that rebuilds the UI according to the state of a Future.</p>
+    <pre><code>import 'package:flutter/material.dart';
+
+class UserPage extends StatefulWidget {
+  const UserPage({super.key});
+
+  @override
+  State&lt;UserPage&gt; createState() =&gt; _UserPageState();
+}
+
+class _UserPageState extends State&lt;UserPage&gt; {
+  late final Future&lt;String&gt; _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = fetchUser();
+  }
+
+  Future&lt;String&gt; fetchUser() async {
+    await Future.delayed(const Duration(seconds: 2));
+    return 'Nahid';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('FutureBuilder Example')),
+      body: FutureBuilder&lt;String&gt;(
+        future: _userFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          if (!snapshot.hasData) {
+            return const Center(child: Text('No data found'));
+          }
+
+          return Center(child: Text('Welcome, ${snapshot.data}'));
+        },
+      ),
+    );
+  }
+}</code></pre>
+    <div class="note"><strong>Best practice:</strong> Create the Future in <code>initState()</code> or store it in a provider/view model. Avoid creating a new Future directly inside <code>build()</code> when repeated calls are not intended.</div>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="dsa">
+    <h2>21. Data Structures and Algorithms Fundamentals</h2>
+    <p>A data structure organizes data. An algorithm is a step-by-step procedure for solving a problem.</p>
+    <table>
+      <tr><th>Structure</th><th>Use</th></tr>
+      <tr><td>List/Array</td><td>Ordered collection with index access.</td></tr>
+      <tr><td>Set</td><td>Unique values and fast membership checks.</td></tr>
+      <tr><td>Map</td><td>Key-value lookup.</td></tr>
+      <tr><td>Stack</td><td>Last In, First Out.</td></tr>
+      <tr><td>Queue</td><td>First In, First Out.</td></tr>
+      <tr><td>Linked List</td><td>Nodes connected through references.</td></tr>
+      <tr><td>Tree</td><td>Hierarchical data.</td></tr>
+      <tr><td>Graph</td><td>Connected nodes and relationships.</td></tr>
+    </table>
+
+    <h3>Simple frequency counter using Map</h3>
+    <pre><code>Map&lt;String, int&gt; countWords(List&lt;String&gt; words) {
+  final frequency = &lt;String, int&gt;{};
+
+  for (final word in words) {
+    frequency[word] = (frequency[word] ?? 0) + 1;
+  }
+
+  return frequency;
+}
+
+void main() {
+  print(countWords(['dart', 'flutter', 'dart']));
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="linked-list">
+    <h2>22. Linked List</h2>
+    <p>A singly linked list contains nodes. Each node stores data and a reference to the next node.</p>
+    <pre><code>class Node&lt;T&gt; {
+  T value;
+  Node&lt;T&gt;? next;
+
+  Node(this.value);
+}
+
+class LinkedList&lt;T&gt; {
+  Node&lt;T&gt;? head;
+
+  void addFirst(T value) {
+    final newNode = Node(value);
+    newNode.next = head;
+    head = newNode;
+  }
+
+  void addLast(T value) {
+    final newNode = Node(value);
+
+    if (head == null) {
+      head = newNode;
+      return;
+    }
+
+    Node&lt;T&gt; current = head!;
+    while (current.next != null) {
+      current = current.next!;
+    }
+    current.next = newNode;
+  }
+
+  bool contains(T value) {
+    Node&lt;T&gt;? current = head;
+
+    while (current != null) {
+      if (current.value == value) return true;
+      current = current.next;
+    }
+    return false;
+  }
+
+  bool remove(T value) {
+    if (head == null) return false;
+
+    if (head!.value == value) {
+      head = head!.next;
+      return true;
+    }
+
+    Node&lt;T&gt; current = head!;
+    while (current.next != null) {
+      if (current.next!.value == value) {
+        current.next = current.next!.next;
+        return true;
+      }
+      current = current.next!;
+    }
+    return false;
+  }
+
+  void printList() {
+    Node&lt;T&gt;? current = head;
+    final values = &lt;T&gt;[];
+
+    while (current != null) {
+      values.add(current.value);
+      current = current.next;
+    }
+
+    print(values.join(' -&gt; '));
+  }
+}
+
+void main() {
+  final list = LinkedList&lt;int&gt;();
+  list.addLast(10);
+  list.addLast(20);
+  list.addFirst(5);
+  list.printList();
+
+  print(list.contains(20));
+  list.remove(10);
+  list.printList();
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="stack-queue">
+    <h2>23. Stack and Queue</h2>
+    <h3>Stack using List</h3>
+    <pre><code>class Stack&lt;T&gt; {
+  final List&lt;T&gt; _items = [];
+
+  void push(T item) =&gt; _items.add(item);
+
+  T pop() {
+    if (_items.isEmpty) {
+      throw StateError('Stack is empty');
+    }
+    return _items.removeLast();
+  }
+
+  T get peek {
+    if (_items.isEmpty) {
+      throw StateError('Stack is empty');
+    }
+    return _items.last;
+  }
+
+  bool get isEmpty =&gt; _items.isEmpty;
+  int get length =&gt; _items.length;
+}
+
+void main() {
+  final stack = Stack&lt;String&gt;();
+  stack.push('A');
+  stack.push('B');
+  stack.push('C');
+
+  print(stack.peek);
+  print(stack.pop());
+  print(stack.pop());
+}</code></pre>
+
+    <h3>Queue using ListQueue</h3>
+    <pre><code>import 'dart:collection';
+
+void main() {
+  final Queue&lt;String&gt; queue = ListQueue();
+
+  queue.addLast('Customer 1');
+  queue.addLast('Customer 2');
+  queue.addLast('Customer 3');
+
+  print(queue.removeFirst());
+  print(queue.first);
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="search">
+    <h2>24. Searching Algorithms</h2>
+    <h3>Linear search — O(n)</h3>
+    <pre><code>int linearSearch(List&lt;int&gt; numbers, int target) {
+  for (int i = 0; i &lt; numbers.length; i++) {
+    if (numbers[i] == target) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+void main() {
+  print(linearSearch([5, 8, 2, 10], 2)); // 2
+}</code></pre>
+
+    <h3>Binary search — O(log n)</h3>
+    <p>Binary search requires a sorted list.</p>
+    <pre><code>int binarySearch(List&lt;int&gt; numbers, int target) {
+  int left = 0;
+  int right = numbers.length - 1;
+
+  while (left &lt;= right) {
+    final middle = left + (right - left) ~/ 2;
+
+    if (numbers[middle] == target) {
+      return middle;
+    } else if (numbers[middle] &lt; target) {
+      left = middle + 1;
+    } else {
+      right = middle - 1;
+    }
+  }
+
+  return -1;
+}
+
+void main() {
+  print(binarySearch([1, 3, 5, 7, 9, 11], 7)); // 3
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="sorting">
+    <h2>25. Sorting Algorithms</h2>
+    <h3>Built-in sort</h3>
+    <pre><code>void main() {
+  final numbers = [5, 2, 9, 1, 3];
+
+  numbers.sort();
+  print(numbers);
+
+  numbers.sort((a, b) =&gt; b.compareTo(a));
+  print(numbers);
+}</code></pre>
+
+    <h3>Bubble sort — O(n²)</h3>
+    <pre><code>List&lt;int&gt; bubbleSort(List&lt;int&gt; input) {
+  final numbers = List&lt;int&gt;.from(input);
+
+  for (int i = 0; i &lt; numbers.length - 1; i++) {
+    bool swapped = false;
+
+    for (int j = 0; j &lt; numbers.length - i - 1; j++) {
+      if (numbers[j] &gt; numbers[j + 1]) {
+        final temp = numbers[j];
+        numbers[j] = numbers[j + 1];
+        numbers[j + 1] = temp;
+        swapped = true;
+      }
+    }
+
+    if (!swapped) break;
+  }
+
+  return numbers;
+}
+</code></pre>
+
+    <h3>Selection sort — O(n²)</h3>
+    <pre><code>List&lt;int&gt; selectionSort(List&lt;int&gt; input) {
+  final numbers = List&lt;int&gt;.from(input);
+
+  for (int i = 0; i &lt; numbers.length - 1; i++) {
+    int minIndex = i;
+
+    for (int j = i + 1; j &lt; numbers.length; j++) {
+      if (numbers[j] &lt; numbers[minIndex]) {
+        minIndex = j;
+      }
+    }
+
+    final temp = numbers[i];
+    numbers[i] = numbers[minIndex];
+    numbers[minIndex] = temp;
+  }
+
+  return numbers;
+}</code></pre>
+
+    <h3>Insertion sort — O(n²)</h3>
+    <pre><code>List&lt;int&gt; insertionSort(List&lt;int&gt; input) {
+  final numbers = List&lt;int&gt;.from(input);
+
+  for (int i = 1; i &lt; numbers.length; i++) {
+    final key = numbers[i];
+    int j = i - 1;
+
+    while (j &gt;= 0 &amp;&amp; numbers[j] &gt; key) {
+      numbers[j + 1] = numbers[j];
+      j--;
+    }
+
+    numbers[j + 1] = key;
+  }
+
+  return numbers;
+}</code></pre>
+
+    <h3>Merge sort — O(n log n)</h3>
+    <pre><code>List&lt;int&gt; mergeSort(List&lt;int&gt; numbers) {
+  if (numbers.length &lt;= 1) return numbers;
+
+  final middle = numbers.length ~/ 2;
+  final left = mergeSort(numbers.sublist(0, middle));
+  final right = mergeSort(numbers.sublist(middle));
+
+  return merge(left, right);
+}
+
+List&lt;int&gt; merge(List&lt;int&gt; left, List&lt;int&gt; right) {
+  final result = &lt;int&gt;[];
+  int i = 0;
+  int j = 0;
+
+  while (i &lt; left.length &amp;&amp; j &lt; right.length) {
+    if (left[i] &lt;= right[j]) {
+      result.add(left[i++]);
+    } else {
+      result.add(right[j++]);
+    }
+  }
+
+  result.addAll(left.sublist(i));
+  result.addAll(right.sublist(j));
+  return result;
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="complexity">
+    <h2>26. Time and Space Complexity</h2>
+    <table>
+      <tr><th>Complexity</th><th>Name</th><th>Example</th></tr>
+      <tr><td>O(1)</td><td>Constant</td><td>Accessing a List item by index.</td></tr>
+      <tr><td>O(log n)</td><td>Logarithmic</td><td>Binary search.</td></tr>
+      <tr><td>O(n)</td><td>Linear</td><td>Linear search.</td></tr>
+      <tr><td>O(n log n)</td><td>Linearithmic</td><td>Merge sort.</td></tr>
+      <tr><td>O(n²)</td><td>Quadratic</td><td>Bubble sort.</td></tr>
+      <tr><td>O(2ⁿ)</td><td>Exponential</td><td>Naive recursive Fibonacci.</td></tr>
+    </table>
+    <pre><code>// O(1)
+int first(List&lt;int&gt; items) =&gt; items.first;
+
+// O(n)
+bool containsValue(List&lt;int&gt; items, int target) {
+  for (final item in items) {
+    if (item == target) return true;
+  }
+  return false;
+}
+
+// O(n²)
+void printPairs(List&lt;int&gt; items) {
+  for (final a in items) {
+    for (final b in items) {
+      print('$a, $b');
+    }
+  }
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+
+  <section id="mini-project">
+    <h2>27. Complete Mini Project: Product Manager</h2>
+    <p>This console project combines input, parsing, enums, named parameters, null safety, collections, OOP, JSON, factory constructors, and sorting.</p>
+    <pre><code>import 'dart:convert';
+import 'dart:io';
+
+enum ProductCategory {
+  phone,
+  laptop,
+  accessory,
+}
+
+class Product {
+  final int id;
+  final String name;
+  final double price;
+  final ProductCategory category;
+  final List&lt;String&gt; images;
+  final String? description;
+
+  const Product({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.category,
+    required this.images,
+    this.description,
+  });
+
+  factory Product.fromJson(Map&lt;String, dynamic&gt; json) {
+    return Product(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      price: (json['price'] as num).toDouble(),
+      category: ProductCategory.values.firstWhere(
+        (item) =&gt; item.name == json['category'],
+        orElse: () =&gt; ProductCategory.accessory,
+      ),
+      images: List&lt;String&gt;.from(json['images'] ?? const []),
+      description: json['description'] as String?,
+    );
+  }
+
+  Map&lt;String, dynamic&gt; toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'price': price,
+      'category': category.name,
+      'images': images,
+      'description': description,
+    };
+  }
+
+  Product copyWith({
+    int? id,
+    String? name,
+    double? price,
+    ProductCategory? category,
+    List&lt;String&gt;? images,
+    String? description,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      category: category ?? this.category,
+      images: images ?? this.images,
+      description: description ?? this.description,
+    );
+  }
+
+  @override
+  String toString() {
+    return '$id | $name | \$$price | ${category.name}';
+  }
+}
+
+class ProductRepository {
+  final List&lt;Product&gt; _products = [];
+
+  List&lt;Product&gt; get products =&gt; List.unmodifiable(_products);
+
+  void add(Product product) {
+    _products.add(product);
+  }
+
+  bool deleteById(int id) {
+    final previousLength = _products.length;
+    _products.removeWhere((product) =&gt; product.id == id);
+    return _products.length != previousLength;
+  }
+
+  Product? findById(int id) {
+    for (final product in _products) {
+      if (product.id == id) return product;
+    }
+    return null;
+  }
+
+  List&lt;Product&gt; search(String query) {
+    final normalized = query.toLowerCase();
+    return _products
+        .where((product) =&gt; product.name.toLowerCase().contains(normalized))
+        .toList();
+  }
+
+  void sortByPrice({bool ascending = true}) {
+    _products.sort(
+      (a, b) =&gt; ascending
+          ? a.price.compareTo(b.price)
+          : b.price.compareTo(a.price),
+    );
+  }
+
+  String exportJson() {
+    return jsonEncode(_products.map((product) =&gt; product.toJson()).toList());
+  }
+}
+
+void main() {
+  final repository = ProductRepository();
+
+  repository.add(
+    const Product(
+      id: 1,
+      name: 'Smartphone',
+      price: 499.99,
+      category: ProductCategory.phone,
+      images: ['phone-front.jpg', 'phone-back.jpg'],
+      description: 'A modern smartphone.',
+    ),
+  );
+
+  repository.add(
+    const Product(
+      id: 2,
+      name: 'Laptop',
+      price: 999.99,
+      category: ProductCategory.laptop,
+      images: ['laptop.jpg'],
+    ),
+  );
+
+  stdout.write('Search product: ');
+  final query = stdin.readLineSync()?.trim() ?? '';
+
+  final results = repository.search(query);
+  if (results.isEmpty) {
+    print('No products found.');
+  } else {
+    for (final product in results) {
+      print(product);
+    }
+  }
+
+  repository.sortByPrice();
+  print('\nSorted products:');
+  repository.products.forEach(print);
+
+  print('\nJSON output:');
+  print(repository.exportJson());
+}</code></pre>
+    <a class="back" href="#top">↑ Back to top</a>
+  </section>
+</main>
+
+<footer>
+  Complete Dart Notes — designed for self-study, revision, interview preparation, and Flutter development.
+</footer>
+</body>
+</html>

@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git & GitHub — Flutter Developer's Guide</title>
+<style>
+:root {
+  --bg:      #0b0f0a;
+  --s1:      #111710;
+  --s2:      #161e14;
+  --s3:      #1b2619;
+  --b1:      #243020;
+  --b2:      #2d3d28;
+
+  --git:     #f05032;
+  --gitL:    rgba(240,80,50,.12);
+  --gh:      #3fb950;
+  --ghL:     rgba(63,185,80,.12);
+  --cmd:     #e3b341;
+  --cmdL:    rgba(227,179,65,.10);
+  --danger:  #f85149;
+  --info:    #58a6ff;
+  --violet:  #bc8cff;
+
+  --text:    #d4dcc8;
+  --text2:   #7a9068;
+  --text3:   #3d5235;
+  --mono:    'Cascadia Code','Fira Code','Courier New',monospace;
+  --sans:    'Inter','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.72}
+
+/* ── HERO ── */
+.hero{
+  padding:50px 44px 40px;
+  background: linear-gradient(160deg,#0e1a0b 0%,#121a0f 60%,#0b0f0a 100%);
+  border-bottom:1px solid var(--b1);
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:'$ git push';
+  position:absolute;right:48px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:4.5rem;font-weight:900;
+  color:rgba(63,185,80,.04);letter-spacing:-2px;white-space:nowrap;
+  pointer-events:none;
+}
+.hero-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.hc{font-size:10.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding:3px 11px;border-radius:20px;border:1px solid}
+.hc.g{color:#f87171;border-color:rgba(248,113,113,.3);background:rgba(240,80,50,.07)}
+.hc.h{color:#4ade80;border-color:rgba(74,222,128,.3);background:rgba(63,185,80,.08)}
+.hc.f{color:#60a5fa;border-color:rgba(96,165,250,.3);background:rgba(88,166,255,.07)}
+.hero h1{font-size:clamp(1.9rem,3.5vw,2.8rem);font-weight:800;color:#e8f0e0;letter-spacing:-1.2px;margin-bottom:10px;line-height:1.1}
+.hero h1 .git{color:#f87060}.hero h1 .gh{color:#4ade80}
+.hero p{color:var(--text2);max-width:560px;font-size:.97rem}
+
+/* ── LAYOUT ── */
+.page{max-width:1120px;margin:0 auto;padding:32px 20px 88px}
+
+/* ── CATEGORY DIVIDER ── */
+.cat{display:flex;align-items:center;gap:10px;margin:32px 0 12px}
+.cat-line{flex:1;height:1px;background:var(--b1)}
+.cat-label{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.cat.git-cat .cat-label{color:#f87060;background:var(--gitL);border:1px solid rgba(240,80,50,.25)}
+.cat.gh-cat  .cat-label{color:#4ade80;background:var(--ghL); border:1px solid rgba(63,185,80,.25)}
+.cat.flow-cat .cat-label{color:#e3b341;background:var(--cmdL);border:1px solid rgba(227,179,65,.25)}
+.cat.adv-cat .cat-label{color:#bc8cff;background:rgba(188,140,255,.08);border:1px solid rgba(188,140,255,.25)}
+
+/* ── SECTION CARD ── */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:13px;margin-bottom:18px;overflow:hidden}
+.card-head{display:flex;align-items:flex-start;gap:13px;padding:14px 18px 12px;background:var(--s2);border-bottom:1px solid var(--b1)}
+.card-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.card-meta h3{font-size:1rem;font-weight:700;color:#e8f0e0;margin-bottom:2px}
+.card-meta p{font-size:12.5px;color:var(--text2);line-height:1.5}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.tag{font-size:10px;font-weight:700;padding:1px 7px;border-radius:4px}
+.tg{color:#f87060;background:rgba(240,80,50,.1)}
+.th{color:#4ade80;background:rgba(63,185,80,.1)}
+.tc{color:#e3b341;background:rgba(227,179,65,.1)}
+.tv{color:#bc8cff;background:rgba(188,140,255,.1)}
+.ti{color:#60a5fa;background:rgba(88,166,255,.1)}
+.card-body{padding:16px 18px 18px}
+.card-body > p{font-size:13px;color:var(--text2);margin-bottom:10px}
+
+/* ── COMMAND BLOCK ── */
+.cb{background:#060a05;border:1px solid var(--b1);border-radius:9px;overflow:hidden;margin:8px 0}
+.cb-top{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:#0a0f08;border-bottom:1px solid var(--b1)}
+.cb-top .lbl{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.dots{display:flex;gap:4px}.d{width:8px;height:8px;border-radius:50%}
+.dr{background:#f85149}.dy{background:#e3b341}.dg{background:#3fb950}
+pre{font-family:var(--mono);font-size:12.8px;line-height:1.7;padding:13px 15px;overflow-x:auto;color:#c8d8b8}
+/* Terminal prompt style */
+.pr{color:#4ade80;font-weight:700} /* $ prompt */
+.cm2{color:#5a7050;font-style:italic} /* comment */
+.hl{color:#e3b341} /* highlight / flag */
+.br{color:#f87060} /* branch name */
+.gh2{color:#60a5fa} /* github url */
+.ok{color:#3fb950} /* success */
+.er{color:#f85149} /* error/danger */
+.fl{color:#bc8cff} /* flutter specific */
+
+/* ── EXPLANATION ── */
+.exp{background:var(--s2);border-left:3px solid var(--b2);border-radius:0 8px 8px 0;padding:9px 13px;margin:8px 0 10px;font-size:12.8px;color:var(--text2);line-height:1.6}
+.exp.git-exp{border-color:var(--git)}
+.exp.gh-exp{border-color:var(--gh)}
+.exp.warn-exp{border-color:var(--danger)}
+.exp.tip-exp{border-color:var(--cmd)}
+.exp strong{color:var(--text)}
+.exp code{background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:11.5px;color:#a5d6ff}
+
+/* ── NOTE ── */
+.note{display:flex;gap:8px;padding:8px 12px;border-radius:7px;font-size:12.5px;margin:8px 0;color:var(--text2)}
+.note.danger{background:rgba(248,81,73,.07);border-left:2px solid var(--danger)}
+.note.tip{background:rgba(227,179,65,.07);border-left:2px solid var(--cmd)}
+.note.good{background:rgba(63,185,80,.07);border-left:2px solid var(--gh)}
+.note.info{background:rgba(88,166,255,.07);border-left:2px solid var(--info)}
+.note strong{color:var(--text)}
+
+/* ── FLOW DIAGRAM ── */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:10px 0;padding:12px 14px;background:var(--s2);border-radius:8px;border:1px solid var(--b1)}
+.fbox{padding:5px 12px;border-radius:6px;font-size:12px;font-weight:700;white-space:nowrap}
+.farr{color:var(--text3);font-size:13px;font-weight:700}
+
+/* ── TWO COL ── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:740px){.two{grid-template-columns:1fr}}
+
+/* ── CHEAT SHEET TABLE ── */
+.cheat{background:var(--s1);border:1px solid var(--b1);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.cheat-head{padding:12px 18px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:8px}
+table.ct{width:100%;border-collapse:collapse;font-size:12.5px}
+table.ct th{background:var(--s3);color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.5px;padding:7px 14px;text-align:left;border-bottom:1px solid var(--b1)}
+table.ct td{padding:8px 14px;border-bottom:1px solid var(--b2);color:var(--text2);vertical-align:top}
+table.ct tr:last-child td{border-bottom:none}
+table.ct td:first-child{font-family:var(--mono);color:#e3b341;font-size:12px;white-space:nowrap}
+table.ct td:nth-child(2){color:#4ade80;font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+table.ct tr:hover td{background:rgba(255,255,255,.015)}
+
+/* ── GITIGNORE BOX ── */
+.gi-box{background:#060a05;border:1px solid var(--b1);border-radius:9px;overflow:hidden;margin:8px 0}
+.gi-box pre{color:#7a9068;font-size:12px;padding:12px 15px}
+.gi-box .gi-c{color:#3d5235;font-style:italic}
+.gi-box .gi-p{color:#e3b341}
+.gi-box .gi-f{color:#4ade80}
+
+footer{text-align:center;padding:26px;color:var(--text3);font-size:12px;border-top:1px solid var(--b1)}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-chips">
+    <span class="hc g">Git</span>
+    <span class="hc h">GitHub</span>
+    <span class="hc f">Flutter</span>
+  </div>
+  <h1><span class="git">Git</span> &amp; <span class="gh">GitHub</span><br>Flutter Developer's Guide</h1>
+  <p>Version control from first commit to team collaboration — every command a Flutter dev needs, with real project workflows.</p>
+</div>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════
+     WHAT IS GIT
+═══════════════════════════════════════ -->
+<div class="cat git-cat"><div class="cat-line"></div><span class="cat-label">Git Basics</span><div class="cat-line"></div></div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(240,80,50,.1)">🌳</div>
+    <div class="card-meta">
+      <h3>What is Git? — Core Concepts</h3>
+      <p>Git is a version control system that tracks every change in your project files. Think of it as a time machine for your code.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tc">Concept</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="exp git-exp">
+      <strong>3 areas you must know:</strong><br>
+      <strong>Working Directory</strong> — your actual files on disk (where you write code).<br>
+      <strong>Staging Area (Index)</strong> — files you've marked to be committed (<code>git add</code>).<br>
+      <strong>Repository (.git)</strong> — the saved snapshot history (<code>git commit</code>).
+    </div>
+    <div class="flow">
+      <span class="fbox" style="background:rgba(240,80,50,.12);color:#f87060">Working Directory<br><small>Edit files</small></span>
+      <span class="farr">──git add──→</span>
+      <span class="fbox" style="background:rgba(227,179,65,.12);color:#e3b341">Staging Area<br><small>Prepare snapshot</small></span>
+      <span class="farr">──git commit──→</span>
+      <span class="fbox" style="background:rgba(63,185,80,.12);color:#4ade80">Repository<br><small>Saved history</small></span>
+      <span class="farr">──git push──→</span>
+      <span class="fbox" style="background:rgba(88,166,255,.12);color:#60a5fa">GitHub<br><small>Remote backup</small></span>
+    </div>
+  </div>
+</div>
+
+<!-- INSTALL & CONFIG -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(240,80,50,.1)">⚙️</div>
+    <div class="card-meta">
+      <h3>Install &amp; First-Time Setup</h3>
+      <p>Configure Git with your identity before anything else — every commit records who made it.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tc">Setup</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">terminal — one-time setup</span></div>
+<pre><span class="cm2"># ── 1. Check if Git is installed ──</span>
+<span class="pr">$</span> git --version
+<span class="ok">git version 2.44.0</span>
+
+<span class="cm2"># ── 2. Set your name (shows in commits) ──</span>
+<span class="pr">$</span> git config --global user.name <span class="hl">"Rahim Ahmed"</span>
+
+<span class="cm2"># ── 3. Set your email (must match GitHub account) ──</span>
+<span class="pr">$</span> git config --global user.email <span class="hl">"rahim@example.com"</span>
+
+<span class="cm2"># ── 4. Set default branch name to 'main' ──</span>
+<span class="pr">$</span> git config --global init.defaultBranch main
+
+<span class="cm2"># ── 5. Set VS Code as default editor ──</span>
+<span class="pr">$</span> git config --global core.editor <span class="hl">"code --wait"</span>
+
+<span class="cm2"># ── Verify your config ──</span>
+<span class="pr">$</span> git config --list</pre>
+    </div>
+    <div class="note good"><span>✅</span><div>Run these commands once after installing Git. They apply globally to all your projects on this machine.</div></div>
+  </div>
+</div>
+
+<!-- INIT & CLONE -->
+<div class="two">
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(240,80,50,.1)">🆕</div>
+    <div class="card-meta">
+      <h3>git init — Start Tracking</h3>
+      <p>Initialize a new repo inside your Flutter project folder.</p>
+      <div class="tags"><span class="tag tg">Git</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">new flutter project</span></div>
+<pre><span class="cm2"># Create Flutter app</span>
+<span class="pr">$</span> flutter create my_app
+<span class="pr">$</span> cd my_app
+
+<span class="cm2"># Initialize Git inside it</span>
+<span class="pr">$</span> git init
+<span class="ok">Initialized empty Git repository
+in /my_app/.git/</span>
+
+<span class="cm2"># Check status of all files</span>
+<span class="pr">$</span> git status</pre>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(240,80,50,.1)">📥</div>
+    <div class="card-meta">
+      <h3>git clone — Download a Repo</h3>
+      <p>Download an existing project from GitHub to your machine.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag th">GitHub</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">clone a repo</span></div>
+<pre><span class="cm2"># Clone from GitHub</span>
+<span class="pr">$</span> git clone <span class="gh2">https://github.com/user/my_app.git</span>
+<span class="pr">$</span> cd my_app
+
+<span class="cm2"># Clone into a custom folder name</span>
+<span class="pr">$</span> git clone <span class="gh2">https://github.com/user/my_app.git</span> <span class="hl">flutter_project</span>
+
+<span class="cm2"># After clone: install packages</span>
+<span class="pr">$</span> flutter pub get</pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two -->
+
+<!-- .GITIGNORE FOR FLUTTER -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(227,179,65,.1)">🚫</div>
+    <div class="card-meta">
+      <h3>.gitignore — What NOT to Track in Flutter</h3>
+      <p>Tell Git to ignore generated files, build outputs, and secrets. Flutter creates a default <code>.gitignore</code> automatically with <code>flutter create</code>.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tv">Flutter</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="exp tip-exp">The <code>.gitignore</code> file lives in your project root. Any path listed here is <strong>completely ignored</strong> by Git — never committed, never pushed. Critical for keeping secrets out of GitHub and keeping your repo small.</div>
+    <div class="gi-box">
+<pre><span class="gi-c"># ── Flutter build outputs (never commit these) ──</span>
+<span class="gi-p">build/</span>
+<span class="gi-p">.dart_tool/</span>
+<span class="gi-p">.flutter-plugins</span>
+<span class="gi-p">.flutter-plugins-dependencies</span>
+
+<span class="gi-c"># ── IDE files ──</span>
+<span class="gi-p">.idea/</span>
+<span class="gi-p">.vscode/</span>
+<span class="gi-p">*.iml</span>
+
+<span class="gi-c"># ── Android / iOS generated ──</span>
+<span class="gi-p">android/.gradle/</span>
+<span class="gi-p">ios/Pods/</span>
+<span class="gi-p">ios/.symlinks/</span>
+
+<span class="gi-c"># ── Secrets & Environment (NEVER commit these!) ──</span>
+<span class="gi-p">.env</span>
+<span class="gi-p">google-services.json</span>     <span class="gi-c"># Firebase config</span>
+<span class="gi-p">GoogleService-Info.plist</span>  <span class="gi-c"># Firebase iOS config</span>
+<span class="gi-p">*.keystore</span>                <span class="gi-c"># Android signing key</span>
+<span class="gi-p">key.properties</span>            <span class="gi-c"># Android key passwords</span>
+
+<span class="gi-c"># ── Dart generated ──</span>
+<span class="gi-p">*.freezed.dart</span>
+<span class="gi-p">*.g.dart</span>                  <span class="gi-c"># json_serializable output</span>
+
+<span class="gi-c"># ── pubspec.lock: commit for apps, ignore for packages ──</span>
+<span class="gi-c"># pubspec.lock</span></pre>
+    </div>
+    <div class="note danger"><span>🔥</span><div><strong>Never commit</strong> <code>google-services.json</code>, <code>key.properties</code>, or <code>.env</code> to GitHub. If you do accidentally, the secret is compromised — rotate it immediately.</div></div>
+  </div>
+</div>
+
+<!-- CORE COMMANDS -->
+<div class="cat git-cat"><div class="cat-line"></div><span class="cat-label">Core Git Commands</span><div class="cat-line"></div></div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(227,179,65,.1)">📸</div>
+    <div class="card-meta">
+      <h3>add · commit · status · log</h3>
+      <p>The four commands you'll use every single day. Stage changes, save snapshots, check what's changed, and view history.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tc">Daily Use</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">daily workflow</span></div>
+<pre><span class="cm2"># ── See what changed ──</span>
+<span class="pr">$</span> git status
+<span class="cm2">  modified:   lib/main.dart</span>
+<span class="cm2">  untracked:  lib/screens/home.dart</span>
+
+<span class="cm2"># ── Stage a specific file ──</span>
+<span class="pr">$</span> git add lib/main.dart
+
+<span class="cm2"># ── Stage ALL changed files at once ──</span>
+<span class="pr">$</span> git add .
+
+<span class="cm2"># ── Stage parts of a file interactively ──</span>
+<span class="pr">$</span> git add <span class="hl">-p</span> lib/main.dart
+
+<span class="cm2"># ── Commit with a message ──</span>
+<span class="pr">$</span> git commit <span class="hl">-m</span> <span class="hl">"feat: add home screen UI"</span>
+
+<span class="cm2"># ── Stage + commit tracked files in one step ──</span>
+<span class="pr">$</span> git commit <span class="hl">-am</span> <span class="hl">"fix: resolve API null error"</span>
+
+<span class="cm2"># ── View commit history ──</span>
+<span class="pr">$</span> git log
+<span class="pr">$</span> git log <span class="hl">--oneline</span>          <span class="cm2"># compact view</span>
+<span class="pr">$</span> git log <span class="hl">--oneline --graph</span>  <span class="cm2"># with branch graph</span>
+
+<span class="cm2"># ── See exactly what changed in files ──</span>
+<span class="pr">$</span> git diff                   <span class="cm2"># unstaged changes</span>
+<span class="pr">$</span> git diff <span class="hl">--staged</span>          <span class="cm2"># staged changes</span></pre>
+    </div>
+    <div class="exp tip-exp"><strong>Good commit messages</strong> use a prefix:<br>
+      <code>feat:</code> new feature &nbsp;·&nbsp; <code>fix:</code> bug fix &nbsp;·&nbsp; <code>refactor:</code> code cleanup &nbsp;·&nbsp; <code>style:</code> UI/formatting &nbsp;·&nbsp; <code>docs:</code> documentation &nbsp;·&nbsp; <code>chore:</code> dependencies, config
+    </div>
+  </div>
+</div>
+
+<!-- BRANCH -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(63,185,80,.1)">🌿</div>
+    <div class="card-meta">
+      <h3>Branching — Work Without Breaking Main</h3>
+      <p>Branches let you build features in isolation. The <code>main</code> branch stays clean and deployable at all times.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tc">Branching</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="exp git-exp"><strong>Rule of thumb:</strong> never code directly on <code>main</code>. Create a new branch for every feature, bugfix, or experiment. Merge back when done.</div>
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">branch commands</span></div>
+<pre><span class="cm2"># ── List all branches ──</span>
+<span class="pr">$</span> git branch
+<span class="ok">* main</span>
+<span class="cm2">  feature/login</span>
+
+<span class="cm2"># ── Create new branch ──</span>
+<span class="pr">$</span> git branch <span class="br">feature/task-screen</span>
+
+<span class="cm2"># ── Switch to a branch ──</span>
+<span class="pr">$</span> git checkout <span class="br">feature/task-screen</span>
+
+<span class="cm2"># ── Create AND switch in one command (preferred) ──</span>
+<span class="pr">$</span> git checkout <span class="hl">-b</span> <span class="br">feature/task-screen</span>
+<span class="cm2"># OR modern syntax:</span>
+<span class="pr">$</span> git switch <span class="hl">-c</span> <span class="br">feature/task-screen</span>
+
+<span class="cm2"># ── Rename current branch ──</span>
+<span class="pr">$</span> git branch <span class="hl">-m</span> <span class="br">new-name</span>
+
+<span class="cm2"># ── Delete a merged branch ──</span>
+<span class="pr">$</span> git branch <span class="hl">-d</span> <span class="br">feature/task-screen</span>
+
+<span class="cm2"># ── Delete unmerged branch (force) ──</span>
+<span class="pr">$</span> git branch <span class="hl">-D</span> <span class="br">feature/old-experiment</span>
+
+<span class="cm2"># ── See all branches including remote ──</span>
+<span class="pr">$</span> git branch <span class="hl">-a</span></pre>
+    </div>
+    <div class="exp tip-exp"><strong>Branch naming convention for Flutter projects:</strong><br>
+      <code>feature/login-screen</code> &nbsp;·&nbsp; <code>fix/null-safety-crash</code> &nbsp;·&nbsp; <code>refactor/task-provider</code> &nbsp;·&nbsp; <code>release/v1.2.0</code>
+    </div>
+  </div>
+</div>
+
+<!-- MERGE & REBASE -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(188,140,255,.1)">🔀</div>
+    <div class="card-meta">
+      <h3>merge · rebase — Combining Branches</h3>
+      <p>Two ways to integrate changes from one branch into another. Both have different use cases.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tv">Merge</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="two">
+      <div>
+        <div class="exp git-exp"><strong>git merge</strong> — creates a new "merge commit" that joins two branches. History shows the branch clearly. <em>Use for team projects and feature branches.</em></div>
+        <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">merge</span></div>
+<pre><span class="cm2"># Go to main first</span>
+<span class="pr">$</span> git checkout main
+
+<span class="cm2"># Merge feature branch into main</span>
+<span class="pr">$</span> git merge <span class="br">feature/task-screen</span>
+<span class="ok">Merge made by 'ort' strategy.</span>
+
+<span class="cm2"># Delete the branch after merge</span>
+<span class="pr">$</span> git branch <span class="hl">-d</span> <span class="br">feature/task-screen</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="exp git-exp"><strong>git rebase</strong> — replays your commits on top of another branch. Creates a <em>linear history</em> with no merge commits. <em>Use for keeping local feature branches up to date.</em></div>
+        <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">rebase</span></div>
+<pre><span class="cm2"># On feature branch, rebase onto main</span>
+<span class="pr">$</span> git checkout <span class="br">feature/task-screen</span>
+<span class="pr">$</span> git rebase main
+
+<span class="cm2"># Continue after resolving conflicts</span>
+<span class="pr">$</span> git rebase <span class="hl">--continue</span>
+
+<span class="cm2"># Abort rebase if needed</span>
+<span class="pr">$</span> git rebase <span class="hl">--abort</span></pre>
+        </div>
+        <div class="note danger"><span>⚠️</span><div><strong>Never rebase</strong> commits that have already been pushed to a shared GitHub branch.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFLICT -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(248,81,73,.1)">⚡</div>
+    <div class="card-meta">
+      <h3>Merge Conflicts — How to Resolve</h3>
+      <p>A conflict happens when two branches change the same line differently. Git marks the conflict and waits for you to decide.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tg">Conflict</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="exp warn-exp"><strong>What a conflict looks like in a Dart file:</strong></div>
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">lib/main.dart — conflict markers</span></div>
+<pre><span class="er">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>          <span class="cm2">← your current branch (main)</span>
+  <span class="fl">home: const HomeScreen(),</span>
+<span class="er">=======</span>              <span class="cm2">← separator</span>
+  <span class="fl">home: const TaskScreen(),</span>
+<span class="er">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/task-screen</span>  <span class="cm2">← incoming branch</span></pre>
+    </div>
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">steps to resolve</span></div>
+<pre><span class="cm2"># 1. Git tells you which files conflict</span>
+<span class="pr">$</span> git status
+<span class="er">both modified: lib/main.dart</span>
+
+<span class="cm2"># 2. Open the file, manually choose what to keep:
+#    - Keep your version (HEAD)
+#    - Keep their version (incoming)
+#    - Keep both / rewrite
+#    Delete ALL conflict markers (&lt;&lt;&lt;, ===, &gt;&gt;&gt;) when done</span>
+
+<span class="cm2"># 3. Stage the resolved file</span>
+<span class="pr">$</span> git add lib/main.dart
+
+<span class="cm2"># 4. Complete the merge</span>
+<span class="pr">$</span> git commit <span class="hl">-m</span> <span class="hl">"merge: resolve home screen conflict"</span>
+
+<span class="cm2"># VS Code shows a 3-way diff UI for conflicts —
+# use "Accept Current" / "Accept Incoming" buttons</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- UNDO & FIX -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(248,81,73,.1)">↩️</div>
+    <div class="card-meta">
+      <h3>Undo &amp; Fix Mistakes</h3>
+      <p>Git lets you undo almost anything. The right command depends on how far the change went.</p>
+      <div class="tags"><span class="tag tg">Git</span><span class="tag tg">Undo</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">undo commands</span></div>
+<pre><span class="cm2"># ── Discard changes in working directory (PERMANENT) ──</span>
+<span class="pr">$</span> git checkout -- lib/main.dart
+<span class="cm2"># Modern syntax:</span>
+<span class="pr">$</span> git restore lib/main.dart
+
+<span class="cm2"># ── Unstage a file (keep changes, just un-add) ──</span>
+<span class="pr">$</span> git restore <span class="hl">--staged</span> lib/main.dart
+
+<span class="cm2"># ── Fix last commit message (before pushing) ──</span>
+<span class="pr">$</span> git commit <span class="hl">--amend</span> <span class="hl">-m</span> <span class="hl">"fix: corrected commit message"</span>
+
+<span class="cm2"># ── Add forgotten file to last commit (before pushing) ──</span>
+<span class="pr">$</span> git add lib/forgotten.dart
+<span class="pr">$</span> git commit <span class="hl">--amend --no-edit</span>
+
+<span class="cm2"># ── Undo last commit, KEEP the changes ──</span>
+<span class="pr">$</span> git reset <span class="hl">HEAD~1</span>        <span class="cm2"># default: --mixed (changes go to working dir)</span>
+<span class="pr">$</span> git reset <span class="hl">--soft HEAD~1</span>  <span class="cm2"># changes go back to staging</span>
+
+<span class="cm2"># ── Undo last commit, DISCARD the changes (DANGEROUS) ──</span>
+<span class="pr">$</span> git reset <span class="hl">--hard HEAD~1</span>
+
+<span class="cm2"># ── Safe undo: creates a new "undo" commit (for pushed commits) ──</span>
+<span class="pr">$</span> git revert <span class="hl">abc1234</span>    <span class="cm2"># use the commit hash from git log</span>
+
+<span class="cm2"># ── Stash: temporarily save unfinished work ──</span>
+<span class="pr">$</span> git stash              <span class="cm2"># save dirty state</span>
+<span class="pr">$</span> git stash pop          <span class="cm2"># restore it</span>
+<span class="pr">$</span> git stash list         <span class="cm2"># see all stashes</span>
+<span class="pr">$</span> git stash drop         <span class="cm2"># delete top stash</span></pre>
+    </div>
+    <div class="note danger"><span>⚠️</span><div><strong>git reset --hard</strong> permanently deletes uncommitted work. Use with extreme caution. Prefer <strong>git revert</strong> for commits already pushed to GitHub.</div></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     GITHUB
+═══════════════════════════════════════ -->
+<div class="cat gh-cat"><div class="cat-line"></div><span class="cat-label">GitHub — Remote & Collaboration</span><div class="cat-line"></div></div>
+
+<!-- REMOTE -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(63,185,80,.1)">☁️</div>
+    <div class="card-meta">
+      <h3>Connect Local Repo to GitHub</h3>
+      <p>Push your local Flutter project to a new GitHub repository for backup and collaboration.</p>
+      <div class="tags"><span class="tag th">GitHub</span><span class="tag tg">Remote</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="exp gh-exp"><strong>First time only:</strong> create an empty repo on GitHub (no README, no .gitignore), then link it to your local project with these commands.</div>
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">connect & push</span></div>
+<pre><span class="cm2"># ── Add GitHub as the remote named 'origin' ──</span>
+<span class="pr">$</span> git remote add origin <span class="gh2">https://github.com/yourname/my_app.git</span>
+
+<span class="cm2"># ── Verify remote was added ──</span>
+<span class="pr">$</span> git remote <span class="hl">-v</span>
+<span class="ok">origin  https://github.com/yourname/my_app.git (fetch)
+origin  https://github.com/yourname/my_app.git (push)</span>
+
+<span class="cm2"># ── First push: set upstream tracking ──</span>
+<span class="pr">$</span> git push <span class="hl">-u</span> origin main
+<span class="ok">Branch 'main' set up to track 'origin/main'.</span>
+
+<span class="cm2"># ── From now on, just: ──</span>
+<span class="pr">$</span> git push
+
+<span class="cm2"># ── Change remote URL (e.g. moved repo) ──</span>
+<span class="pr">$</span> git remote set-url origin <span class="gh2">https://github.com/newname/my_app.git</span>
+
+<span class="cm2"># ── Remove a remote ──</span>
+<span class="pr">$</span> git remote remove origin</pre>
+    </div>
+  </div>
+</div>
+
+<!-- PUSH / PULL / FETCH -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(63,185,80,.1)">🔄</div>
+    <div class="card-meta">
+      <h3>push · pull · fetch — Sync with GitHub</h3>
+      <p>Keep your local and remote repos in sync during solo work and team collaboration.</p>
+      <div class="tags"><span class="tag th">GitHub</span><span class="tag tg">Sync</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">push · pull · fetch</span></div>
+<pre><span class="cm2"># ── Push: send local commits to GitHub ──</span>
+<span class="pr">$</span> git push                           <span class="cm2"># push current branch</span>
+<span class="pr">$</span> git push origin <span class="br">feature/login</span>     <span class="cm2"># push specific branch</span>
+<span class="pr">$</span> git push <span class="hl">--force-with-lease</span>        <span class="cm2"># safe force push (after rebase)</span>
+
+<span class="cm2"># ── Pull: fetch + merge in one command ──</span>
+<span class="pr">$</span> git pull                           <span class="cm2"># pull current branch</span>
+<span class="pr">$</span> git pull origin main               <span class="cm2"># pull specific remote branch</span>
+<span class="pr">$</span> git pull <span class="hl">--rebase</span>                  <span class="cm2"># pull and rebase instead of merge</span>
+
+<span class="cm2"># ── Fetch: download changes WITHOUT merging ──</span>
+<span class="pr">$</span> git fetch                          <span class="cm2"># see what's new on remote</span>
+<span class="pr">$</span> git fetch origin
+
+<span class="cm2"># ── Push a new branch to GitHub ──</span>
+<span class="pr">$</span> git push <span class="hl">-u</span> origin <span class="br">feature/new-screen</span>
+
+<span class="cm2"># ── Delete a remote branch ──</span>
+<span class="pr">$</span> git push origin <span class="hl">--delete</span> <span class="br">feature/old-branch</span></pre>
+    </div>
+    <div class="exp gh-exp"><strong>fetch vs pull:</strong> <code>git fetch</code> downloads remote changes but doesn't touch your local files. <code>git pull</code> = <code>git fetch</code> + <code>git merge</code>. Use <code>fetch</code> when you want to inspect changes before merging.</div>
+  </div>
+</div>
+
+<!-- PULL REQUEST -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(63,185,80,.1)">📬</div>
+    <div class="card-meta">
+      <h3>Pull Requests (PR) — The GitHub Workflow</h3>
+      <p>A Pull Request is a proposal to merge your feature branch into <code>main</code>. It triggers code review before anything is merged.</p>
+      <div class="tags"><span class="tag th">GitHub</span><span class="tag tc">Team</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="exp gh-exp"><strong>How a PR works:</strong> you push your feature branch → open a PR on GitHub → teammates review your code → approve → merge into main. This is the standard team workflow for every real Flutter project.</div>
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">complete PR workflow</span></div>
+<pre><span class="cm2"># ── Step 1: Create feature branch ──</span>
+<span class="pr">$</span> git checkout <span class="hl">-b</span> <span class="br">feature/profile-screen</span>
+
+<span class="cm2"># ── Step 2: Do your work, then commit ──</span>
+<span class="pr">$</span> git add .
+<span class="pr">$</span> git commit <span class="hl">-m</span> <span class="hl">"feat: add user profile screen"</span>
+
+<span class="cm2"># ── Step 3: Push branch to GitHub ──</span>
+<span class="pr">$</span> git push <span class="hl">-u</span> origin <span class="br">feature/profile-screen</span>
+
+<span class="cm2"># ── Step 4: Go to GitHub.com ──
+#    → You'll see a "Compare & pull request" button
+#    → Write a PR title and description
+#    → Request reviewers
+#    → Click "Create pull request"</span>
+
+<span class="cm2"># ── Step 5: After teammates review &amp; approve ──
+#    → Click "Merge pull request" on GitHub
+#    → Delete the branch on GitHub</span>
+
+<span class="cm2"># ── Step 6: Update your local main ──</span>
+<span class="pr">$</span> git checkout main
+<span class="pr">$</span> git pull
+<span class="pr">$</span> git branch <span class="hl">-d</span> <span class="br">feature/profile-screen</span>  <span class="cm2"># clean up locally</span></pre>
+    </div>
+    <div class="note good"><span>✅</span><div><strong>Good PR description includes:</strong> what changed, why it changed, screenshots of UI changes, and how to test it. Flutter PRs should always mention if <code>pubspec.yaml</code> was changed.</div></div>
+  </div>
+</div>
+
+<!-- FORK -->
+<div class="two">
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(63,185,80,.1)">🍴</div>
+    <div class="card-meta">
+      <h3>Fork — Contribute to Open Source</h3>
+      <p>Fork = your personal copy of someone else's repo on GitHub.</p>
+      <div class="tags"><span class="tag th">GitHub</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">fork workflow</span></div>
+<pre><span class="cm2"># 1. Fork on GitHub.com (click Fork button)
+# 2. Clone YOUR fork</span>
+<span class="pr">$</span> git clone <span class="gh2">https://github.com/YOU/flutter_pkg.git</span>
+
+<span class="cm2"># 3. Add original as 'upstream'</span>
+<span class="pr">$</span> git remote add upstream \
+  <span class="gh2">https://github.com/ORIGINAL/flutter_pkg.git</span>
+
+<span class="cm2"># 4. Keep your fork up to date</span>
+<span class="pr">$</span> git fetch upstream
+<span class="pr">$</span> git merge upstream/main
+
+<span class="cm2"># 5. Push changes &amp; open PR to original</span></pre>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(63,185,80,.1)">🏷️</div>
+    <div class="card-meta">
+      <h3>Tags &amp; Releases</h3>
+      <p>Mark specific commits as release versions — e.g. v1.0.0 on the App Store release.</p>
+      <div class="tags"><span class="tag th">GitHub</span><span class="tag tv">Flutter</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">tags</span></div>
+<pre><span class="cm2"># ── Create annotated tag ──</span>
+<span class="pr">$</span> git tag <span class="hl">-a</span> v1.0.0 <span class="hl">-m</span> <span class="hl">"Release v1.0.0"</span>
+
+<span class="cm2"># ── Push tags to GitHub ──</span>
+<span class="pr">$</span> git push <span class="hl">--tags</span>
+
+<span class="cm2"># ── List all tags ──</span>
+<span class="pr">$</span> git tag
+
+<span class="cm2"># ── Delete a tag ──</span>
+<span class="pr">$</span> git tag <span class="hl">-d</span> v1.0.0
+<span class="pr">$</span> git push origin <span class="hl">--delete</span> v1.0.0
+
+<span class="cm2"># Tag version matches pubspec.yaml:
+# version: 1.0.0+1</span></pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two -->
+
+
+<!-- ═══════════════════════════════════════
+     FLUTTER-SPECIFIC WORKFLOW
+═══════════════════════════════════════ -->
+<div class="cat flow-cat"><div class="cat-line"></div><span class="cat-label">Flutter-Specific Git Workflow</span><div class="cat-line"></div></div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(227,179,65,.1)">📱</div>
+    <div class="card-meta">
+      <h3>Complete Flutter Project Git Workflow</h3>
+      <p>The exact workflow from creating a new Flutter app to pushing it live on GitHub — step by step.</p>
+      <div class="tags"><span class="tag tv">Flutter</span><span class="tag tg">Git</span><span class="tag th">GitHub</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">new flutter project → github</span></div>
+<pre><span class="cm2"># ── 1. Create Flutter app ──</span>
+<span class="pr">$</span> flutter create task_manager
+<span class="pr">$</span> cd task_manager
+
+<span class="cm2"># ── 2. Init Git ──</span>
+<span class="pr">$</span> git init
+<span class="pr">$</span> git add .
+<span class="pr">$</span> git commit <span class="hl">-m</span> <span class="hl">"chore: initial Flutter project"</span>
+
+<span class="cm2"># ── 3. Create repo on GitHub, then link ──</span>
+<span class="pr">$</span> git remote add origin <span class="gh2">https://github.com/you/task_manager.git</span>
+<span class="pr">$</span> git push <span class="hl">-u</span> origin main
+
+<span class="cm2"># ── 4. Start a new feature ──</span>
+<span class="pr">$</span> git checkout <span class="hl">-b</span> <span class="br">feature/task-list</span>
+
+<span class="cm2"># ... write code in lib/screens/task_screen.dart ...</span>
+
+<span class="cm2"># ── 5. Check what changed ──</span>
+<span class="pr">$</span> git status
+<span class="pr">$</span> git diff
+
+<span class="cm2"># ── 6. Stage and commit ──</span>
+<span class="pr">$</span> git add lib/
+<span class="pr">$</span> git commit <span class="hl">-m</span> <span class="hl">"feat: add task list screen with API"</span>
+
+<span class="cm2"># ── 7. Push feature branch ──</span>
+<span class="pr">$</span> git push <span class="hl">-u</span> origin <span class="br">feature/task-list</span>
+
+<span class="cm2"># ── 8. Open PR on GitHub → get reviewed → merge ──
+
+# ── 9. Update local main after merge ──</span>
+<span class="pr">$</span> git checkout main
+<span class="pr">$</span> git pull
+<span class="pr">$</span> git branch <span class="hl">-d</span> <span class="br">feature/task-list</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM WORKFLOW -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(227,179,65,.1)">👥</div>
+    <div class="card-meta">
+      <h3>Team Collaboration — Stay in Sync</h3>
+      <p>Working with other developers on the same Flutter project. How to handle updates from teammates without breaking your own work.</p>
+      <div class="tags"><span class="tag th">GitHub</span><span class="tag tc">Team</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">daily team routine</span></div>
+<pre><span class="cm2"># ── Morning: always pull before starting work ──</span>
+<span class="pr">$</span> git checkout main
+<span class="pr">$</span> git pull                <span class="cm2"># get teammates' latest commits</span>
+<span class="pr">$</span> git checkout <span class="br">feature/my-branch</span>
+<span class="pr">$</span> git merge main          <span class="cm2"># bring updates into your branch</span>
+
+<span class="cm2"># ── If teammate pushed to main while you were coding ──</span>
+<span class="pr">$</span> git stash               <span class="cm2"># save your uncommitted work</span>
+<span class="pr">$</span> git pull                <span class="cm2"># get updates</span>
+<span class="pr">$</span> git stash pop           <span class="cm2"># restore your work</span>
+
+<span class="cm2"># ── See what a teammate committed ──</span>
+<span class="pr">$</span> git fetch
+<span class="pr">$</span> git log origin/main <span class="hl">--oneline</span>
+
+<span class="cm2"># ── Check out a teammate's branch locally ──</span>
+<span class="pr">$</span> git fetch
+<span class="pr">$</span> git checkout <span class="br">feature/teammate-branch</span>
+<span class="pr">$</span> flutter pub get         <span class="cm2"># always run after checkout!</span>
+
+<span class="cm2"># ── After pulling: always check if packages changed ──</span>
+<span class="pr">$</span> git pull
+<span class="fl">$ flutter pub get         # if pubspec.yaml was changed</span></pre>
+    </div>
+    <div class="note tip"><span>💡</span><div>After any <code>git pull</code> or branch switch, run <code>flutter pub get</code> if <code>pubspec.yaml</code> or <code>pubspec.lock</code> changed. Also run <code>flutter clean</code> if you get strange build errors after pulling.</div></div>
+  </div>
+</div>
+
+<!-- GITHUB ACTIONS (CI/CD) -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(227,179,65,.1)">🤖</div>
+    <div class="card-meta">
+      <h3>GitHub Actions — Auto-Run Flutter Tests on Every Push</h3>
+      <p>CI/CD: automatically run <code>flutter test</code> and <code>flutter analyze</code> every time code is pushed to GitHub.</p>
+      <div class="tags"><span class="tag th">GitHub</span><span class="tag tv">CI/CD</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="exp gh-exp">Create a file at <code>.github/workflows/flutter.yml</code> in your project. GitHub automatically detects and runs it on every push and PR.</div>
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">.github/workflows/flutter.yml</span></div>
+<pre><span class="ok">name</span>: Flutter CI
+
+<span class="ok">on</span>:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+<span class="ok">jobs</span>:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - <span class="ok">name</span>: Checkout code
+        <span class="ok">uses</span>: actions/checkout@v4
+
+      - <span class="ok">name</span>: Setup Flutter
+        <span class="ok">uses</span>: subosito/flutter-action@v2
+        <span class="ok">with</span>:
+          flutter-version: <span class="hl">'3.22.0'</span>
+
+      - <span class="ok">name</span>: Install dependencies
+        <span class="ok">run</span>: flutter pub get
+
+      - <span class="ok">name</span>: Analyze code (lint)
+        <span class="ok">run</span>: flutter analyze
+
+      - <span class="ok">name</span>: Run tests
+        <span class="ok">run</span>: flutter test
+
+      - <span class="ok">name</span>: Build APK (verify it compiles)
+        <span class="ok">run</span>: flutter build apk <span class="hl">--release</span></pre>
+    </div>
+    <div class="note good"><span>✅</span><div>After adding this file and pushing, go to GitHub → <strong>Actions</strong> tab to see the workflow run. A green ✅ means all tests passed. PRs will show a status check before merging.</div></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     ADVANCED
+═══════════════════════════════════════ -->
+<div class="cat adv-cat"><div class="cat-line"></div><span class="cat-label">Advanced & Essential</span><div class="cat-line"></div></div>
+
+<!-- CHERRY PICK & ALIASES -->
+<div class="two">
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(188,140,255,.1)">🍒</div>
+    <div class="card-meta">
+      <h3>cherry-pick — Copy a Single Commit</h3>
+      <p>Apply one specific commit from another branch without merging the whole branch.</p>
+      <div class="tags"><span class="tag tv">Advanced</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">cherry-pick</span></div>
+<pre><span class="cm2"># Get the commit hash from git log</span>
+<span class="pr">$</span> git log <span class="hl">--oneline</span>
+<span class="ok">a3f8c21 fix: null safety crash in TaskModel
+b72d015 feat: add search bar</span>
+
+<span class="cm2"># Cherry-pick ONLY the fix commit onto current branch</span>
+<span class="pr">$</span> git cherry-pick <span class="hl">a3f8c21</span>
+
+<span class="cm2"># Cherry-pick a range of commits</span>
+<span class="pr">$</span> git cherry-pick <span class="hl">a3f8c21..b72d015</span></pre>
+    </div>
+    <div class="exp git-exp">Use case: a critical bug was fixed on a feature branch but main needs it now — cherry-pick brings just that fix.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(188,140,255,.1)">⚡</div>
+    <div class="card-meta">
+      <h3>Git Aliases — Shortcuts</h3>
+      <p>Define short commands for things you type every day.</p>
+      <div class="tags"><span class="tag tv">Advanced</span><span class="tag tc">Productivity</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">~/.gitconfig</span></div>
+<pre><span class="cm2"># Set aliases via terminal</span>
+<span class="pr">$</span> git config <span class="hl">--global</span> alias.st status
+<span class="pr">$</span> git config <span class="hl">--global</span> alias.co checkout
+<span class="pr">$</span> git config <span class="hl">--global</span> alias.br branch
+<span class="pr">$</span> git config <span class="hl">--global</span> alias.lg \
+  <span class="hl">"log --oneline --graph --all"</span>
+
+<span class="cm2"># Now use short form:</span>
+<span class="pr">$</span> git st          <span class="cm2"># = git status</span>
+<span class="pr">$</span> git co main     <span class="cm2"># = git checkout main</span>
+<span class="pr">$</span> git lg          <span class="cm2"># = pretty log</span></pre>
+    </div>
+  </div>
+</div>
+</div><!-- /two -->
+
+<!-- SSH SETUP -->
+<div class="card">
+  <div class="card-head">
+    <div class="card-icon" style="background:rgba(88,166,255,.1)">🔑</div>
+    <div class="card-meta">
+      <h3>SSH Keys — Push Without Password Every Time</h3>
+      <p>Set up SSH once and never type your GitHub password again when pushing.</p>
+      <div class="tags"><span class="tag th">GitHub</span><span class="tag ti">SSH</span></div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="cb"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="lbl">SSH setup — one time</span></div>
+<pre><span class="cm2"># ── 1. Generate SSH key pair ──</span>
+<span class="pr">$</span> ssh-keygen <span class="hl">-t ed25519</span> <span class="hl">-C</span> <span class="hl">"you@example.com"</span>
+<span class="cm2">  (press Enter to accept defaults)</span>
+
+<span class="cm2"># ── 2. Copy the PUBLIC key ──</span>
+<span class="pr">$</span> cat ~/.ssh/id_ed25519.pub
+<span class="cm2">  (copy the entire output)</span>
+
+<span class="cm2"># ── 3. Add to GitHub ──
+#    GitHub.com → Settings → SSH and GPG keys
+#    → New SSH key → paste → Save</span>
+
+<span class="cm2"># ── 4. Test the connection ──</span>
+<span class="pr">$</span> ssh -T git@github.com
+<span class="ok">Hi yourname! You've successfully authenticated.</span>
+
+<span class="cm2"># ── 5. Change existing repo from HTTPS to SSH ──</span>
+<span class="pr">$</span> git remote set-url origin \
+  <span class="gh2">git@github.com:yourname/my_app.git</span>
+
+<span class="cm2"># Now push works without password:</span>
+<span class="pr">$</span> git push</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CHEAT SHEET -->
+<div class="cat flow-cat"><div class="cat-line"></div><span class="cat-label">Complete Cheat Sheet</span><div class="cat-line"></div></div>
+
+<div class="cheat">
+  <div class="cheat-head">📋 Git Command Reference</div>
+  <table class="ct">
+    <tr><th>Command</th><th>Short Form</th><th>What it does</th></tr>
+    <tr><td>git init</td><td></td><td>Start tracking a folder with Git</td></tr>
+    <tr><td>git clone &lt;url&gt;</td><td></td><td>Download a remote repo</td></tr>
+    <tr><td>git status</td><td>git st</td><td>Show changed / untracked files</td></tr>
+    <tr><td>git add .</td><td></td><td>Stage all changed files</td></tr>
+    <tr><td>git add &lt;file&gt;</td><td></td><td>Stage one specific file</td></tr>
+    <tr><td>git commit -m "msg"</td><td></td><td>Save a snapshot with message</td></tr>
+    <tr><td>git commit -am "msg"</td><td></td><td>Stage tracked + commit in one step</td></tr>
+    <tr><td>git log --oneline</td><td>git lg</td><td>View compact commit history</td></tr>
+    <tr><td>git diff</td><td></td><td>Show unstaged changes</td></tr>
+    <tr><td>git diff --staged</td><td></td><td>Show staged changes</td></tr>
+    <tr><td>git branch</td><td>git br</td><td>List local branches</td></tr>
+    <tr><td>git checkout -b &lt;name&gt;</td><td></td><td>Create and switch to new branch</td></tr>
+    <tr><td>git switch &lt;name&gt;</td><td></td><td>Switch to existing branch</td></tr>
+    <tr><td>git merge &lt;branch&gt;</td><td></td><td>Merge branch into current</td></tr>
+    <tr><td>git rebase main</td><td></td><td>Replay commits on top of main</td></tr>
+    <tr><td>git stash</td><td></td><td>Temporarily save dirty state</td></tr>
+    <tr><td>git stash pop</td><td></td><td>Restore stashed changes</td></tr>
+    <tr><td>git restore &lt;file&gt;</td><td></td><td>Discard working directory changes</td></tr>
+    <tr><td>git reset HEAD~1</td><td></td><td>Undo last commit (keep changes)</td></tr>
+    <tr><td>git reset --hard HEAD~1</td><td></td><td>Undo last commit (delete changes)</td></tr>
+    <tr><td>git revert &lt;hash&gt;</td><td></td><td>Safe undo (creates new commit)</td></tr>
+    <tr><td>git cherry-pick &lt;hash&gt;</td><td></td><td>Copy a single commit</td></tr>
+    <tr><td>git remote add origin &lt;url&gt;</td><td></td><td>Link local repo to GitHub</td></tr>
+    <tr><td>git push -u origin main</td><td></td><td>First push + set upstream</td></tr>
+    <tr><td>git push</td><td></td><td>Push current branch to GitHub</td></tr>
+    <tr><td>git pull</td><td></td><td>Fetch + merge from GitHub</td></tr>
+    <tr><td>git fetch</td><td></td><td>Download remote changes (no merge)</td></tr>
+    <tr><td>git push --delete &lt;branch&gt;</td><td></td><td>Delete remote branch on GitHub</td></tr>
+    <tr><td>git tag -a v1.0.0 -m "msg"</td><td></td><td>Create annotated release tag</td></tr>
+    <tr><td>git push --tags</td><td></td><td>Push all tags to GitHub</td></tr>
+    <tr><td>git commit --amend</td><td></td><td>Fix last commit message/files</td></tr>
+    <tr><td>git config --list</td><td></td><td>View all Git config settings</td></tr>
+  </table>
+</div>
+
+</div><!-- /page -->
+<footer>Git &amp; GitHub — Flutter Developer's Complete Reference &nbsp;·&nbsp; Version Control · Branching · GitHub Workflows · CI/CD</footer>
+</body>
+</html>

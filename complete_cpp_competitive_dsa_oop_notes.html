@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Complete C++ Notes for Competitive Programming, DSA, and OOP</title>
+<style>
+:root{
+  --bg:#f6f8fb;--card:#ffffff;--text:#172033;--muted:#5d6b82;
+  --primary:#2c5cc5;--accent:#e9efff;--border:#dfe6f2;--code:#111827;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,#15223f,#2c5cc5);color:white;padding:56px 24px}
+header .wrap,main{max-width:1120px;margin:auto}
+h1{font-size:2.5rem;margin:0 0 10px}
+.subtitle{max-width:820px;color:#dce6ff}
+main{padding:28px 20px 60px}
+nav{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:24px;box-shadow:0 8px 30px rgba(23,32,51,.06)}
+nav h2{margin-top:0}
+.toc{columns:2;column-gap:36px;padding-left:20px}
+.toc li{break-inside:avoid;margin:5px 0}
+a{color:var(--primary);text-decoration:none}
+section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;margin:22px 0;box-shadow:0 8px 30px rgba(23,32,51,.05)}
+h2{color:#18356f;margin-top:0;border-bottom:2px solid var(--accent);padding-bottom:8px}
+h3{color:#294c92;margin-top:28px}
+code{font-family:Consolas,Monaco,monospace}
+pre{background:var(--code);color:#e5e7eb;padding:18px;border-radius:12px;overflow:auto;border:1px solid #263244}
+.note,.tip,.warn{padding:14px 16px;border-radius:10px;margin:14px 0}
+.note{background:#eef4ff;border-left:4px solid #2c5cc5}
+.tip{background:#edfdf3;border-left:4px solid #1f9d55}
+.warn{background:#fff7e8;border-left:4px solid #d97706}
+table{width:100%;border-collapse:collapse;margin:14px 0}
+th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+th{background:#eef3ff}
+.badge{display:inline-block;background:var(--accent);color:#244b9f;padding:2px 8px;border-radius:999px;font-size:.85rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fbfcff}
+footer{text-align:center;color:var(--muted);padding:24px}
+@media(max-width:700px){.toc{columns:1}h1{font-size:2rem}section{padding:20px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Complete C++ Notes</h1>
+<p class="subtitle">Beginner-to-advanced C++ handbook covering syntax, STL, object-oriented programming, competitive programming patterns, data structures, algorithms, complexity, and complete code examples.</p>
+</div></header>
+<main>
+<nav><h2>Table of Contents</h2><ol class='toc'><li><a href='#setup'>Setup and I/O</a></li><li><a href='#types'>Types and casting</a></li><li><a href='#operators'>Operators</a></li><li><a href='#control'>Control flow and functions</a></li><li><a href='#arrays'>Arrays, strings, pointers</a></li><li><a href='#stl'>STL overview</a></li><li><a href='#vector'>Vector</a></li><li><a href='#maps_sets'>Maps and sets</a></li><li><a href='#stack_queue'>Stack and queue</a></li><li><a href='#oop'>Complete OOP</a></li><li><a href='#templates'>Templates and lambda</a></li><li><a href='#memory'>Memory</a></li><li><a href='#complexity'>Complexity</a></li><li><a href='#search_sort'>Searching and sorting</a></li><li><a href='#linkedlist'>Linked list</a></li><li><a href='#trees'>Trees</a></li><li><a href='#graphs'>Graphs</a></li><li><a href='#dp_greedy'>Recursion, DP, greedy</a></li><li><a href='#cp_patterns'>CP patterns</a></li><li><a href='#number_theory'>Number theory and bits</a></li><li><a href='#advanced_dsa'>Advanced DSA</a></li><li><a href='#exceptions_files'>Exceptions and files</a></li><li><a href='#cp_template'>CP template</a></li><li><a href='#practice'>Practice roadmap</a></li></ol></nav>
+<section id="setup"><h2>1. C++ Setup, Input, Output, and Basic Program</h2>
+<p>C++ is a compiled, statically typed language widely used in systems programming, game development, high-performance applications, competitive programming, and DSA.</p>
+<h3>Basic program</h3>
+<pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello, C++!\n";
+    return 0;
+}</code></pre>
+<h3>Input and output</h3>
+<pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int age;
+    string name;
+
+    cout &lt;&lt; "Enter name: ";
+    getline(cin, name);
+
+    cout &lt;&lt; "Enter age: ";
+    cin &gt;&gt; age;
+
+    cout &lt;&lt; "Name: " &lt;&lt; name &lt;&lt; "\n";
+    cout &lt;&lt; "Age: " &lt;&lt; age &lt;&lt; "\n";
+}</code></pre>
+<div class="tip"><strong>Competitive programming:</strong> use fast I/O when input is large.</div>
+<pre><code>ios::sync_with_stdio(false);
+cin.tie(nullptr);</code></pre>
+</section><section id="types"><h2>2. Variables, Data Types, Constants, and Type Casting</h2>
+<table><tr><th>Type</th><th>Typical use</th></tr>
+<tr><td>int</td><td>Normal integers</td></tr>
+<tr><td>long long</td><td>Large integers</td></tr>
+<tr><td>double</td><td>Decimal values</td></tr>
+<tr><td>char</td><td>Single character</td></tr>
+<tr><td>bool</td><td>true or false</td></tr>
+<tr><td>string</td><td>Text</td></tr></table>
+<pre><code>int score = 90;
+long long population = 8000000000LL;
+double price = 99.95;
+char grade = 'A';
+bool passed = true;
+string name = "Nahid";
+
+const double PI = 3.1415926535;
+constexpr int MAX_SIZE = 100000;</code></pre>
+<h3>Type casting</h3>
+<pre><code>double x = 7.8;
+int a = static_cast&lt;int&gt;(x);   // 7
+
+int p = 5, q = 2;
+double result = static_cast&lt;double&gt;(p) / q; // 2.5</code></pre>
+</section><section id="operators"><h2>3. Operators and Expressions</h2>
+<div class="grid">
+<div class="card"><strong>Arithmetic</strong><br>+ - * / %</div>
+<div class="card"><strong>Relational</strong><br>== != &lt; &gt; &lt;= &gt;=</div>
+<div class="card"><strong>Logical</strong><br>&amp;&amp; || !</div>
+<div class="card"><strong>Bitwise</strong><br>&amp; | ^ ~ &lt;&lt; &gt;&gt;</div>
+</div>
+<pre><code>int a = 10, b = 3;
+cout &lt;&lt; a + b &lt;&lt; "\n";
+cout &lt;&lt; a % b &lt;&lt; "\n";
+
+bool ok = (a &gt; b) &amp;&amp; (b &gt; 0);
+
+int mask = 1 &lt;&lt; 3;     // 8
+int value = 10 | mask;</code></pre>
+<h3>Ternary operator</h3>
+<pre><code>int mx = (a &gt; b) ? a : b;</code></pre>
+</section><section id="control"><h2>4. Conditions, Loops, and Functions</h2>
+<h3>Conditions</h3>
+<pre><code>if (x &gt; 0) {
+    cout &lt;&lt; "Positive";
+} else if (x == 0) {
+    cout &lt;&lt; "Zero";
+} else {
+    cout &lt;&lt; "Negative";
+}</code></pre>
+<h3>Loops</h3>
+<pre><code>for (int i = 0; i &lt; 5; i++) cout &lt;&lt; i &lt;&lt; ' ';
+
+int n = 3;
+while (n &gt; 0) n--;
+
+for (int value : numbers) cout &lt;&lt; value &lt;&lt; ' ';</code></pre>
+<h3>Functions</h3>
+<pre><code>int add(int a, int b) {
+    return a + b;
+}
+
+void printVector(const vector&lt;int&gt;&amp; values) {
+    for (int x : values) cout &lt;&lt; x &lt;&lt; ' ';
+}</code></pre>
+<div class="note"><code>const vector&lt;int&gt;&amp;</code> avoids copying and prevents modification.</div>
+</section><section id="arrays"><h2>5. Arrays, Strings, Pointers, and References</h2>
+<h3>Static array</h3>
+<pre><code>int arr[5] = {4, 1, 7, 2, 9};
+
+for (int i = 0; i &lt; 5; i++) {
+    cout &lt;&lt; arr[i] &lt;&lt; ' ';
+}</code></pre>
+<h3>std::array</h3>
+<pre><code>#include &lt;array&gt;
+array&lt;int, 4&gt; values = {1, 2, 3, 4};</code></pre>
+<h3>Strings</h3>
+<pre><code>string text = "competitive";
+cout &lt;&lt; text.length() &lt;&lt; "\n";
+cout &lt;&lt; text.substr(0, 4) &lt;&lt; "\n";
+cout &lt;&lt; text.find("pet") &lt;&lt; "\n";
+
+sort(text.begin(), text.end());
+reverse(text.begin(), text.end());</code></pre>
+<h3>Pointers and references</h3>
+<pre><code>int x = 10;
+int* ptr = &amp;x;
+cout &lt;&lt; *ptr;       // 10
+
+int&amp; ref = x;
+ref = 20;             // x becomes 20</code></pre>
+</section><section id="stl"><h2>6. STL Overview</h2>
+<p>The Standard Template Library provides containers, iterators, algorithms, and utilities.</p>
+<table><tr><th>Category</th><th>Important tools</th></tr>
+<tr><td>Sequence</td><td>vector, deque, list, array</td></tr>
+<tr><td>Ordered associative</td><td>set, multiset, map, multimap</td></tr>
+<tr><td>Unordered associative</td><td>unordered_set, unordered_map</td></tr>
+<tr><td>Adapters</td><td>stack, queue, priority_queue</td></tr>
+<tr><td>Algorithms</td><td>sort, reverse, binary_search, lower_bound, accumulate</td></tr></table>
+</section><section id="vector"><h2>7. Vector and Common Algorithms</h2>
+<pre><code>#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+int main() {
+    vector&lt;int&gt; v = {5, 2, 8, 2};
+
+    v.push_back(10);
+    v.pop_back();
+
+    cout &lt;&lt; v.front() &lt;&lt; ' ' &lt;&lt; v.back() &lt;&lt; "\n";
+    cout &lt;&lt; v.size() &lt;&lt; "\n";
+
+    sort(v.begin(), v.end());
+    reverse(v.begin(), v.end());
+
+    int sum = accumulate(v.begin(), v.end(), 0);
+    int countTwo = count(v.begin(), v.end(), 2);
+
+    v.erase(remove(v.begin(), v.end(), 2), v.end());
+}</code></pre>
+<h3>2D vector</h3>
+<pre><code>vector&lt;vector&lt;int&gt;&gt; matrix(3, vector&lt;int&gt;(4, 0));
+matrix[1][2] = 7;</code></pre>
+</section><section id="maps_sets"><h2>8. Map, Unordered Map, Set, and Multiset</h2>
+<h3>Map</h3>
+<pre><code>map&lt;string, int&gt; frequency;
+frequency["apple"]++;
+frequency["banana"] += 2;
+
+for (const auto&amp; [key, value] : frequency) {
+    cout &lt;&lt; key &lt;&lt; " " &lt;&lt; value &lt;&lt; "\n";
+}</code></pre>
+<h3>Unordered map</h3>
+<pre><code>unordered_map&lt;int, int&gt; count;
+for (int x : values) count[x]++;</code></pre>
+<h3>Set and multiset</h3>
+<pre><code>set&lt;int&gt; uniqueValues = {4, 2, 4, 1};     // 1 2 4
+multiset&lt;int&gt; duplicateValues = {2, 2, 3};
+
+uniqueValues.insert(7);
+uniqueValues.erase(2);
+
+auto it = uniqueValues.lower_bound(4);</code></pre>
+</section><section id="stack_queue"><h2>9. Stack, Queue, Deque, and Priority Queue</h2>
+<h3>Stack</h3>
+<pre><code>stack&lt;int&gt; st;
+st.push(10);
+st.push(20);
+cout &lt;&lt; st.top();
+st.pop();</code></pre>
+<h3>Queue</h3>
+<pre><code>queue&lt;int&gt; q;
+q.push(10);
+q.push(20);
+cout &lt;&lt; q.front();
+q.pop();</code></pre>
+<h3>Priority queue</h3>
+<pre><code>priority_queue&lt;int&gt; maxHeap;
+priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; minHeap;</code></pre>
+<h3>Deque</h3>
+<pre><code>deque&lt;int&gt; dq;
+dq.push_front(1);
+dq.push_back(2);
+dq.pop_front();</code></pre>
+</section><section id="oop"><h2>10. Complete OOP in C++</h2>
+<h3>Class and object</h3>
+<pre><code>class Product {
+private:
+    string name;
+    double price;
+
+public:
+    Product(string name, double price)
+        : name(std::move(name)), price(price) {}
+
+    string getName() const { return name; }
+    double getPrice() const { return price; }
+
+    void setPrice(double newPrice) {
+        if (newPrice &gt;= 0) price = newPrice;
+    }
+
+    void display() const {
+        cout &lt;&lt; name &lt;&lt; ": " &lt;&lt; price &lt;&lt; "\n";
+    }
+};
+
+int main() {
+    Product phone("Phone", 500);
+    phone.display();
+}</code></pre>
+<h3>Inheritance and polymorphism</h3>
+<pre><code>class Shape {
+public:
+    virtual double area() const = 0;
+    virtual ~Shape() = default;
+};
+
+class Rectangle : public Shape {
+    double width, height;
+public:
+    Rectangle(double w, double h) : width(w), height(h) {}
+    double area() const override { return width * height; }
+};
+
+class Circle : public Shape {
+    double radius;
+public:
+    explicit Circle(double r) : radius(r) {}
+    double area() const override {
+        return 3.1415926535 * radius * radius;
+    }
+};</code></pre>
+<h3>Runtime polymorphism</h3>
+<pre><code>vector&lt;unique_ptr&lt;Shape&gt;&gt; shapes;
+shapes.push_back(make_unique&lt;Rectangle&gt;(4, 5));
+shapes.push_back(make_unique&lt;Circle&gt;(3));
+
+for (const auto&amp; shape : shapes)
+    cout &lt;&lt; shape-&gt;area() &lt;&lt; "\n";</code></pre>
+<h3>Constructor, destructor, copy and move</h3>
+<pre><code>class Resource {
+public:
+    Resource() { cout &lt;&lt; "Created\n"; }
+    Resource(const Resource&amp;) { cout &lt;&lt; "Copied\n"; }
+    Resource(Resource&amp;&amp;) noexcept { cout &lt;&lt; "Moved\n"; }
+    ~Resource() { cout &lt;&lt; "Destroyed\n"; }
+};</code></pre>
+<div class="note"><strong>Four pillars:</strong> encapsulation, abstraction, inheritance, and polymorphism.</div>
+</section><section id="templates"><h2>11. Templates, Generics, Lambda, and Function Objects</h2>
+<h3>Function template</h3>
+<pre><code>template &lt;typename T&gt;
+T maximum(T a, T b) {
+    return a &gt; b ? a : b;
+}</code></pre>
+<h3>Class template</h3>
+<pre><code>template &lt;typename T&gt;
+class Box {
+    T value;
+public:
+    explicit Box(T value) : value(value) {}
+    T get() const { return value; }
+};</code></pre>
+<h3>Lambda</h3>
+<pre><code>vector&lt;int&gt; v = {5, 1, 4, 2};
+
+sort(v.begin(), v.end(), [](int a, int b) {
+    return a &gt; b;
+});
+
+int limit = 3;
+auto countLarge = count_if(v.begin(), v.end(),
+    [limit](int x) { return x &gt; limit; });</code></pre>
+</section><section id="memory"><h2>12. Dynamic Memory and Smart Pointers</h2>
+<pre><code>int* value = new int(25);
+delete value;
+
+int* arr = new int[100];
+delete[] arr;</code></pre>
+<p>Prefer smart pointers in modern C++.</p>
+<pre><code>unique_ptr&lt;int&gt; a = make_unique&lt;int&gt;(10);
+shared_ptr&lt;string&gt; b = make_shared&lt;string&gt;("hello");</code></pre>
+<div class="warn">Avoid raw <code>new</code>/<code>delete</code> unless the problem explicitly requires manual memory management.</div>
+</section><section id="complexity"><h2>13. Time and Space Complexity</h2>
+<table><tr><th>Complexity</th><th>Meaning</th><th>Example</th></tr>
+<tr><td>O(1)</td><td>Constant</td><td>array access</td></tr>
+<tr><td>O(log n)</td><td>Logarithmic</td><td>binary search</td></tr>
+<tr><td>O(n)</td><td>Linear</td><td>single traversal</td></tr>
+<tr><td>O(n log n)</td><td>Efficient sorting</td><td>merge sort</td></tr>
+<tr><td>O(n²)</td><td>Quadratic</td><td>nested loops</td></tr>
+<tr><td>O(2ⁿ)</td><td>Exponential</td><td>subset recursion</td></tr></table>
+</section><section id="search_sort"><h2>14. Searching and Sorting</h2>
+<h3>Linear search</h3>
+<pre><code>int linearSearch(const vector&lt;int&gt;&amp; a, int target) {
+    for (int i = 0; i &lt; (int)a.size(); i++)
+        if (a[i] == target) return i;
+    return -1;
+}</code></pre>
+<h3>Binary search</h3>
+<pre><code>int binarySearch(const vector&lt;int&gt;&amp; a, int target) {
+    int left = 0, right = (int)a.size() - 1;
+
+    while (left &lt;= right) {
+        int mid = left + (right - left) / 2;
+        if (a[mid] == target) return mid;
+        if (a[mid] &lt; target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}</code></pre>
+<h3>Bubble sort</h3>
+<pre><code>void bubbleSort(vector&lt;int&gt;&amp; a) {
+    for (int i = 0; i &lt; (int)a.size(); i++)
+        for (int j = 0; j + 1 &lt; (int)a.size() - i; j++)
+            if (a[j] &gt; a[j + 1])
+                swap(a[j], a[j + 1]);
+}</code></pre>
+<h3>Merge sort</h3>
+<pre><code>void mergeSort(vector&lt;int&gt;&amp; a, int l, int r) {
+    if (l &gt;= r) return;
+
+    int m = l + (r - l) / 2;
+    mergeSort(a, l, m);
+    mergeSort(a, m + 1, r);
+
+    vector&lt;int&gt; temp;
+    int i = l, j = m + 1;
+
+    while (i &lt;= m &amp;&amp; j &lt;= r)
+        temp.push_back(a[i] &lt;= a[j] ? a[i++] : a[j++]);
+
+    while (i &lt;= m) temp.push_back(a[i++]);
+    while (j &lt;= r) temp.push_back(a[j++]);
+
+    for (int k = l; k &lt;= r; k++)
+        a[k] = temp[k - l];
+}</code></pre>
+</section><section id="linkedlist"><h2>15. Linked List</h2>
+<pre><code>struct Node {
+    int data;
+    Node* next;
+
+    explicit Node(int value) : data(value), next(nullptr) {}
+};
+
+class LinkedList {
+    Node* head = nullptr;
+
+public:
+    void pushFront(int value) {
+        Node* node = new Node(value);
+        node-&gt;next = head;
+        head = node;
+    }
+
+    void display() const {
+        Node* current = head;
+        while (current) {
+            cout &lt;&lt; current-&gt;data &lt;&lt; " -&gt; ";
+            current = current-&gt;next;
+        }
+        cout &lt;&lt; "null\n";
+    }
+
+    ~LinkedList() {
+        while (head) {
+            Node* next = head-&gt;next;
+            delete head;
+            head = next;
+        }
+    }
+};</code></pre>
+</section><section id="trees"><h2>16. Trees and Binary Search Trees</h2>
+<pre><code>struct TreeNode {
+    int value;
+    TreeNode* left;
+    TreeNode* right;
+
+    explicit TreeNode(int value)
+        : value(value), left(nullptr), right(nullptr) {}
+};
+
+TreeNode* insert(TreeNode* root, int value) {
+    if (!root) return new TreeNode(value);
+
+    if (value &lt; root-&gt;value)
+        root-&gt;left = insert(root-&gt;left, value);
+    else
+        root-&gt;right = insert(root-&gt;right, value);
+
+    return root;
+}
+
+void inorder(TreeNode* root) {
+    if (!root) return;
+    inorder(root-&gt;left);
+    cout &lt;&lt; root-&gt;value &lt;&lt; ' ';
+    inorder(root-&gt;right);
+}</code></pre>
+</section><section id="graphs"><h2>17. Graphs, BFS, and DFS</h2>
+<h3>Adjacency list</h3>
+<pre><code>int n = 5;
+vector&lt;vector&lt;int&gt;&gt; graph(n);
+
+graph[0].push_back(1);
+graph[1].push_back(0);</code></pre>
+<h3>BFS</h3>
+<pre><code>void bfs(int start, const vector&lt;vector&lt;int&gt;&gt;&amp; graph) {
+    vector&lt;bool&gt; visited(graph.size(), false);
+    queue&lt;int&gt; q;
+
+    visited[start] = true;
+    q.push(start);
+
+    while (!q.empty()) {
+        int node = q.front();
+        q.pop();
+
+        cout &lt;&lt; node &lt;&lt; ' ';
+
+        for (int next : graph[node]) {
+            if (!visited[next]) {
+                visited[next] = true;
+                q.push(next);
+            }
+        }
+    }
+}</code></pre>
+<h3>DFS</h3>
+<pre><code>void dfs(int node, const vector&lt;vector&lt;int&gt;&gt;&amp; graph,
+         vector&lt;bool&gt;&amp; visited) {
+    visited[node] = true;
+    cout &lt;&lt; node &lt;&lt; ' ';
+
+    for (int next : graph[node])
+        if (!visited[next])
+            dfs(next, graph, visited);
+}</code></pre>
+</section><section id="dp_greedy"><h2>18. Recursion, Backtracking, Greedy, and Dynamic Programming</h2>
+<h3>Recursion</h3>
+<pre><code>long long factorial(int n) {
+    if (n &lt;= 1) return 1;
+    return 1LL * n * factorial(n - 1);
+}</code></pre>
+<h3>Backtracking: generate subsets</h3>
+<pre><code>void generateSubsets(int index, const vector&lt;int&gt;&amp; a,
+                     vector&lt;int&gt;&amp; current) {
+    if (index == (int)a.size()) {
+        for (int x : current) cout &lt;&lt; x &lt;&lt; ' ';
+        cout &lt;&lt; "\n";
+        return;
+    }
+
+    generateSubsets(index + 1, a, current);
+
+    current.push_back(a[index]);
+    generateSubsets(index + 1, a, current);
+    current.pop_back();
+}</code></pre>
+<h3>Dynamic programming: Fibonacci</h3>
+<pre><code>long long fibonacci(int n) {
+    vector&lt;long long&gt; dp(n + 1);
+    if (n &gt;= 1) dp[1] = 1;
+
+    for (int i = 2; i &lt;= n; i++)
+        dp[i] = dp[i - 1] + dp[i - 2];
+
+    return dp[n];
+}</code></pre>
+<h3>Greedy idea</h3>
+<p>Choose the locally best option at each step. Common examples include activity selection, interval scheduling, Kruskal, Prim, and Huffman coding.</p>
+</section><section id="cp_patterns"><h2>19. Competitive Programming Patterns</h2>
+<h3>Prefix sum</h3>
+<pre><code>vector&lt;long long&gt; prefix(n + 1, 0);
+for (int i = 0; i &lt; n; i++)
+    prefix[i + 1] = prefix[i] + a[i];
+
+long long rangeSum = prefix[r + 1] - prefix[l];</code></pre>
+<h3>Two pointers</h3>
+<pre><code>int left = 0;
+for (int right = 0; right &lt; n; right++) {
+    // add a[right]
+    while (/* window invalid */) {
+        // remove a[left]
+        left++;
+    }
+}</code></pre>
+<h3>Sliding window</h3>
+<pre><code>long long window = 0, best = 0;
+for (int i = 0; i &lt; n; i++) {
+    window += a[i];
+    if (i &gt;= k) window -= a[i - k];
+    if (i &gt;= k - 1) best = max(best, window);
+}</code></pre>
+<h3>Binary search on answer</h3>
+<pre><code>long long low = 0, high = 1e18, answer = -1;
+
+while (low &lt;= high) {
+    long long mid = low + (high - low) / 2;
+
+    if (can(mid)) {
+        answer = mid;
+        high = mid - 1;
+    } else {
+        low = mid + 1;
+    }
+}</code></pre>
+</section><section id="number_theory"><h2>20. Number Theory and Bit Manipulation</h2>
+<h3>GCD and LCM</h3>
+<pre><code>long long g = gcd(a, b);
+long long l = a / g * b;</code></pre>
+<h3>Prime check</h3>
+<pre><code>bool isPrime(long long n) {
+    if (n &lt; 2) return false;
+    for (long long i = 2; i * i &lt;= n; i++)
+        if (n % i == 0) return false;
+    return true;
+}</code></pre>
+<h3>Sieve of Eratosthenes</h3>
+<pre><code>vector&lt;bool&gt; isPrime(n + 1, true);
+isPrime[0] = isPrime[1] = false;
+
+for (int p = 2; p * p &lt;= n; p++)
+    if (isPrime[p])
+        for (int multiple = p * p; multiple &lt;= n; multiple += p)
+            isPrime[multiple] = false;</code></pre>
+<h3>Bit tricks</h3>
+<pre><code>bool isSet = (mask &amp; (1 &lt;&lt; bit)) != 0;
+mask |= (1 &lt;&lt; bit);      // set
+mask &amp;= ~(1 &lt;&lt; bit);     // clear
+mask ^= (1 &lt;&lt; bit);      // toggle
+int bits = __builtin_popcount(mask);</code></pre>
+</section><section id="advanced_dsa"><h2>21. Heaps, Disjoint Set Union, Shortest Paths, and MST</h2>
+<h3>Disjoint Set Union</h3>
+<pre><code>class DSU {
+    vector&lt;int&gt; parent, size;
+
+public:
+    explicit DSU(int n) : parent(n), size(n, 1) {
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int find(int x) {
+        if (parent[x] == x) return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    bool unite(int a, int b) {
+        a = find(a);
+        b = find(b);
+        if (a == b) return false;
+
+        if (size[a] &lt; size[b]) swap(a, b);
+        parent[b] = a;
+        size[a] += size[b];
+        return true;
+    }
+};</code></pre>
+<h3>Dijkstra</h3>
+<pre><code>vector&lt;long long&gt; dijkstra(
+    int source,
+    const vector&lt;vector&lt;pair&lt;int,int&gt;&gt;&gt;&amp; graph) {
+
+    const long long INF = 4e18;
+    vector&lt;long long&gt; dist(graph.size(), INF);
+
+    priority_queue&lt;
+        pair&lt;long long,int&gt;,
+        vector&lt;pair&lt;long long,int&gt;&gt;,
+        greater&lt;pair&lt;long long,int&gt;&gt;
+    &gt; pq;
+
+    dist[source] = 0;
+    pq.push({0, source});
+
+    while (!pq.empty()) {
+        auto [distance, node] = pq.top();
+        pq.pop();
+
+        if (distance != dist[node]) continue;
+
+        for (auto [next, weight] : graph[node]) {
+            if (dist[next] &gt; distance + weight) {
+                dist[next] = distance + weight;
+                pq.push({dist[next], next});
+            }
+        }
+    }
+    return dist;
+}</code></pre>
+</section><section id="exceptions_files"><h2>22. Exceptions, Files, and Useful Utilities</h2>
+<h3>Exception handling</h3>
+<pre><code>try {
+    if (value &lt; 0)
+        throw invalid_argument("Negative value");
+} catch (const exception&amp; error) {
+    cerr &lt;&lt; error.what() &lt;&lt; "\n";
+}</code></pre>
+<h3>File handling</h3>
+<pre><code>#include &lt;fstream&gt;
+
+ofstream out("output.txt");
+out &lt;&lt; "Hello file\n";
+
+ifstream in("input.txt");
+string line;
+getline(in, line);</code></pre>
+<h3>Useful headers and aliases</h3>
+<pre><code>#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+using ll = long long;
+using pii = pair&lt;int,int&gt;;
+const int INF = 1e9;</code></pre>
+</section><section id="cp_template"><h2>23. Competitive Programming Template</h2>
+<pre><code>#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+using ll = long long;
+
+void solve() {
+    int n;
+    cin &gt;&gt; n;
+
+    vector&lt;int&gt; a(n);
+    for (int&amp; x : a) cin &gt;&gt; x;
+
+    sort(a.begin(), a.end());
+
+    for (int x : a) cout &lt;&lt; x &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int testCases = 1;
+    cin &gt;&gt; testCases;
+
+    while (testCases--) solve();
+    return 0;
+}</code></pre>
+</section><section id="practice"><h2>24. Practice Roadmap</h2>
+<ol>
+<li>Syntax, input/output, conditions, loops, and functions.</li>
+<li>Arrays, strings, vectors, maps, sets, stacks, and queues.</li>
+<li>OOP, templates, references, pointers, and memory.</li>
+<li>Searching, sorting, recursion, linked lists, trees, and graphs.</li>
+<li>Prefix sums, two pointers, sliding windows, greedy, and binary search on answer.</li>
+<li>Dynamic programming, DSU, shortest paths, MST, and advanced graph problems.</li>
+<li>Practice regularly on Codeforces, LeetCode, AtCoder, HackerRank, or similar platforms.</li>
+</ol>
+<div class="tip"><strong>Recommended habit:</strong> learn one concept, implement it without copying, solve 3–5 problems, then review complexity and edge cases.</div>
+</section>
+</main>
+<footer>Complete C++ Competitive Programming, DSA, and OOP Study Guide</footer>
+</body>
+</html>

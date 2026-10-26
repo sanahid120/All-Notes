@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flutter HTTP & Dio – Complete Notes</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2128;
+    --border: #30363d;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #f78166;
+    --accent4: #d2a8ff;
+    --accent5: #ffa657;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --code-bg: #0d1117;
+    --tag-bg: #1f2937;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #01579b 100%);
+    padding: 48px 40px 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(88,166,255,.15) 0%, transparent 70%);
+  }
+  header .badge-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .badge {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #90caf9;
+    letter-spacing: .5px;
+  }
+  header h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  header p { color: #90caf9; font-size: 1.05rem; max-width: 640px; }
+
+  /* ── LAYOUT ── */
+  .wrapper { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .toc h2 { font-size: 1rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px; }
+  .toc a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13.5px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background .15s;
+    display: block;
+  }
+  .toc a:hover { background: rgba(88,166,255,.1); }
+  .toc .num { color: var(--muted); margin-right: 4px; font-size: 12px; }
+
+  /* ── SECTION ── */
+  section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .sec-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .sec-num {
+    background: var(--accent);
+    color: #0d1117;
+    border-radius: 8px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .sec-num.green  { background: var(--accent2); }
+  .sec-num.red    { background: var(--accent3); }
+  .sec-num.purple { background: var(--accent4); color: #0d1117; }
+  .sec-num.orange { background: var(--accent5); color: #0d1117; }
+
+  .sec-header h2 { font-size: 1.15rem; font-weight: 700; color: var(--text); }
+  .sec-body { padding: 22px 24px; }
+  .sec-body p { color: #c9d1d9; margin-bottom: 12px; }
+  .sec-body p:last-child { margin-bottom: 0; }
+
+  /* ── CODE BLOCK ── */
+  .code-wrap {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 14px 0;
+    overflow: hidden;
+  }
+  .code-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #161b22;
+    border-bottom: 1px solid var(--border);
+    padding: 7px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+  }
+  .code-label .dot-row { display: flex; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #f78166; }
+  .dot.y { background: #ffa657; }
+  .dot.g { background: #3fb950; }
+  pre {
+    padding: 16px 18px;
+    overflow-x: auto;
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #e6edf3;
+  }
+  /* Syntax highlight classes */
+  .kw  { color: #ff7b72; }   /* keywords */
+  .cl  { color: #79c0ff; }   /* class names */
+  .fn  { color: #d2a8ff; }   /* function names */
+  .st  { color: #a5d6ff; }   /* strings */
+  .cm  { color: #8b949e; font-style: italic; } /* comments */
+  .nt  { color: #ffa657; }   /* types/annotations */
+  .nm  { color: #3fb950; }   /* numbers/constants */
+  .va  { color: #ffa657; }   /* variables */
+
+  /* ── GRID CARDS ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .card .card-title { font-weight: 700; font-size: 13px; color: var(--accent); margin-bottom: 6px; }
+  .card p { font-size: 13px; color: var(--muted); }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+  th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid #21262d; color: #c9d1d9; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 9px;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .callout.info  { background: rgba(88,166,255,.08);  border-left: 3px solid var(--accent);  }
+  .callout.warn  { background: rgba(255,166,87,.08);  border-left: 3px solid var(--accent5); }
+  .callout.good  { background: rgba(63,185,80,.08);   border-left: 3px solid var(--accent2); }
+  .callout.bad   { background: rgba(247,129,102,.08); border-left: 3px solid var(--accent3); }
+  .callout .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .callout .body { color: #c9d1d9; }
+  .callout strong { color: var(--text); }
+
+  /* ── ARCH DIAGRAM ── */
+  .arch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 16px 0;
+  }
+  .arch-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 32px;
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 200px;
+    text-align: center;
+  }
+  .arch-box.blue   { border-color: var(--accent);  color: var(--accent);  }
+  .arch-box.green  { border-color: var(--accent2); color: var(--accent2); }
+  .arch-box.purple { border-color: var(--accent4); color: var(--accent4); }
+  .arch-box.orange { border-color: var(--accent5); color: var(--accent5); }
+  .arch-arrow { font-size: 20px; color: var(--muted); line-height: 1.2; }
+
+  /* ── FILE TREE ── */
+  .tree {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #c9d1d9;
+    margin: 14px 0;
+  }
+  .tree .folder { color: var(--accent5); font-weight: 700; }
+  .tree .file   { color: var(--accent2); }
+  .tree .dart   { color: var(--accent);  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 28px;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header>
+  <div class="badge-row">
+    <span class="badge">Flutter</span>
+    <span class="badge">HTTP Package</span>
+    <span class="badge">Dio</span>
+    <span class="badge">Clean Architecture</span>
+    <span class="badge">REST API</span>
+  </div>
+  <h1>Flutter HTTP &amp; Dio — Complete Notes</h1>
+  <p>From Model Classes → Repository Pattern → Core NetworkCaller → Clean Architecture. Every HTTP verb, JSON handling, interceptors, auth, file upload, and more.</p>
+</header>
+
+<div class="wrapper">
+
+<!-- ═══════════════════ TOC ═══════════════════ -->
+<div class="toc">
+  <h2>Contents</h2>
+  <div class="toc-grid">
+    <a href="#s1"><span class="num">01</span> HTTP Fundamentals</a>
+    <a href="#s2"><span class="num">02</span> pubspec.yaml Setup</a>
+    <a href="#s3"><span class="num">03</span> JSON &amp; dart:convert</a>
+    <a href="#s4"><span class="num">04</span> Model Classes</a>
+    <a href="#s5"><span class="num">05</span> HTTP Package — All Verbs</a>
+    <a href="#s6"><span class="num">06</span> Core NetworkCaller (HTTP)</a>
+    <a href="#s7"><span class="num">07</span> Dio Setup &amp; BaseOptions</a>
+    <a href="#s8"><span class="num">08</span> Dio — All Verbs</a>
+    <a href="#s9"><span class="num">09</span> Dio Interceptors</a>
+    <a href="#s10"><span class="num">10</span> Dio Error Handling</a>
+    <a href="#s11"><span class="num">11</span> Authentication</a>
+    <a href="#s12"><span class="num">12</span> File Upload</a>
+    <a href="#s13"><span class="num">13</span> Repository Pattern</a>
+    <a href="#s14"><span class="num">14</span> Clean Architecture</a>
+    <a href="#s15"><span class="num">15</span> Complete App Example</a>
+    <a href="#s16"><span class="num">16</span> Best Practices</a>
+  </div>
+</div>
+
+<!-- ═══════════════════ S1 — HTTP FUNDAMENTALS ═══════════════════ -->
+<section id="s1">
+  <div class="sec-header">
+    <span class="sec-num">01</span>
+    <h2>HTTP Fundamentals — Methods &amp; Status Codes</h2>
+  </div>
+  <div class="sec-body">
+    <table>
+      <tr><th>Method</th><th>Purpose</th><th>Has Body?</th><th>Idempotent?</th></tr>
+      <tr><td><code>GET</code></td><td>Read / fetch data</td><td>No</td><td>✅ Yes</td></tr>
+      <tr><td><code>POST</code></td><td>Create new resource</td><td>Yes</td><td>❌ No</td></tr>
+      <tr><td><code>PUT</code></td><td>Replace entire resource</td><td>Yes</td><td>✅ Yes</td></tr>
+      <tr><td><code>PATCH</code></td><td>Partial update</td><td>Yes</td><td>✅ Yes</td></tr>
+      <tr><td><code>DELETE</code></td><td>Remove resource</td><td>Optional</td><td>✅ Yes</td></tr>
+    </table>
+    <table>
+      <tr><th>Status Code</th><th>Meaning</th></tr>
+      <tr><td><span style="color:var(--accent2)">200 OK</span></td><td>Success</td></tr>
+      <tr><td><span style="color:var(--accent2)">201 Created</span></td><td>Resource created (POST)</td></tr>
+      <tr><td><span style="color:var(--accent2)">204 No Content</span></td><td>Success, no body (DELETE)</td></tr>
+      <tr><td><span style="color:var(--accent5)">400 Bad Request</span></td><td>Client sent invalid data</td></tr>
+      <tr><td><span style="color:var(--accent3)">401 Unauthorized</span></td><td>Token missing / expired</td></tr>
+      <tr><td><span style="color:var(--accent3)">403 Forbidden</span></td><td>Not allowed</td></tr>
+      <tr><td><span style="color:var(--accent3)">404 Not Found</span></td><td>Resource doesn't exist</td></tr>
+      <tr><td><span style="color:var(--accent3)">500 Server Error</span></td><td>Backend crashed</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ S2 — PUBSPEC ═══════════════════ -->
+<section id="s2">
+  <div class="sec-header">
+    <span class="sec-num green">02</span>
+    <h2>pubspec.yaml — Dependencies</h2>
+  </div>
+  <div class="sec-body">
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> pubspec.yaml</div>
+      <pre><span class="kw">dependencies</span>:
+  flutter:
+    sdk: flutter
+
+  <span class="cm"># HTTP package (simple, lightweight)</span>
+  http: ^1.2.1
+
+  <span class="cm"># Dio (powerful, interceptors, upload, timeout)</span>
+  dio: ^5.4.3
+
+  <span class="cm"># Date formatting</span>
+  intl: ^0.19.0
+
+  <span class="cm"># Shared Preferences (token storage)</span>
+  shared_preferences: ^2.2.3
+
+  <span class="cm"># Image picker (for file upload)</span>
+  image_picker: ^1.1.2</pre>
+    </div>
+    <div class="callout info">
+      <span class="icon">💡</span>
+      <div class="body">Run <code>flutter pub get</code> after editing pubspec.yaml.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S3 — JSON ═══════════════════ -->
+<section id="s3">
+  <div class="sec-header">
+    <span class="sec-num purple">03</span>
+    <h2>JSON &amp; dart:convert</h2>
+  </div>
+  <div class="sec-body">
+    <p>Flutter uses <code>dart:convert</code> to encode/decode JSON. Always import it at the top of any file that touches network data.</p>
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> json_basics.dart</div>
+      <pre><span class="kw">import</span> <span class="st">'dart:convert'</span>;
+
+<span class="cm">// ── Decode JSON string → Dart Map ──</span>
+<span class="nt">String</span> jsonStr = <span class="st">'{"name":"Rahim","age":25}'</span>;
+<span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="nt">dynamic</span>&gt; data = jsonDecode(jsonStr);
+<span class="fn">print</span>(data[<span class="st">'name'</span>]); <span class="cm">// Rahim</span>
+
+<span class="cm">// ── Encode Dart Map → JSON string ──</span>
+<span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="nt">dynamic</span>&gt; map = {<span class="st">'name'</span>: <span class="st">'Rahim'</span>, <span class="st">'age'</span>: <span class="nm">25</span>};
+<span class="nt">String</span> encoded = jsonEncode(map);
+<span class="fn">print</span>(encoded); <span class="cm">// {"name":"Rahim","age":25}</span>
+
+<span class="cm">// ── Decode JSON array ──</span>
+<span class="nt">String</span> jsonArray = <span class="st">'[{"id":1},{"id":2}]'</span>;
+<span class="nt">List</span>&lt;<span class="nt">dynamic</span>&gt; list = jsonDecode(jsonArray);
+<span class="fn">print</span>(list.length); <span class="cm">// 2</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S4 — MODEL CLASSES ═══════════════════ -->
+<section id="s4">
+  <div class="sec-header">
+    <span class="sec-num orange">04</span>
+    <h2>Model Classes — fromJson / toJson</h2>
+  </div>
+  <div class="sec-body">
+    <p>Every API response must be mapped to a Dart model class. Two key factory methods: <code>fromJson</code> (decode) and <code>toJson</code> (encode).</p>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> user_model.dart</div>
+      <pre><span class="kw">class</span> <span class="cl">UserModel</span> {
+  <span class="kw">final</span> <span class="nt">String</span> id;
+  <span class="kw">final</span> <span class="nt">String</span> email;
+  <span class="kw">final</span> <span class="nt">String</span> firstName;
+  <span class="kw">final</span> <span class="nt">String</span> lastName;
+  <span class="kw">final</span> <span class="nt">String</span> mobile;
+
+  <span class="cm">// ── Computed property ──</span>
+  <span class="nt">String</span> <span class="kw">get</span> fullName =&gt; <span class="st">"</span><span class="va">$firstName</span> <span class="va">$lastName</span><span class="st">"</span>;
+
+  <span class="cl">UserModel</span>({
+    <span class="kw">required</span> <span class="kw">this</span>.id,
+    <span class="kw">required</span> <span class="kw">this</span>.email,
+    <span class="kw">required</span> <span class="kw">this</span>.firstName,
+    <span class="kw">required</span> <span class="kw">this</span>.lastName,
+    <span class="kw">required</span> <span class="kw">this</span>.mobile,
+  });
+
+  <span class="cm">// ── Decode API response → UserModel ──</span>
+  <span class="kw">factory</span> <span class="cl">UserModel</span>.fromJson(<span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt; json) {
+    <span class="kw">return</span> <span class="cl">UserModel</span>(
+      id:        json[<span class="st">'_id'</span>],
+      email:     json[<span class="st">'email'</span>],
+      firstName: json[<span class="st">'firstName'</span>],
+      lastName:  json[<span class="st">'lastName'</span>],
+      mobile:    json[<span class="st">'mobile'</span>],
+    );
+  }
+
+  <span class="cm">// ── Encode UserModel → Map (for POST/PUT) ──</span>
+  <span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt; toJson() =&gt; {
+    <span class="st">'_id'</span>:       id,
+    <span class="st">'email'</span>:     email,
+    <span class="st">'firstName'</span>: firstName,
+    <span class="st">'lastName'</span>:  lastName,
+    <span class="st">'mobile'</span>:    mobile,
+  };
+}</pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> task_model.dart</div>
+      <pre><span class="kw">import</span> <span class="st">'package:intl/intl.dart'</span>;
+
+<span class="kw">class</span> <span class="cl">TaskModel</span> {
+  <span class="kw">final</span> <span class="nt">String</span>? sId;
+  <span class="kw">final</span> <span class="nt">String</span>? title;
+  <span class="kw">final</span> <span class="nt">String</span>? description;
+  <span class="kw">final</span> <span class="nt">String</span>? status;   <span class="cm">// "New" | "InProgress" | "Completed" | "Cancelled"</span>
+  <span class="kw">final</span> <span class="nt">String</span>? email;
+  <span class="kw">final</span> <span class="nt">String</span>? createdDate;
+
+  <span class="cl">TaskModel</span>({
+    <span class="kw">required</span> <span class="kw">this</span>.sId,
+    <span class="kw">required</span> <span class="kw">this</span>.title,
+    <span class="kw">required</span> <span class="kw">this</span>.description,
+    <span class="kw">required</span> <span class="kw">this</span>.status,
+    <span class="kw">required</span> <span class="kw">this</span>.email,
+    <span class="kw">required</span> <span class="kw">this</span>.createdDate,
+  });
+
+  <span class="kw">factory</span> <span class="cl">TaskModel</span>.fromJson(<span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt; json) {
+    <span class="kw">return</span> <span class="cl">TaskModel</span>(
+      sId:         json[<span class="st">'_id'</span>],
+      title:       json[<span class="st">'title'</span>],
+      description: json[<span class="st">'description'</span>],
+      status:      json[<span class="st">'status'</span>],
+      email:       json[<span class="st">'email'</span>],
+      <span class="cm">// Format ISO date string to readable format</span>
+      createdDate: <span class="cl">DateFormat</span>(<span class="st">'dd MMM yyyy'</span>).format(
+                     <span class="cl">DateTime</span>.parse(json[<span class="st">'createdDate'</span>])),
+    );
+  }
+
+  <span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt; toJson() =&gt; {
+    <span class="st">'_id'</span>:         sId,
+    <span class="st">'title'</span>:       title,
+    <span class="st">'description'</span>: description,
+    <span class="st">'status'</span>:      status,
+    <span class="st">'email'</span>:       email,
+    <span class="st">'createdDate'</span>: createdDate,
+  };
+}
+
+<span class="cm">// ── Parsing a LIST of tasks from API ──</span>
+<span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt; parseTaskList(<span class="nt">List</span>&lt;<span class="kw">dynamic</span>&gt; jsonList) {
+  <span class="kw">return</span> jsonList
+    .map((item) =&gt; <span class="cl">TaskModel</span>.fromJson(item <span class="kw">as</span> <span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt;))
+    .toList();
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S5 — HTTP PACKAGE VERBS ═══════════════════ -->
+<section id="s5">
+  <div class="sec-header">
+    <span class="sec-num">05</span>
+    <h2>HTTP Package — GET, POST, PUT, PATCH, DELETE</h2>
+  </div>
+  <div class="sec-body">
+    <div class="callout info">
+      <span class="icon">📦</span>
+      <div class="body">Import: <code>import 'package:http/http.dart' as http;</code></div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> http_verbs.dart — GET</div>
+      <pre><span class="cm">// ────────────────── GET ──────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">fetchTasks</span>() <span class="kw">async</span> {
+  <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'https://api.example.com/tasks'</span>);
+
+  <span class="kw">final</span> response = <span class="kw">await</span> http.get(
+    uri,
+    headers: {<span class="st">'token'</span>: accessToken},
+  );
+
+  <span class="kw">if</span> (response.statusCode == <span class="nm">200</span>) {
+    <span class="kw">final</span> body = jsonDecode(response.body);
+    <span class="kw">final</span> <span class="nt">List</span> rawList = body[<span class="st">'data'</span>];
+    <span class="kw">final</span> tasks = rawList
+      .map((e) =&gt; <span class="cl">TaskModel</span>.fromJson(e))
+      .toList();
+    <span class="fn">print</span>(tasks.length);
+  }
+}</pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> http_verbs.dart — POST</div>
+      <pre><span class="cm">// ────────────────── POST ──────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">createTask</span>(<span class="nt">String</span> title, <span class="nt">String</span> desc) <span class="kw">async</span> {
+  <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'https://api.example.com/tasks'</span>);
+
+  <span class="kw">final</span> response = <span class="kw">await</span> http.post(
+    uri,
+    headers: {
+      <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span>,
+      <span class="st">'token'</span>: accessToken,
+    },
+    body: jsonEncode({
+      <span class="st">'title'</span>:       title,
+      <span class="st">'description'</span>: desc,
+      <span class="st">'status'</span>:      <span class="st">'New'</span>,
+    }),
+  );
+
+  <span class="kw">if</span> (response.statusCode == <span class="nm">200</span>) {
+    <span class="fn">print</span>(<span class="st">'Task created!'</span>);
+  }
+}</pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> http_verbs.dart — PUT (replace all)</div>
+      <pre><span class="cm">// ────────────────── PUT ──────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">replaceTask</span>(<span class="nt">String</span> taskId, <span class="cl">TaskModel</span> task) <span class="kw">async</span> {
+  <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'https://api.example.com/tasks/</span><span class="va">$taskId</span><span class="st">'</span>);
+
+  <span class="kw">final</span> response = <span class="kw">await</span> http.put(
+    uri,
+    headers: {
+      <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span>,
+      <span class="st">'token'</span>: accessToken,
+    },
+    body: jsonEncode(task.toJson()), <span class="cm">// Send complete object</span>
+  );
+
+  <span class="kw">if</span> (response.statusCode == <span class="nm">200</span>) {
+    <span class="fn">print</span>(<span class="st">'Task replaced!'</span>);
+  }
+}</pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> http_verbs.dart — PATCH (update status only)</div>
+      <pre><span class="cm">// ────────────────── PATCH ──────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">updateTaskStatus</span>(<span class="nt">String</span> taskId, <span class="nt">String</span> newStatus) <span class="kw">async</span> {
+  <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'https://api.example.com/tasks/</span><span class="va">$taskId</span><span class="st">'</span>);
+
+  <span class="kw">final</span> response = <span class="kw">await</span> http.patch(
+    uri,
+    headers: {
+      <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span>,
+      <span class="st">'token'</span>: accessToken,
+    },
+    body: jsonEncode({<span class="st">'status'</span>: newStatus}), <span class="cm">// Only changed field</span>
+  );
+
+  <span class="kw">if</span> (response.statusCode == <span class="nm">200</span>) {
+    <span class="fn">print</span>(<span class="st">'Status updated to </span><span class="va">$newStatus</span><span class="st">'</span>);
+  }
+}</pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> http_verbs.dart — DELETE</div>
+      <pre><span class="cm">// ────────────────── DELETE ──────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">deleteTask</span>(<span class="nt">String</span> taskId) <span class="kw">async</span> {
+  <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'https://api.example.com/tasks/</span><span class="va">$taskId</span><span class="st">'</span>);
+
+  <span class="kw">final</span> response = <span class="kw">await</span> http.delete(
+    uri,
+    headers: {<span class="st">'token'</span>: accessToken},
+  );
+
+  <span class="kw">if</span> (response.statusCode == <span class="nm">200</span>) {
+    <span class="fn">print</span>(<span class="st">'Task deleted!'</span>);
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S6 — CORE NETWORKCALLER ═══════════════════ -->
+<section id="s6">
+  <div class="sec-header">
+    <span class="sec-num red">06</span>
+    <h2>Core NetworkCaller Class (HTTP Package)</h2>
+  </div>
+  <div class="sec-body">
+    <p>Instead of writing try/catch in every screen, we create a single <strong>NetworkCaller</strong> class that wraps all HTTP logic. This is the same pattern used in your uploaded <code>network_caller.dart</code>, extended here.</p>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> core/network/network_response.dart</div>
+      <pre><span class="kw">class</span> <span class="cl">NetworkResponse</span> {
+  <span class="kw">final</span> <span class="nt">bool</span>    isSuccess;
+  <span class="kw">final</span> <span class="nt">int</span>     responseCode;
+  <span class="kw">final</span> <span class="kw">dynamic</span> body;
+  <span class="kw">final</span> <span class="nt">String</span>? errorMessage;
+
+  <span class="cl">NetworkResponse</span>({
+    <span class="kw">required</span> <span class="kw">this</span>.isSuccess,
+    <span class="kw">required</span> <span class="kw">this</span>.responseCode,
+    <span class="kw">this</span>.body,
+    <span class="kw">this</span>.errorMessage,
+  });
+}</pre>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> core/network/network_caller.dart</div>
+      <pre><span class="kw">import</span> <span class="st">'dart:convert'</span>;
+<span class="kw">import</span> <span class="st">'package:flutter/material.dart'</span>;
+<span class="kw">import</span> <span class="st">'package:http/http.dart'</span> <span class="kw">as</span> http;
+
+<span class="kw">class</span> <span class="cl">NetworkCaller</span> {
+  <span class="cm">// ── Base URL ──</span>
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> _baseUrl = <span class="st">'https://api.example.com'</span>;
+
+  <span class="cm">// ── Token getter (set from AuthController) ──</span>
+  <span class="kw">static</span> <span class="nt">String</span>? accessToken;
+
+  <span class="cm">// ──────────────── GET ────────────────</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="cl">NetworkResponse</span>&gt; <span class="fn">getRequest</span>(<span class="nt">String</span> path) <span class="kw">async</span> {
+    <span class="kw">try</span> {
+      <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'</span><span class="va">$_baseUrl$path</span><span class="st">'</span>);
+      <span class="fn">_log</span>(<span class="st">'GET'</span>, path);
+
+      <span class="kw">final</span> response = <span class="kw">await</span> http.get(uri,
+        headers: <span class="fn">_headers</span>());
+
+      <span class="kw">return</span> <span class="fn">_handleResponse</span>(response);
+    } <span class="kw">catch</span> (e) {
+      <span class="kw">return</span> <span class="fn">_errorResponse</span>(e);
+    }
+  }
+
+  <span class="cm">// ──────────────── POST ────────────────</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="cl">NetworkResponse</span>&gt; <span class="fn">postRequest</span>(
+    <span class="nt">String</span> path, {
+    <span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt;? body,
+  }) <span class="kw">async</span> {
+    <span class="kw">try</span> {
+      <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'</span><span class="va">$_baseUrl$path</span><span class="st">'</span>);
+      <span class="fn">_log</span>(<span class="st">'POST'</span>, path, body: body);
+
+      <span class="kw">final</span> response = <span class="kw">await</span> http.post(uri,
+        headers: <span class="fn">_headers</span>(withContentType: <span class="kw">true</span>),
+        body: jsonEncode(body));
+
+      <span class="kw">return</span> <span class="fn">_handleResponse</span>(response);
+    } <span class="kw">catch</span> (e) {
+      <span class="kw">return</span> <span class="fn">_errorResponse</span>(e);
+    }
+  }
+
+  <span class="cm">// ──────────────── PUT ────────────────</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="cl">NetworkResponse</span>&gt; <span class="fn">putRequest</span>(
+    <span class="nt">String</span> path, {
+    <span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt;? body,
+  }) <span class="kw">async</span> {
+    <span class="kw">try</span> {
+      <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'</span><span class="va">$_baseUrl$path</span><span class="st">'</span>);
+      <span class="fn">_log</span>(<span class="st">'PUT'</span>, path, body: body);
+
+      <span class="kw">final</span> response = <span class="kw">await</span> http.put(uri,
+        headers: <span class="fn">_headers</span>(withContentType: <span class="kw">true</span>),
+        body: jsonEncode(body));
+
+      <span class="kw">return</span> <span class="fn">_handleResponse</span>(response);
+    } <span class="kw">catch</span> (e) {
+      <span class="kw">return</span> <span class="fn">_errorResponse</span>(e);
+    }
+  }
+
+  <span class="cm">// ──────────────── PATCH ────────────────</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="cl">NetworkResponse</span>&gt; <span class="fn">patchRequest</span>(
+    <span class="nt">String</span> path, {
+    <span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="kw">dynamic</span>&gt;? body,
+  }) <span class="kw">async</span> {
+    <span class="kw">try</span> {
+      <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'</span><span class="va">$_baseUrl$path</span><span class="st">'</span>);
+      <span class="fn">_log</span>(<span class="st">'PATCH'</span>, path, body: body);
+
+      <span class="kw">final</span> response = <span class="kw">await</span> http.patch(uri,
+        headers: <span class="fn">_headers</span>(withContentType: <span class="kw">true</span>),
+        body: jsonEncode(body));
+
+      <span class="kw">return</span> <span class="fn">_handleResponse</span>(response);
+    } <span class="kw">catch</span> (e) {
+      <span class="kw">return</span> <span class="fn">_errorResponse</span>(e);
+    }
+  }
+
+  <span class="cm">// ──────────────── DELETE ────────────────</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="cl">NetworkResponse</span>&gt; <span class="fn">deleteRequest</span>(<span class="nt">String</span> path) <span class="kw">async</span> {
+    <span class="kw">try</span> {
+      <span class="kw">final</span> uri = <span class="cl">Uri</span>.parse(<span class="st">'</span><span class="va">$_baseUrl$path</span><span class="st">'</span>);
+      <span class="fn">_log</span>(<span class="st">'DELETE'</span>, path);
+
+      <span class="kw">final</span> response = <span class="kw">await</span> http.delete(uri,
+        headers: <span class="fn">_headers</span>());
+
+      <span class="kw">return</span> <span class="fn">_handleResponse</span>(response);
+    } <span class="kw">catch</span> (e) {
+      <span class="kw">return</span> <span class="fn">_errorResponse</span>(e);
+    }
+  }
+
+  <span class="cm">// ─── Private Helpers ───</span>
+
+  <span class="kw">static</span> <span class="nt">Map</span>&lt;<span class="nt">String</span>, <span class="nt">String</span>&gt; <span class="fn">_headers</span>({<span class="nt">bool</span> withContentType = <span class="kw">false</span>}) {
+    <span class="kw">return</span> {
+      <span class="kw">if</span> (withContentType) <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span>,
+      <span class="st">'token'</span>: accessToken ?? <span class="st">''</span>,
+    };
+  }
+
+  <span class="kw">static</span> <span class="cl">NetworkResponse</span> <span class="fn">_handleResponse</span>(http.Response response) {
+    <span class="kw">final</span> decoded = jsonDecode(response.body);
+
+    <span class="kw">if</span> (response.statusCode == <span class="nm">200</span>) {
+      <span class="kw">return</span> <span class="cl">NetworkResponse</span>(isSuccess: <span class="kw">true</span>, responseCode: <span class="nm">200</span>, body: decoded);
+    } <span class="kw">else if</span> (response.statusCode == <span class="nm">401</span>) {
+      <span class="fn">_onUnauthorized</span>();
+      <span class="kw">return</span> <span class="cl">NetworkResponse</span>(isSuccess: <span class="kw">false</span>, responseCode: <span class="nm">401</span>,
+                              errorMessage: <span class="st">'Token expired'</span>);
+    } <span class="kw">else</span> {
+      <span class="kw">return</span> <span class="cl">NetworkResponse</span>(isSuccess: <span class="kw">false</span>,
+                              responseCode: response.statusCode,
+                              errorMessage: decoded[<span class="st">'message'</span>] ?? <span class="st">'Unknown error'</span>);
+    }
+  }
+
+  <span class="kw">static</span> <span class="cl">NetworkResponse</span> <span class="fn">_errorResponse</span>(<span class="kw">dynamic</span> e) {
+    <span class="kw">return</span> <span class="cl">NetworkResponse</span>(isSuccess: <span class="kw">false</span>, responseCode: <span class="nm">-1</span>,
+                            errorMessage: e.toString());
+  }
+
+  <span class="kw">static</span> <span class="nt">void</span> <span class="fn">_onUnauthorized</span>() {
+    <span class="cm">// Navigate to login screen and clear token</span>
+    accessToken = <span class="kw">null</span>;
+  }
+
+  <span class="kw">static</span> <span class="nt">void</span> <span class="fn">_log</span>(<span class="nt">String</span> method, <span class="nt">String</span> path,
+      {<span class="nt">Map</span>? body}) {
+    debugPrint(<span class="st">'[NET] </span><span class="va">$method</span> <span class="va">$path</span> | body: </span><span class="va">$body</span><span class="st">'</span>);
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S7 — DIO SETUP ═══════════════════ -->
+<section id="s7">
+  <div class="sec-header">
+    <span class="sec-num green">07</span>
+    <h2>Dio — Setup &amp; BaseOptions</h2>
+  </div>
+  <div class="sec-body">
+    <p>Dio is a powerful HTTP client. Unlike the http package, it supports interceptors, global timeout, automatic JSON decoding, FormData, and download progress.</p>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> core/network/dio_client.dart</div>
+      <pre><span class="kw">import</span> <span class="st">'package:dio/dio.dart'</span>;
+
+<span class="kw">class</span> <span class="cl">DioClient</span> {
+  <span class="kw">static</span> <span class="kw">final</span> <span class="cl">Dio</span> _dio = <span class="cl">Dio</span>(
+    <span class="cl">BaseOptions</span>(
+      baseUrl:        <span class="st">'https://api.example.com'</span>,
+      connectTimeout: <span class="kw">const</span> <span class="cl">Duration</span>(seconds: <span class="nm">10</span>),
+      receiveTimeout: <span class="kw">const</span> <span class="cl">Duration</span>(seconds: <span class="nm">15</span>),
+      headers: {
+        <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span>,
+      },
+      <span class="cm">// Dio decodes JSON automatically</span>
+      responseType: <span class="cl">ResponseType</span>.json,
+    ),
+  );
+
+  <span class="cm">// ── Expose Dio instance ──</span>
+  <span class="kw">static</span> <span class="cl">Dio</span> <span class="kw">get</span> instance => _dio;
+
+  <span class="cm">// ── Set auth token (call after login) ──</span>
+  <span class="kw">static</span> <span class="nt">void</span> <span class="fn">setToken</span>(<span class="nt">String</span> token) {
+    _dio.options.headers[<span class="st">'token'</span>] = token;
+  }
+
+  <span class="cm">// ── Clear token (call after logout) ──</span>
+  <span class="kw">static</span> <span class="nt">void</span> <span class="fn">clearToken</span>() {
+    _dio.options.headers.remove(<span class="st">'token'</span>);
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S8 — DIO VERBS ═══════════════════ -->
+<section id="s8">
+  <div class="sec-header">
+    <span class="sec-num purple">08</span>
+    <h2>Dio — GET, POST, PUT, PATCH, DELETE</h2>
+  </div>
+  <div class="sec-body">
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> dio_verbs.dart</div>
+      <pre><span class="kw">final</span> dio = <span class="cl">DioClient</span>.instance;
+
+<span class="cm">// ──────────────── GET ────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">getTasksDio</span>() <span class="kw">async</span> {
+  <span class="kw">try</span> {
+    <span class="kw">final</span> response = <span class="kw">await</span> dio.get(<span class="st">'/tasks'</span>);
+    <span class="kw">final</span> tasks = (response.data[<span class="st">'data'</span>] <span class="kw">as</span> <span class="nt">List</span>)
+        .map((e) =&gt; <span class="cl">TaskModel</span>.fromJson(e))
+        .toList();
+    <span class="fn">print</span>(tasks);
+  } <span class="kw">on</span> <span class="cl">DioException</span> <span class="kw">catch</span> (e) {
+    <span class="fn">print</span>(<span class="st">'DIO ERROR: </span><span class="va">${e.message}</span><span class="st">'</span>);
+  }
+}
+
+<span class="cm">// ──────────────── POST ────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">createTaskDio</span>(<span class="nt">String</span> title, <span class="nt">String</span> desc) <span class="kw">async</span> {
+  <span class="kw">try</span> {
+    <span class="kw">final</span> response = <span class="kw">await</span> dio.post(
+      <span class="st">'/tasks'</span>,
+      data: {
+        <span class="st">'title'</span>:       title,
+        <span class="st">'description'</span>: desc,
+        <span class="st">'status'</span>:      <span class="st">'New'</span>,
+      },
+    );
+    <span class="fn">print</span>(response.data);
+  } <span class="kw">on</span> <span class="cl">DioException</span> <span class="kw">catch</span> (e) {
+    <span class="fn">print</span>(e.message);
+  }
+}
+
+<span class="cm">// ──────────────── PUT ────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">replaceTaskDio</span>(<span class="nt">String</span> id, <span class="cl">TaskModel</span> task) <span class="kw">async</span> {
+  <span class="kw">final</span> response = <span class="kw">await</span> dio.put(<span class="st">'/tasks/</span><span class="va">$id</span><span class="st">'</span>, data: task.toJson());
+  <span class="fn">print</span>(response.statusCode); <span class="cm">// 200</span>
+}
+
+<span class="cm">// ──────────────── PATCH ────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">updateStatusDio</span>(<span class="nt">String</span> id, <span class="nt">String</span> status) <span class="kw">async</span> {
+  <span class="kw">final</span> response = <span class="kw">await</span> dio.patch(
+    <span class="st">'/tasks/</span><span class="va">$id</span><span class="st">'</span>,
+    data: {<span class="st">'status'</span>: status},
+  );
+  <span class="fn">print</span>(response.data);
+}
+
+<span class="cm">// ──────────────── DELETE ────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">deleteTaskDio</span>(<span class="nt">String</span> id) <span class="kw">async</span> {
+  <span class="kw">final</span> response = <span class="kw">await</span> dio.delete(<span class="st">'/tasks/</span><span class="va">$id</span><span class="st">'</span>);
+  <span class="fn">print</span>(response.statusCode); <span class="cm">// 200 or 204</span>
+}
+
+<span class="cm">// ──────────────── GET with Query Params ────────────────</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">searchTasksDio</span>(<span class="nt">String</span> keyword) <span class="kw">async</span> {
+  <span class="kw">final</span> response = <span class="kw">await</span> dio.get(
+    <span class="st">'/tasks'</span>,
+    queryParameters: {<span class="st">'search'</span>: keyword, <span class="st">'limit'</span>: <span class="nm">20</span>},
+  );
+  <span class="cm">// Sends: GET /tasks?search=flutter&limit=20</span>
+  <span class="fn">print</span>(response.data);
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S9 — DIO INTERCEPTORS ═══════════════════ -->
+<section id="s9">
+  <div class="sec-header">
+    <span class="sec-num orange">09</span>
+    <h2>Dio Interceptors — Token, Logging, Retry</h2>
+  </div>
+  <div class="sec-body">
+    <p>Interceptors run automatically before every request and after every response — perfect for adding auth tokens, logging, and handling 401s globally.</p>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> core/network/auth_interceptor.dart</div>
+      <pre><span class="kw">class</span> <span class="cl">AuthInterceptor</span> <span class="kw">extends</span> <span class="cl">Interceptor</span> {
+
+  <span class="cm">// ── Before request: inject token ──</span>
+  <span class="kw">@override</span>
+  <span class="nt">void</span> <span class="fn">onRequest</span>(<span class="cl">RequestOptions</span> options, <span class="cl">RequestInterceptorHandler</span> handler) {
+    <span class="kw">final</span> token = <span class="cl">AuthStorage</span>.getToken();
+    <span class="kw">if</span> (token != <span class="kw">null</span>) {
+      options.headers[<span class="st">'token'</span>] = token;
+    }
+    handler.next(options); <span class="cm">// continue</span>
+  }
+
+  <span class="cm">// ── After response ──</span>
+  <span class="kw">@override</span>
+  <span class="nt">void</span> <span class="fn">onResponse</span>(<span class="cl">Response</span> response, <span class="cl">ResponseInterceptorHandler</span> handler) {
+    debugPrint(<span class="st">'[✅ </span><span class="va">${response.statusCode}</span><span class="st">] </span><span class="va">${response.requestOptions.path}</span><span class="st">'</span>);
+    handler.next(response);
+  }
+
+  <span class="cm">// ── On error: handle 401 globally ──</span>
+  <span class="kw">@override</span>
+  <span class="nt">void</span> <span class="fn">onError</span>(<span class="cl">DioException</span> err, <span class="cl">ErrorInterceptorHandler</span> handler) {
+    <span class="kw">if</span> (err.response?.statusCode == <span class="nm">401</span>) {
+      <span class="cm">// Token expired → logout</span>
+      <span class="cl">AuthStorage</span>.clearToken();
+      <span class="cm">// Navigate to login</span>
+      <span class="cl">NavigationService</span>.goToLogin();
+    }
+    handler.next(err);
+  }
+}
+
+<span class="cm">// ── Register in DioClient ──</span>
+<span class="kw">class</span> <span class="cl">DioClient</span> {
+  <span class="kw">static</span> <span class="kw">final</span> <span class="cl">Dio</span> _dio = <span class="cl">Dio</span>(<span class="cl">BaseOptions</span>(baseUrl: <span class="st">'https://api.example.com'</span>))
+    ..interceptors.addAll([
+      <span class="cl">AuthInterceptor</span>(),
+      <span class="cl">LogInterceptor</span>(requestBody: <span class="kw">true</span>, responseBody: <span class="kw">true</span>),
+    ]);
+
+  <span class="kw">static</span> <span class="cl">Dio</span> <span class="kw">get</span> instance => _dio;
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S10 — DIO ERROR HANDLING ═══════════════════ -->
+<section id="s10">
+  <div class="sec-header">
+    <span class="sec-num red">10</span>
+    <h2>Dio Error Handling — DioException Types</h2>
+  </div>
+  <div class="sec-body">
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> dio_error_handling.dart</div>
+      <pre><span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">safeApiCall</span>() <span class="kw">async</span> {
+  <span class="kw">try</span> {
+    <span class="kw">final</span> response = <span class="kw">await</span> <span class="cl">DioClient</span>.instance.get(<span class="st">'/tasks'</span>);
+    <span class="fn">print</span>(response.data);
+  } <span class="kw">on</span> <span class="cl">DioException</span> <span class="kw">catch</span> (e) {
+    <span class="kw">switch</span> (e.type) {
+      <span class="kw">case</span> <span class="cl">DioExceptionType</span>.connectionTimeout:
+        <span class="fn">print</span>(<span class="st">'⏱️ Connection timed out'</span>);
+        <span class="kw">break</span>;
+      <span class="kw">case</span> <span class="cl">DioExceptionType</span>.receiveTimeout:
+        <span class="fn">print</span>(<span class="st">'⏱️ Server too slow'</span>);
+        <span class="kw">break</span>;
+      <span class="kw">case</span> <span class="cl">DioExceptionType</span>.badResponse:
+        <span class="kw">final</span> code = e.response?.statusCode;
+        <span class="fn">print</span>(<span class="st">'🔴 Server error: </span><span class="va">$code</span><span class="st">'</span>);
+        <span class="kw">break</span>;
+      <span class="kw">case</span> <span class="cl">DioExceptionType</span>.connectionError:
+        <span class="fn">print</span>(<span class="st">'📡 No internet connection'</span>);
+        <span class="kw">break</span>;
+      <span class="kw">case</span> <span class="cl">DioExceptionType</span>.cancel:
+        <span class="fn">print</span>(<span class="st">'❌ Request cancelled'</span>);
+        <span class="kw">break</span>;
+      <span class="kw">default</span>:
+        <span class="fn">print</span>(<span class="st">'Unknown error: </span><span class="va">${e.message}</span><span class="st">'</span>);
+    }
+  }
+}</pre>
+    </div>
+    <table>
+      <tr><th>DioExceptionType</th><th>When it occurs</th></tr>
+      <tr><td><code>connectionTimeout</code></td><td>Server didn't connect in time</td></tr>
+      <tr><td><code>receiveTimeout</code></td><td>Response took too long</td></tr>
+      <tr><td><code>sendTimeout</code></td><td>Upload took too long</td></tr>
+      <tr><td><code>badResponse</code></td><td>4xx / 5xx status codes</td></tr>
+      <tr><td><code>connectionError</code></td><td>No internet / DNS failure</td></tr>
+      <tr><td><code>cancel</code></td><td>Request was cancelled</td></tr>
+      <tr><td><code>unknown</code></td><td>Unexpected errors</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════ S11 — AUTH ═══════════════════ -->
+<section id="s11">
+  <div class="sec-header">
+    <span class="sec-num">11</span>
+    <h2>Authentication — Login, Token Storage, Logout</h2>
+  </div>
+  <div class="sec-body">
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> data/services/auth_service.dart</div>
+      <pre><span class="kw">import</span> <span class="st">'package:shared_preferences/shared_preferences.dart'</span>;
+
+<span class="kw">class</span> <span class="cl">AuthStorage</span> {
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> _tokenKey = <span class="st">'access_token'</span>;
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> _userKey  = <span class="st">'user_data'</span>;
+
+  <span class="cm">// ── Save token after login ──</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">saveToken</span>(<span class="nt">String</span> token) <span class="kw">async</span> {
+    <span class="kw">final</span> prefs = <span class="kw">await</span> <span class="cl">SharedPreferences</span>.getInstance();
+    <span class="kw">await</span> prefs.setString(_tokenKey, token);
+    <span class="cl">DioClient</span>.setToken(token); <span class="cm">// update Dio header too</span>
+  }
+
+  <span class="cm">// ── Read token ──</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="nt">String</span>?&gt; <span class="fn">getToken</span>() <span class="kw">async</span> {
+    <span class="kw">final</span> prefs = <span class="kw">await</span> <span class="cl">SharedPreferences</span>.getInstance();
+    <span class="kw">return</span> prefs.getString(_tokenKey);
+  }
+
+  <span class="cm">// ── Save user object ──</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">saveUser</span>(<span class="cl">UserModel</span> user) <span class="kw">async</span> {
+    <span class="kw">final</span> prefs = <span class="kw">await</span> <span class="cl">SharedPreferences</span>.getInstance();
+    <span class="kw">await</span> prefs.setString(_userKey, jsonEncode(user.toJson()));
+  }
+
+  <span class="cm">// ── Logout: clear everything ──</span>
+  <span class="kw">static</span> <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">logOut</span>() <span class="kw">async</span> {
+    <span class="kw">final</span> prefs = <span class="kw">await</span> <span class="cl">SharedPreferences</span>.getInstance();
+    <span class="kw">await</span> prefs.clear();
+    <span class="cl">DioClient</span>.clearToken();
+  }
+}
+
+<span class="cm">// ── Login API call ──</span>
+<span class="kw">class</span> <span class="cl">AuthRepository</span> {
+  <span class="kw">Future</span>&lt;<span class="cl">UserModel</span>?&gt; <span class="fn">login</span>(<span class="nt">String</span> email, <span class="nt">String</span> password) <span class="kw">async</span> {
+    <span class="kw">final</span> response = <span class="kw">await</span> <span class="cl">NetworkCaller</span>.postRequest(
+      <span class="st">'/login'</span>,
+      body: {<span class="st">'email'</span>: email, <span class="st">'password'</span>: password},
+    );
+
+    <span class="kw">if</span> (response.isSuccess) {
+      <span class="kw">final</span> token = response.body[<span class="st">'token'</span>];
+      <span class="kw">final</span> user  = <span class="cl">UserModel</span>.fromJson(response.body[<span class="st">'data'</span>]);
+      <span class="kw">await</span> <span class="cl">AuthStorage</span>.saveToken(token);
+      <span class="kw">await</span> <span class="cl">AuthStorage</span>.saveUser(user);
+      <span class="kw">return</span> user;
+    }
+    <span class="kw">return</span> <span class="kw">null</span>;
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S12 — FILE UPLOAD ═══════════════════ -->
+<section id="s12">
+  <div class="sec-header">
+    <span class="sec-num green">12</span>
+    <h2>File Upload with Dio — MultipartFile &amp; FormData</h2>
+  </div>
+  <div class="sec-body">
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> file_upload.dart</div>
+      <pre><span class="kw">import</span> <span class="st">'package:image_picker/image_picker.dart'</span>;
+
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">uploadProfilePhoto</span>() <span class="kw">async</span> {
+  <span class="cm">// 1️⃣ Pick image from gallery</span>
+  <span class="kw">final</span> picker = <span class="cl">ImagePicker</span>();
+  <span class="kw">final</span> picked = <span class="kw">await</span> picker.pickImage(source: <span class="cl">ImageSource</span>.gallery);
+  <span class="kw">if</span> (picked == <span class="kw">null</span>) <span class="kw">return</span>;
+
+  <span class="cm">// 2️⃣ Build FormData</span>
+  <span class="kw">final</span> formData = <span class="cl">FormData</span>.fromMap({
+    <span class="st">'photo'</span>: <span class="kw">await</span> <span class="cl">MultipartFile</span>.fromFile(
+      picked.path,
+      filename: <span class="st">'photo.jpg'</span>,
+    ),
+    <span class="st">'email'</span>: <span class="st">'user@example.com'</span>, <span class="cm">// extra fields</span>
+  });
+
+  <span class="cm">// 3️⃣ Send with Dio</span>
+  <span class="kw">try</span> {
+    <span class="kw">final</span> response = <span class="kw">await</span> <span class="cl">DioClient</span>.instance.patch(
+      <span class="st">'/profile/photo'</span>,
+      data: formData,
+      onSendProgress: (sent, total) {
+        <span class="kw">final</span> percent = (sent / total * <span class="nm">100</span>).toStringAsFixed(<span class="nm">0</span>);
+        <span class="fn">print</span>(<span class="st">'Upload: </span><span class="va">$percent</span><span class="st">%'</span>);
+      },
+    );
+    <span class="fn">print</span>(response.data);
+  } <span class="kw">on</span> <span class="cl">DioException</span> <span class="kw">catch</span> (e) {
+    <span class="fn">print</span>(<span class="st">'Upload failed: </span><span class="va">${e.message}</span><span class="st">'</span>);
+  }
+}</pre>
+    </div>
+    <div class="callout warn">
+      <span class="icon">⚠️</span>
+      <div class="body"><strong>Do NOT</strong> set <code>Content-Type: application/json</code> when sending FormData. Dio sets the multipart boundary automatically.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S13 — REPOSITORY PATTERN ═══════════════════ -->
+<section id="s13">
+  <div class="sec-header">
+    <span class="sec-num purple">13</span>
+    <h2>Repository Pattern — Separating API from UI</h2>
+  </div>
+  <div class="sec-body">
+    <p>The repository sits between the UI/controllers and the network layer. UI never calls NetworkCaller directly.</p>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> data/repositories/task_repository.dart</div>
+      <pre><span class="kw">class</span> <span class="cl">TaskRepository</span> {
+  <span class="cm">// ── Get all tasks ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;?&gt; <span class="fn">getAllTasks</span>() <span class="kw">async</span> {
+    <span class="kw">final</span> res = <span class="kw">await</span> <span class="cl">NetworkCaller</span>.getRequest(<span class="st">'/tasks'</span>);
+    <span class="kw">if</span> (res.isSuccess) {
+      <span class="kw">final</span> rawList = res.body[<span class="st">'data'</span>] <span class="kw">as</span> <span class="nt">List</span>;
+      <span class="kw">return</span> rawList.map((e) =&gt; <span class="cl">TaskModel</span>.fromJson(e)).toList();
+    }
+    <span class="kw">return</span> <span class="kw">null</span>;
+  }
+
+  <span class="cm">// ── Get tasks by status ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;?&gt; <span class="fn">getTasksByStatus</span>(<span class="nt">String</span> status) <span class="kw">async</span> {
+    <span class="kw">final</span> res = <span class="kw">await</span> <span class="cl">NetworkCaller</span>.getRequest(
+      <span class="st">'/tasks?status=</span><span class="va">$status</span><span class="st">'</span>);
+    <span class="kw">if</span> (res.isSuccess) {
+      <span class="kw">final</span> rawList = res.body[<span class="st">'data'</span>] <span class="kw">as</span> <span class="nt">List</span>;
+      <span class="kw">return</span> rawList.map((e) =&gt; <span class="cl">TaskModel</span>.fromJson(e)).toList();
+    }
+    <span class="kw">return</span> <span class="kw">null</span>;
+  }
+
+  <span class="cm">// ── Create task ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">bool</span>&gt; <span class="fn">createTask</span>(<span class="nt">String</span> title, <span class="nt">String</span> desc) <span class="kw">async</span> {
+    <span class="kw">final</span> res = <span class="kw">await</span> <span class="cl">NetworkCaller</span>.postRequest(
+      <span class="st">'/tasks'</span>,
+      body: {<span class="st">'title'</span>: title, <span class="st">'description'</span>: desc, <span class="st">'status'</span>: <span class="st">'New'</span>},
+    );
+    <span class="kw">return</span> res.isSuccess;
+  }
+
+  <span class="cm">// ── Update status (PATCH) ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">bool</span>&gt; <span class="fn">updateStatus</span>(<span class="nt">String</span> id, <span class="nt">String</span> newStatus) <span class="kw">async</span> {
+    <span class="kw">final</span> res = <span class="kw">await</span> <span class="cl">NetworkCaller</span>.patchRequest(
+      <span class="st">'/tasks/</span><span class="va">$id</span><span class="st">'</span>,
+      body: {<span class="st">'status'</span>: newStatus},
+    );
+    <span class="kw">return</span> res.isSuccess;
+  }
+
+  <span class="cm">// ── Delete task ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">bool</span>&gt; <span class="fn">deleteTask</span>(<span class="nt">String</span> id) <span class="kw">async</span> {
+    <span class="kw">final</span> res = <span class="kw">await</span> <span class="cl">NetworkCaller</span>.deleteRequest(<span class="st">'/tasks/</span><span class="va">$id</span><span class="st">'</span>);
+    <span class="kw">return</span> res.isSuccess;
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S14 — CLEAN ARCHITECTURE ═══════════════════ -->
+<section id="s14">
+  <div class="sec-header">
+    <span class="sec-num orange">14</span>
+    <h2>Clean Architecture — Folder Structure &amp; Layers</h2>
+  </div>
+  <div class="sec-body">
+    <div class="arch">
+      <div class="arch-box blue">Presentation Layer (UI + Controllers)</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-box green">Domain Layer (Use Cases + Entities)</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-box purple">Data Layer (Repositories + Data Sources)</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-box orange">Core (NetworkCaller + Dio + Models)</div>
+    </div>
+
+    <div class="tree">
+<span class="folder">lib/</span>
+├── <span class="folder">core/</span>
+│   ├── <span class="folder">network/</span>
+│   │   ├── <span class="dart">network_caller.dart</span>     <span class="cm">← GET/POST/PUT/PATCH/DELETE</span>
+│   │   ├── <span class="dart">network_response.dart</span>   <span class="cm">← Response wrapper</span>
+│   │   ├── <span class="dart">dio_client.dart</span>         <span class="cm">← Dio singleton + interceptors</span>
+│   │   └── <span class="dart">auth_interceptor.dart</span>   <span class="cm">← Token injection</span>
+│   ├── <span class="folder">constants/</span>
+│   │   └── <span class="dart">api_endpoints.dart</span>      <span class="cm">← All URL strings</span>
+│   └── <span class="folder">utils/</span>
+│       └── <span class="dart">app_strings.dart</span>
+│
+├── <span class="folder">data/</span>
+│   ├── <span class="folder">models/</span>
+│   │   ├── <span class="dart">user_model.dart</span>
+│   │   └── <span class="dart">task_model.dart</span>
+│   ├── <span class="folder">repositories/</span>
+│   │   ├── <span class="dart">auth_repository.dart</span>
+│   │   └── <span class="dart">task_repository.dart</span>
+│   └── <span class="folder">services/</span>
+│       └── <span class="dart">auth_storage.dart</span>       <span class="cm">← SharedPreferences</span>
+│
+├── <span class="folder">presentation/</span>
+│   ├── <span class="folder">screens/</span>
+│   │   ├── <span class="dart">signin_screen.dart</span>
+│   │   └── <span class="dart">home_screen.dart</span>
+│   └── <span class="folder">widgets/</span>
+│       └── <span class="dart">task_card.dart</span>
+│
+└── <span class="dart">main.dart</span>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> core/constants/api_endpoints.dart</div>
+      <pre><span class="kw">class</span> <span class="cl">ApiEndpoints</span> {
+  <span class="cm">// ── Never hardcode URLs in screens ──</span>
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> baseUrl    = <span class="st">'https://api.example.com'</span>;
+
+  <span class="cm">// Auth</span>
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> login      = <span class="st">'/login'</span>;
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> register   = <span class="st">'/register'</span>;
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> logout     = <span class="st">'/logout'</span>;
+
+  <span class="cm">// Tasks</span>
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> tasks      = <span class="st">'/tasks'</span>;
+  <span class="kw">static</span> <span class="nt">String</span> <span class="fn">taskById</span>(<span class="nt">String</span> id) =&gt; <span class="st">'/tasks/</span><span class="va">$id</span><span class="st">'</span>;
+
+  <span class="cm">// Profile</span>
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> profile    = <span class="st">'/profile'</span>;
+  <span class="kw">static</span> <span class="kw">const</span> <span class="nt">String</span> uploadPhoto= <span class="st">'/profile/photo'</span>;
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S15 — COMPLETE EXAMPLE ═══════════════════ -->
+<section id="s15">
+  <div class="sec-header">
+    <span class="sec-num">15</span>
+    <h2>Complete Working Example — Task Screen</h2>
+  </div>
+  <div class="sec-body">
+    <p>Putting it all together: a task screen that loads, creates, updates, and deletes tasks.</p>
+
+    <div class="code-wrap">
+      <div class="code-label"><span class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></span> presentation/screens/task_screen.dart</div>
+      <pre><span class="kw">class</span> <span class="cl">TaskScreen</span> <span class="kw">extends</span> <span class="cl">StatefulWidget</span> {
+  <span class="kw">const</span> <span class="cl">TaskScreen</span>({<span class="kw">super</span>.key});
+  <span class="kw">@override</span>
+  <span class="cl">State</span>&lt;<span class="cl">TaskScreen</span>&gt; <span class="fn">createState</span>() =&gt; <span class="cl">_TaskScreenState</span>();
+}
+
+<span class="kw">class</span> <span class="cl">_TaskScreenState</span> <span class="kw">extends</span> <span class="cl">State</span>&lt;<span class="cl">TaskScreen</span>&gt; {
+  <span class="kw">final</span> _repo = <span class="cl">TaskRepository</span>();
+  <span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt; _tasks = [];
+  <span class="nt">bool</span> _loading = <span class="kw">false</span>;
+  <span class="nt">String</span>? _error;
+
+  <span class="kw">@override</span>
+  <span class="nt">void</span> <span class="fn">initState</span>() {
+    <span class="kw">super</span>.initState();
+    <span class="fn">_loadTasks</span>();
+  }
+
+  <span class="cm">// ── Load tasks ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_loadTasks</span>() <span class="kw">async</span> {
+    setState(() =&gt; _loading = <span class="kw">true</span>);
+    <span class="kw">final</span> tasks = <span class="kw">await</span> _repo.getAllTasks();
+    setState(() {
+      _loading = <span class="kw">false</span>;
+      <span class="kw">if</span> (tasks != <span class="kw">null</span>) {
+        _tasks = tasks;
+      } <span class="kw">else</span> {
+        _error = <span class="st">'Failed to load tasks'</span>;
+      }
+    });
+  }
+
+  <span class="cm">// ── Create task ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_createTask</span>(<span class="nt">String</span> title, <span class="nt">String</span> desc) <span class="kw">async</span> {
+    <span class="kw">final</span> success = <span class="kw">await</span> _repo.createTask(title, desc);
+    <span class="kw">if</span> (success) <span class="fn">_loadTasks</span>(); <span class="cm">// refresh</span>
+  }
+
+  <span class="cm">// ── Update status ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_updateStatus</span>(<span class="nt">String</span> id, <span class="nt">String</span> status) <span class="kw">async</span> {
+    <span class="kw">final</span> ok = <span class="kw">await</span> _repo.updateStatus(id, status);
+    <span class="kw">if</span> (ok) <span class="fn">_loadTasks</span>();
+  }
+
+  <span class="cm">// ── Delete task ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_deleteTask</span>(<span class="nt">String</span> id) <span class="kw">async</span> {
+    <span class="kw">final</span> ok = <span class="kw">await</span> _repo.deleteTask(id);
+    <span class="kw">if</span> (ok) <span class="fn">_loadTasks</span>();
+  }
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      appBar: <span class="cl">AppBar</span>(title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Tasks'</span>)),
+      body: _loading
+        ? <span class="kw">const</span> <span class="cl">Center</span>(child: <span class="cl">CircularProgressIndicator</span>())
+        : _error != <span class="kw">null</span>
+          ? <span class="cl">Center</span>(child: <span class="cl">Text</span>(_error!))
+          : <span class="cl">ListView</span>.builder(
+              itemCount: _tasks.length,
+              itemBuilder: (ctx, i) {
+                <span class="kw">final</span> task = _tasks[i];
+                <span class="kw">return</span> <span class="cl">ListTile</span>(
+                  title:    <span class="cl">Text</span>(task.title ?? <span class="st">''</span>),
+                  subtitle: <span class="cl">Text</span>(task.status ?? <span class="st">''</span>),
+                  trailing: <span class="cl">Row</span>(
+                    mainAxisSize: <span class="cl">MainAxisSize</span>.min,
+                    children: [
+                      <span class="cl">IconButton</span>(
+                        icon: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.check),
+                        onPressed: () =&gt;
+                          <span class="fn">_updateStatus</span>(task.sId!, <span class="st">'Completed'</span>),
+                      ),
+                      <span class="cl">IconButton</span>(
+                        icon: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.delete, color: <span class="cl">Colors</span>.red),
+                        onPressed: () =&gt; <span class="fn">_deleteTask</span>(task.sId!),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+      floatingActionButton: <span class="cl">FloatingActionButton</span>(
+        onPressed: () =&gt; <span class="fn">_createTask</span>(<span class="st">'New Task'</span>, <span class="st">'Description'</span>),
+        child: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.add),
+      ),
+    );
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ S16 — BEST PRACTICES ═══════════════════ -->
+<section id="s16">
+  <div class="sec-header">
+    <span class="sec-num red">16</span>
+    <h2>Best Practices — Do's &amp; Don'ts</h2>
+  </div>
+  <div class="sec-body">
+    <div class="callout good">
+      <span class="icon">✅</span>
+      <div class="body"><strong>DO:</strong> Use Dio in production apps — interceptors save a huge amount of boilerplate code.</div>
+    </div>
+    <div class="callout good">
+      <span class="icon">✅</span>
+      <div class="body"><strong>DO:</strong> Create a Model class for every API response. Never parse JSON directly inside UI widgets.</div>
+    </div>
+    <div class="callout good">
+      <span class="icon">✅</span>
+      <div class="body"><strong>DO:</strong> Keep all API URLs in one <code>ApiEndpoints</code> class so changing the backend URL is a one-line edit.</div>
+    </div>
+    <div class="callout good">
+      <span class="icon">✅</span>
+      <div class="body"><strong>DO:</strong> Handle 401 globally in an interceptor — never repeat logout logic in every screen.</div>
+    </div>
+    <div class="callout bad">
+      <span class="icon">❌</span>
+      <div class="body"><strong>DON'T:</strong> Put <code>http.get()</code> or <code>dio.get()</code> calls directly in your widget's <code>build()</code> method.</div>
+    </div>
+    <div class="callout bad">
+      <span class="icon">❌</span>
+      <div class="body"><strong>DON'T:</strong> Store secret keys or tokens in source code — use SharedPreferences, flutter_secure_storage, or .env files.</div>
+    </div>
+    <div class="callout bad">
+      <span class="icon">❌</span>
+      <div class="body"><strong>DON'T:</strong> Set <code>Content-Type: application/json</code> when sending <code>FormData</code> — Dio sets the multipart header automatically.</div>
+    </div>
+    <div class="callout warn">
+      <span class="icon">🔀</span>
+      <div class="body"><strong>HTTP vs Dio:</strong> Use <code>http</code> package for simple hobby projects. Use <strong>Dio</strong> for any real production app that needs interceptors, timeout config, upload progress, or cancellation.</div>
+    </div>
+
+    <table>
+      <tr><th>Feature</th><th>HTTP Package</th><th>Dio</th></tr>
+      <tr><td>Setup complexity</td><td>Simple</td><td>More config</td></tr>
+      <tr><td>Interceptors</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Global timeout</td><td>❌</td><td>✅</td></tr>
+      <tr><td>FormData / upload</td><td>Manual</td><td>✅ Built-in</td></tr>
+      <tr><td>Auto JSON decode</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Download progress</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Cancel request</td><td>❌</td><td>✅</td></tr>
+      <tr><td>Production ready</td><td>⚠️ Limited</td><td>✅ Recommended</td></tr>
+    </table>
+  </div>
+</section>
+
+</div><!-- /wrapper -->
+
+<footer>
+  Flutter HTTP &amp; Dio — Complete Notes &nbsp;|&nbsp; All verbs · Models · Core layer · Clean Architecture
+</footer>
+</body>
+</html>

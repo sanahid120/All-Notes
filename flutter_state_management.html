@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flutter State Management — Provider · Riverpod · Bloc</title>
+<style>
+:root {
+  --bg:#080c14; --s1:#0f1623; --s2:#151e2e; --s3:#1a2540;
+  --b1:#1e2d45; --b2:#243352;
+  --provider:#7c3aed; --providerL:rgba(124,58,237,.15);
+  --riverpod:#0ea5e9; --riverpodL:rgba(14,165,233,.13);
+  --bloc:#f59e0b; --blocL:rgba(245,158,11,.13);
+  --green:#10b981; --rose:#f43f5e; --slate:#94a3b8;
+  --text:#dde4f0; --text2:#8899b4; --text3:#4a5e7a;
+  --mono:'Cascadia Code','Fira Code',monospace;
+  --sans:'Inter','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:14px;line-height:1.7}
+
+/* HERO */
+.hero{padding:44px 40px 36px;background:linear-gradient(135deg,#0d1528 0%,#111c30 100%);border-bottom:1px solid var(--b1);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 15% 50%,rgba(124,58,237,.10) 0%,transparent 55%),radial-gradient(ellipse 50% 60% at 80% 30%,rgba(14,165,233,.08) 0%,transparent 55%)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;position:relative}
+.chip{font-size:10.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid}
+.cp{color:#c084fc;border-color:rgba(192,132,252,.3);background:rgba(124,58,237,.08)}
+.cr{color:#38bdf8;border-color:rgba(56,189,248,.3);background:rgba(14,165,233,.08)}
+.cb{color:#fbbf24;border-color:rgba(251,191,36,.3);background:rgba(245,158,11,.08)}
+.hero h1{font-size:2.2rem;font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:8px;position:relative}
+.hero h1 .p{color:#c084fc}.hero h1 .r{color:#38bdf8}.hero h1 .b{color:#fbbf24}
+.hero p{color:var(--text2);max-width:580px;position:relative}
+
+/* LAYOUT */
+.wrap{max-width:1120px;margin:0 auto;padding:32px 20px 80px}
+
+/* SECTION HEADER */
+.sec-banner{display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:12px 12px 0 0;border:1px solid;border-bottom:none}
+.sec-banner h2{font-size:1.1rem;font-weight:800;letter-spacing:-.3px}
+.sec-banner .num{font-size:11px;font-weight:800;padding:2px 9px;border-radius:6px;letter-spacing:.3px}
+.provider-banner{background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.3)}
+.provider-banner h2{color:#c084fc}.provider-banner .num{background:var(--provider);color:#fff}
+.riverpod-banner{background:rgba(14,165,233,.08);border-color:rgba(14,165,233,.3)}
+.riverpod-banner h2{color:#38bdf8}.riverpod-banner .num{background:var(--riverpod);color:#fff}
+.bloc-banner{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)}
+.bloc-banner h2{color:#fbbf24}.bloc-banner .num{background:var(--bloc);color:#0a0e17}
+
+/* SECTION BODY */
+.sec-body{background:var(--s1);border:1px solid var(--b1);border-radius:0 0 12px 12px;padding:20px;margin-bottom:28px}
+
+/* SUBSECTION */
+.sub{margin-bottom:20px}
+.sub-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--b1)}
+
+/* EXPLANATION BOX */
+.explain{background:var(--s2);border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0 10px;font-size:13px;color:var(--text2)}
+.explain.riv{border-color:var(--riverpod)}
+.explain.blc{border-color:var(--bloc)}
+.explain strong{color:var(--text)}
+.explain code{background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:12px;color:#a5d6ff}
+
+/* CODE */
+.cb-wrap{background:#060a10;border:1px solid var(--b1);border-radius:9px;overflow:hidden;margin:8px 0}
+.cb-top{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;background:#0a0f1a;border-bottom:1px solid var(--b1)}
+.cb-top .fn{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.dots{display:flex;gap:4px}.d{width:9px;height:9px;border-radius:50%}
+.dr{background:#f78166}.dy{background:#e3b341}.dg{background:#3fb950}
+pre{font-family:var(--mono);font-size:12.5px;line-height:1.65;padding:13px 15px;overflow-x:auto;color:#cdd9e5}
+.kw{color:#ff7b72}.cl{color:#79c0ff}.fn{color:#d2a8ff}.st{color:#a5d6ff}
+.cm{color:#555f6e;font-style:italic}.nt{color:#ffa657}.nm{color:#79c0ff}
+
+/* NOTE / TIP */
+.note{display:flex;gap:9px;padding:9px 12px;border-radius:7px;font-size:12.5px;margin:8px 0;color:var(--text2)}
+.note.info{background:rgba(14,165,233,.07);border-left:2px solid var(--riverpod)}
+.note.warn{background:rgba(245,158,11,.07);border-left:2px solid var(--bloc)}
+.note.good{background:rgba(16,185,129,.07);border-left:2px solid var(--green)}
+.note strong{color:var(--text)}
+
+/* COMPARISON TABLE */
+table.cmp{width:100%;border-collapse:collapse;font-size:12.5px;margin:12px 0}
+table.cmp th{background:var(--s3);color:var(--text2);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;text-align:left;border-bottom:1px solid var(--b1)}
+table.cmp td{padding:8px 12px;border-bottom:1px solid var(--b2);color:var(--text2);vertical-align:top}
+table.cmp tr:last-child td{border-bottom:none}
+table.cmp td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:10px 0;padding:12px 16px;background:var(--s2);border-radius:9px;font-size:12.5px}
+.fbox{padding:5px 12px;border-radius:6px;font-weight:700;white-space:nowrap;font-size:12px}
+.farr{color:var(--text3);font-size:14px;font-weight:700}
+
+/* TWO COL */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.two{grid-template-columns:1fr}}
+
+footer{text-align:center;padding:24px;color:var(--text3);font-size:12px;border-top:1px solid var(--b1)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="chips">
+    <span class="chip cp">Provider</span>
+    <span class="chip cr">Riverpod</span>
+    <span class="chip cb">BLoC / Cubit</span>
+  </div>
+  <h1>Flutter <span class="p">Provider</span> · <span class="r">Riverpod</span> · <span class="b">Bloc</span></h1>
+  <p>Complete state management reference — code-first for Provider, explained + real examples for Riverpod &amp; Bloc.</p>
+</div>
+
+<div class="wrap">
+
+<!-- ═══════════════════════════════════
+     COMPARISON TABLE
+═══════════════════════════════════ -->
+<div style="background:var(--s1);border:1px solid var(--b1);border-radius:12px;padding:18px;margin-bottom:28px">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">Quick Comparison</div>
+  <table class="cmp">
+    <tr><th></th><th>Provider</th><th>Riverpod</th><th>Bloc / Cubit</th></tr>
+    <tr><td>Learning Curve</td><td>⭐ Easy</td><td>⭐⭐ Medium</td><td>⭐⭐⭐ Harder</td></tr>
+    <tr><td>Boilerplate</td><td>Low</td><td>Low–Medium</td><td>High</td></tr>
+    <tr><td>Compile-safe</td><td>❌ Runtime</td><td>✅ Always</td><td>✅ Always</td></tr>
+    <tr><td>Context needed</td><td>✅ Yes</td><td>❌ No</td><td>❌ No</td></tr>
+    <tr><td>Testing</td><td>OK</td><td>Excellent</td><td>Excellent</td></tr>
+    <tr><td>Best for</td><td>Small–medium apps</td><td>All app sizes</td><td>Large / team apps</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════
+     PROVIDER
+═══════════════════════════════════ -->
+<div class="sec-banner provider-banner">
+  <span class="num">01</span>
+  <h2>Provider — Code Reference</h2>
+</div>
+<div class="sec-body">
+
+  <!-- pubspec -->
+  <div class="sub">
+    <div class="sub-title">Setup — pubspec.yaml</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">pubspec.yaml</span></div>
+<pre><span class="nt">dependencies</span>:
+  provider: ^6.1.2</pre></div>
+  </div>
+
+  <!-- ChangeNotifier -->
+  <div class="sub">
+    <div class="sub-title">1 · ChangeNotifier — The Model/Controller</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">task_provider.dart</span></div>
+<pre><span class="kw">import</span> <span class="st">'package:flutter/foundation.dart'</span>;
+
+<span class="kw">class</span> <span class="cl">TaskProvider</span> <span class="kw">extends</span> <span class="cl">ChangeNotifier</span> {
+  <span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt; _tasks = [];
+  <span class="nt">bool</span> _isLoading = <span class="kw">false</span>;
+  <span class="nt">String</span>? _error;
+
+  <span class="cm">// ── Getters (read-only outside) ──</span>
+  <span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt; <span class="kw">get</span> tasks   => _tasks;
+  <span class="nt">bool</span>             <span class="kw">get</span> loading => _isLoading;
+  <span class="nt">String</span>?          <span class="kw">get</span> error   => _error;
+
+  <span class="kw">final</span> _repo = <span class="cl">TaskRepository</span>();
+
+  <span class="cm">// ── Fetch all tasks ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">fetchTasks</span>() <span class="kw">async</span> {
+    _isLoading = <span class="kw">true</span>;
+    _error = <span class="kw">null</span>;
+    notifyListeners(); <span class="cm">// rebuild UI → show spinner</span>
+
+    <span class="kw">final</span> result = <span class="kw">await</span> _repo.getAllTasks();
+    <span class="kw">if</span> (result != <span class="kw">null</span>) {
+      _tasks = result;
+    } <span class="kw">else</span> {
+      _error = <span class="st">'Failed to load tasks'</span>;
+    }
+    _isLoading = <span class="kw">false</span>;
+    notifyListeners(); <span class="cm">// rebuild UI → show data</span>
+  }
+
+  <span class="cm">// ── Add a task ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">addTask</span>(<span class="nt">String</span> title, <span class="nt">String</span> desc) <span class="kw">async</span> {
+    <span class="kw">final</span> ok = <span class="kw">await</span> _repo.createTask(title, desc);
+    <span class="kw">if</span> (ok) <span class="kw">await</span> fetchTasks();
+  }
+
+  <span class="cm">// ── Delete a task ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">deleteTask</span>(<span class="nt">String</span> id) <span class="kw">async</span> {
+    <span class="kw">final</span> ok = <span class="kw">await</span> _repo.deleteTask(id);
+    <span class="kw">if</span> (ok) {
+      _tasks.removeWhere((t) => t.sId == id);
+      notifyListeners();
+    }
+  }
+
+  <span class="cm">// ── Update task status ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">updateStatus</span>(<span class="nt">String</span> id, <span class="nt">String</span> status) <span class="kw">async</span> {
+    <span class="kw">await</span> _repo.updateStatus(id, status);
+    <span class="kw">await</span> fetchTasks();
+  }
+}</pre></div>
+  </div>
+
+  <!-- Register -->
+  <div class="sub">
+    <div class="sub-title">2 · Register Provider in main.dart</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">main.dart</span></div>
+<pre><span class="kw">void</span> <span class="fn">main</span>() {
+  runApp(
+    <span class="cm">// ── Single provider ──</span>
+    <span class="cl">ChangeNotifierProvider</span>(
+      create: (_) => <span class="cl">TaskProvider</span>(),
+      child: <span class="kw">const</span> <span class="cl">MyApp</span>(),
+    ),
+  );
+}
+
+<span class="cm">// ── Multiple providers ──</span>
+<span class="kw">void</span> <span class="fn">main</span>() {
+  runApp(
+    <span class="cl">MultiProvider</span>(
+      providers: [
+        <span class="cl">ChangeNotifierProvider</span>(create: (_) => <span class="cl">TaskProvider</span>()),
+        <span class="cl">ChangeNotifierProvider</span>(create: (_) => <span class="cl">AuthProvider</span>()),
+        <span class="cl">ChangeNotifierProvider</span>(create: (_) => <span class="cl">UserProvider</span>()),
+      ],
+      child: <span class="kw">const</span> <span class="cl">MyApp</span>(),
+    ),
+  );
+}</pre></div>
+  </div>
+
+  <!-- Read / Watch / Select -->
+  <div class="sub">
+    <div class="sub-title">3 · Read, Watch &amp; Select in Widgets</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">task_screen.dart</span></div>
+<pre><span class="kw">class</span> <span class="cl">TaskScreen</span> <span class="kw">extends</span> <span class="cl">StatelessWidget</span> {
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+
+    <span class="cm">// .watch → listen + rebuild on every change</span>
+    <span class="kw">final</span> provider = context.watch&lt;<span class="cl">TaskProvider</span>&gt;();
+
+    <span class="cm">// .read  → call once (in onPressed, initState)</span>
+    <span class="cm">// context.read&lt;TaskProvider&gt;().fetchTasks();</span>
+
+    <span class="cm">// .select → rebuild ONLY when one field changes</span>
+    <span class="kw">final</span> count = context.select&lt;<span class="cl">TaskProvider</span>, <span class="nt">int</span>&gt;(
+      (p) => p.tasks.length);
+
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      appBar: <span class="cl">AppBar</span>(title: <span class="cl">Text</span>(<span class="st">'Tasks (</span><span class="kw">$count</span><span class="st">)'</span>)),
+      body: provider.loading
+        ? <span class="kw">const</span> <span class="cl">Center</span>(child: <span class="cl">CircularProgressIndicator</span>())
+        : provider.error != <span class="kw">null</span>
+          ? <span class="cl">Center</span>(child: <span class="cl">Text</span>(provider.error!))
+          : <span class="cl">ListView</span>.builder(
+              itemCount: provider.tasks.length,
+              itemBuilder: (ctx, i) {
+                <span class="kw">final</span> task = provider.tasks[i];
+                <span class="kw">return</span> <span class="cl">ListTile</span>(
+                  title: <span class="cl">Text</span>(task.title ?? <span class="st">''</span>),
+                  subtitle: <span class="cl">Text</span>(task.status ?? <span class="st">''</span>),
+                  trailing: <span class="cl">IconButton</span>(
+                    icon: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.delete),
+                    onPressed: () =>
+                      context.read&lt;<span class="cl">TaskProvider</span>&gt;()
+                        .deleteTask(task.sId!),
+                  ),
+                );
+              }),
+      floatingActionButton: <span class="cl">FloatingActionButton</span>(
+        onPressed: () =>
+          context.read&lt;<span class="cl">TaskProvider</span>&gt;().fetchTasks(),
+        child: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.refresh),
+      ),
+    );
+  }
+}</pre></div>
+  </div>
+
+  <!-- Consumer -->
+  <div class="sub">
+    <div class="sub-title">4 · Consumer — Rebuild Only Part of UI</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">consumer_example.dart</span></div>
+<pre><span class="kw">class</span> <span class="cl">HomePage</span> <span class="kw">extends</span> <span class="cl">StatelessWidget</span> {
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      appBar: <span class="cl">AppBar</span>(title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Home'</span>)),
+      <span class="cm">// AppBar does NOT rebuild when provider changes</span>
+      body: <span class="cl">Consumer</span>&lt;<span class="cl">TaskProvider</span>&gt;(
+        <span class="cm">// Only this subtree rebuilds</span>
+        builder: (context, provider, child) {
+          <span class="kw">if</span> (provider.loading)
+            <span class="kw">return</span> <span class="kw">const</span> <span class="cl">Center</span>(
+              child: <span class="cl">CircularProgressIndicator</span>());
+          <span class="kw">return</span> <span class="cl">ListView</span>.builder(
+            itemCount: provider.tasks.length,
+            itemBuilder: (_, i) =>
+              <span class="cl">Text</span>(provider.tasks[i].title ?? <span class="st">''</span>),
+          );
+        },
+      ),
+    );
+  }
+}
+
+<span class="cm">// ── initState: fetch data on screen open ──</span>
+<span class="kw">@override</span>
+<span class="nt">void</span> <span class="fn">initState</span>() {
+  <span class="kw">super</span>.initState();
+  <span class="cm">// use Future.microtask to avoid build-phase call</span>
+  <span class="cl">Future</span>.microtask(() =>
+    context.read&lt;<span class="cl">TaskProvider</span>&gt;().fetchTasks());
+}</pre></div>
+    <div class="note info"><span>💡</span><div><strong>Rule:</strong> Use <code>context.watch</code> inside <code>build()</code>. Use <code>context.read</code> inside callbacks like <code>onPressed</code> or <code>initState</code>. Never call <code>watch</code> inside a button handler.</div></div>
+  </div>
+
+  <!-- Auth Provider Example -->
+  <div class="sub">
+    <div class="sub-title">5 · Real Example — Auth Provider (Login/Logout)</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">auth_provider.dart</span></div>
+<pre><span class="kw">class</span> <span class="cl">AuthProvider</span> <span class="kw">extends</span> <span class="cl">ChangeNotifier</span> {
+  <span class="cl">UserModel</span>? _user;
+  <span class="nt">bool</span> _loading = <span class="kw">false</span>;
+  <span class="nt">String</span>? _error;
+
+  <span class="cl">UserModel</span>? <span class="kw">get</span> user    => _user;
+  <span class="nt">bool</span>       <span class="kw">get</span> loading => _loading;
+  <span class="nt">bool</span>       <span class="kw">get</span> isLoggedIn => _user != <span class="kw">null</span>;
+  <span class="nt">String</span>?    <span class="kw">get</span> error   => _error;
+
+  <span class="kw">Future</span>&lt;<span class="nt">bool</span>&gt; <span class="fn">login</span>(<span class="nt">String</span> email, <span class="nt">String</span> pass) <span class="kw">async</span> {
+    _loading = <span class="kw">true</span>; _error = <span class="kw">null</span>; notifyListeners();
+    <span class="kw">final</span> user = <span class="kw">await</span> <span class="cl">AuthRepository</span>().login(email, pass);
+    <span class="kw">if</span> (user != <span class="kw">null</span>) {
+      _user = user;
+    } <span class="kw">else</span> {
+      _error = <span class="st">'Invalid credentials'</span>;
+    }
+    _loading = <span class="kw">false</span>; notifyListeners();
+    <span class="kw">return</span> user != <span class="kw">null</span>;
+  }
+
+  <span class="kw">void</span> <span class="fn">logout</span>() {
+    _user = <span class="kw">null</span>;
+    <span class="cl">AuthStorage</span>.logOut();
+    notifyListeners();
+  }
+}
+
+<span class="cm">// ── In SignIn screen ──</span>
+<span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_signIn</span>() <span class="kw">async</span> {
+  <span class="kw">final</span> ok = <span class="kw">await</span> context.read&lt;<span class="cl">AuthProvider</span>&gt;()
+    .login(_emailCtrl.text, _passCtrl.text);
+  <span class="kw">if</span> (ok) <span class="cl">Navigator</span>.pushReplacementNamed(context, <span class="st">'/home'</span>);
+}</pre></div>
+  </div>
+
+</div><!-- /provider sec-body -->
+
+
+<!-- ═══════════════════════════════════
+     RIVERPOD
+═══════════════════════════════════ -->
+<div class="sec-banner riverpod-banner">
+  <span class="num">02</span>
+  <h2>Riverpod — Explained with Real Examples</h2>
+</div>
+<div class="sec-body">
+
+  <div class="sub">
+    <div class="sub-title">What is Riverpod?</div>
+    <div class="explain riv">Riverpod is the <strong>evolution of Provider</strong> by the same author. Key improvements: no <code>BuildContext</code> needed to read state, providers are <strong>compile-time safe</strong> (no runtime "Provider not found" crashes), and providers can be accessed from <em>anywhere</em> — including outside widgets (services, repositories).</div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Setup</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">pubspec.yaml</span></div>
+<pre>flutter_riverpod: ^2.5.1</pre></div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">main.dart</span></div>
+<pre><span class="cm">// Wrap entire app in ProviderScope — done once, that's it.</span>
+<span class="kw">void</span> <span class="fn">main</span>() {
+  runApp(<span class="kw">const</span> <span class="cl">ProviderScope</span>(child: <span class="cl">MyApp</span>()));
+}</pre></div>
+    <div class="explain riv">Unlike Provider, there's <strong>no MultiProvider</strong> setup needed. Each provider is declared globally at the top of its file. <code>ProviderScope</code> is the single entry point — add it once to <code>main()</code>.</div>
+  </div>
+
+  <!-- Provider types -->
+  <div class="sub">
+    <div class="sub-title">Provider Types — Which to Use When</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">provider_types.dart</span></div>
+<pre><span class="cm">// ── Provider: read-only static value ──</span>
+<span class="kw">final</span> greetingProvider = <span class="cl">Provider</span>&lt;<span class="nt">String</span>&gt;((ref) {
+  <span class="kw">return</span> <span class="st">'Hello, Flutter!'</span>;
+});
+
+<span class="cm">// ── StateProvider: simple mutable value (counter, bool) ──</span>
+<span class="kw">final</span> counterProvider = <span class="cl">StateProvider</span>&lt;<span class="nt">int</span>&gt;((ref) => <span class="nm">0</span>);
+
+<span class="cm">// ── FutureProvider: wraps an async/API call ──</span>
+<span class="kw">final</span> tasksProvider = <span class="cl">FutureProvider</span>&lt;<span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;&gt;((ref) async {
+  <span class="kw">return</span> <span class="kw">await</span> <span class="cl">TaskRepository</span>().getAllTasks() ?? [];
+});
+
+<span class="cm">// ── StreamProvider: wraps a live stream ──</span>
+<span class="kw">final</span> messagesProvider = <span class="cl">StreamProvider</span>&lt;<span class="cl">List</span>&lt;<span class="cl">Message</span>&gt;&gt;((ref) {
+  <span class="kw">return</span> <span class="cl">ChatService</span>().messagesStream();
+});
+
+<span class="cm">// ── NotifierProvider: replaces ChangeNotifier (Riverpod 2.x) ──</span>
+<span class="kw">final</span> taskNotifierProvider =
+  <span class="cl">AsyncNotifierProvider</span>&lt;<span class="cl">TaskNotifier</span>, <span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;&gt;(
+    <span class="cl">TaskNotifier</span>.new);
+</pre></div>
+    <div class="explain riv">Think of it this way: <code>StateProvider</code> → simple value (like a toggle). <code>FutureProvider</code> → one-time API fetch. <code>StreamProvider</code> → live/real-time data. <code>AsyncNotifierProvider</code> → full CRUD logic with async operations.</div>
+  </div>
+
+  <!-- StateProvider example -->
+  <div class="sub">
+    <div class="sub-title">StateProvider — Simple State (Filter / Toggle)</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">filter_provider.dart</span></div>
+<pre><span class="cm">// ── Declare globally (outside any class) ──</span>
+<span class="kw">final</span> selectedStatusProvider =
+  <span class="cl">StateProvider</span>&lt;<span class="nt">String</span>&gt;((ref) => <span class="st">'New'</span>);
+
+<span class="cm">// ── Widget must extend ConsumerWidget (not StatelessWidget) ──</span>
+<span class="kw">class</span> <span class="cl">FilterBar</span> <span class="kw">extends</span> <span class="cl">ConsumerWidget</span> {
+  <span class="kw">const</span> <span class="cl">FilterBar</span>({<span class="kw">super</span>.key});
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context, <span class="cl">WidgetRef</span> ref) {
+    <span class="cm">// ref.watch → subscribe to changes (rebuilds widget)</span>
+    <span class="kw">final</span> selected = ref.watch(selectedStatusProvider);
+
+    <span class="kw">return</span> <span class="cl">Row</span>(children:
+      [<span class="st">'New'</span>, <span class="st">'InProgress'</span>, <span class="st">'Completed'</span>].map((s) =>
+        <span class="cl">ChoiceChip</span>(
+          label:    <span class="cl">Text</span>(s),
+          selected: selected == s,
+          onSelected: (_) =>
+            <span class="cm">// ref.read(...).notifier.state = value to update</span>
+            ref.read(selectedStatusProvider.notifier).state = s,
+        )
+      ).toList(),
+    );
+  }
+}</pre></div>
+    <div class="explain riv">The key difference from Provider: use <code>ConsumerWidget</code> instead of <code>StatelessWidget</code>, and access state through <code>ref</code> instead of <code>context</code>. <strong>ref.watch</strong> = listen (rebuild). <strong>ref.read</strong> = one-time read (in callbacks).</div>
+  </div>
+
+  <!-- AsyncNotifierProvider — Real CRUD example -->
+  <div class="sub">
+    <div class="sub-title">AsyncNotifierProvider — Real CRUD Example (Task Manager)</div>
+    <div class="explain riv"><strong>AsyncNotifier</strong> is the Riverpod 2.x way to handle async state (API calls). It replaces the old <code>StateNotifier</code>. It automatically handles loading / error / data states using <code>AsyncValue</code> — no manual boolean flags needed.</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">task_notifier.dart</span></div>
+<pre><span class="cm">// Step 1: Declare the provider at the top of the file</span>
+<span class="kw">final</span> taskNotifierProvider =
+  <span class="cl">AsyncNotifierProvider</span>&lt;<span class="cl">TaskNotifier</span>, <span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;&gt;(
+    <span class="cl">TaskNotifier</span>.new);
+
+<span class="cm">// Step 2: Write the Notifier class</span>
+<span class="kw">class</span> <span class="cl">TaskNotifier</span> <span class="kw">extends</span> <span class="cl">AsyncNotifier</span>&lt;<span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;&gt; {
+  <span class="kw">final</span> _repo = <span class="cl">TaskRepository</span>();
+
+  <span class="cm">// build() = called once on init. Return the initial data.</span>
+  <span class="kw">@override</span>
+  <span class="kw">Future</span>&lt;<span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;&gt; <span class="fn">build</span>() <span class="kw">async</span> {
+    <span class="kw">return</span> <span class="kw">await</span> _repo.getAllTasks() ?? [];
+  }
+
+  <span class="cm">// ── Create task then refresh ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">addTask</span>(<span class="nt">String</span> title, <span class="nt">String</span> desc) <span class="kw">async</span> {
+    <span class="cm">// state = AsyncLoading() shows spinner automatically</span>
+    state = <span class="kw">const</span> <span class="cl">AsyncLoading</span>();
+    <span class="kw">await</span> _repo.createTask(title, desc);
+    <span class="cm">// ref.invalidateSelf() re-calls build() to refresh list</span>
+    ref.invalidateSelf();
+  }
+
+  <span class="cm">// ── Delete: optimistic update (instant UI, no spinner) ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">deleteTask</span>(<span class="nt">String</span> id) <span class="kw">async</span> {
+    <span class="kw">final</span> current = state.value ?? [];
+    <span class="cm">// Update UI instantly before API responds</span>
+    state = <span class="cl">AsyncData</span>(
+      current.where((t) => t.sId != id).toList());
+    <span class="cm">// Then call API in background</span>
+    <span class="kw">await</span> _repo.deleteTask(id);
+  }
+}</pre></div>
+  </div>
+
+  <!-- ConsumerWidget reading AsyncValue -->
+  <div class="sub">
+    <div class="sub-title">Reading AsyncValue in the UI — when/map pattern</div>
+    <div class="explain riv"><code>AsyncValue</code> has three states: <code>loading</code>, <code>error</code>, <code>data</code>. Use <code>.when()</code> to handle all three cleanly in one place — no need for manual <code>if (_isLoading)</code> checks.</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">task_screen.dart</span></div>
+<pre><span class="kw">class</span> <span class="cl">TaskScreen</span> <span class="kw">extends</span> <span class="cl">ConsumerWidget</span> {
+  <span class="kw">const</span> <span class="cl">TaskScreen</span>({<span class="kw">super</span>.key});
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context, <span class="cl">WidgetRef</span> ref) {
+    <span class="cm">// Watch the provider → AsyncValue&lt;List&lt;TaskModel&gt;&gt;</span>
+    <span class="kw">final</span> asyncTasks = ref.watch(taskNotifierProvider);
+
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      appBar: <span class="cl">AppBar</span>(title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'My Tasks'</span>)),
+      body: asyncTasks.when(
+        <span class="cm">// loading: show spinner</span>
+        loading: () => <span class="kw">const</span> <span class="cl">Center</span>(
+          child: <span class="cl">CircularProgressIndicator</span>()),
+
+        <span class="cm">// error: show error message + retry</span>
+        error: (err, stack) => <span class="cl">Center</span>(
+          child: <span class="cl">Column</span>(
+            mainAxisAlignment: <span class="cl">MainAxisAlignment</span>.center,
+            children: [
+              <span class="cl">Text</span>(<span class="st">'Error: </span><span class="kw">$err</span><span class="st">'</span>),
+              <span class="cl">ElevatedButton</span>(
+                onPressed: () =>
+                  <span class="cm">// invalidate = force re-fetch</span>
+                  ref.invalidate(taskNotifierProvider),
+                child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Retry'</span>),
+              ),
+            ],
+          )),
+
+        <span class="cm">// data: render the list</span>
+        data: (tasks) => <span class="cl">ListView</span>.builder(
+          itemCount:   tasks.length,
+          itemBuilder: (ctx, i) => <span class="cl">ListTile</span>(
+            title:    <span class="cl">Text</span>(tasks[i].title ?? <span class="st">''</span>),
+            subtitle: <span class="cl">Text</span>(tasks[i].status ?? <span class="st">''</span>),
+            trailing: <span class="cl">IconButton</span>(
+              icon: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.delete, color: <span class="cl">Colors</span>.red),
+              onPressed: () => ref
+                .read(taskNotifierProvider.notifier)
+                .deleteTask(tasks[i].sId!),
+            ),
+          ),
+        ),
+      ),
+      floatingActionButton: <span class="cl">FloatingActionButton</span>(
+        onPressed: () => _showAddDialog(context, ref),
+        child: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.add),
+      ),
+    );
+  }
+
+  <span class="kw">void</span> <span class="fn">_showAddDialog</span>(<span class="cl">BuildContext</span> ctx, <span class="cl">WidgetRef</span> ref) {
+    <span class="kw">final</span> ctrl = <span class="cl">TextEditingController</span>();
+    showDialog(context: ctx, builder: (_) => <span class="cl">AlertDialog</span>(
+      title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'New Task'</span>),
+      content: <span class="cl">TextField</span>(controller: ctrl,
+        decoration: <span class="kw">const</span> <span class="cl">InputDecoration</span>(hintText: <span class="st">'Title'</span>)),
+      actions: [
+        <span class="cl">ElevatedButton</span>(
+          onPressed: () {
+            ref.read(taskNotifierProvider.notifier)
+              .addTask(ctrl.text, <span class="st">''</span>);
+            <span class="cl">Navigator</span>.pop(ctx);
+          },
+          child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Add'</span>),
+        ),
+      ],
+    ));
+  }
+}</pre></div>
+  </div>
+
+  <!-- provider dependency -->
+  <div class="sub">
+    <div class="sub-title">Provider Dependency — ref.watch inside a Provider</div>
+    <div class="explain riv">Riverpod providers can <strong>depend on each other</strong> using <code>ref.watch</code> inside a provider definition. When the parent provider changes, the dependent provider automatically rebuilds — no manual wiring needed.</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">filtered_tasks.dart</span></div>
+<pre><span class="kw">final</span> selectedStatusProvider =
+  <span class="cl">StateProvider</span>&lt;<span class="nt">String</span>&gt;((ref) => <span class="st">'New'</span>);
+
+<span class="cm">// This provider DEPENDS on both tasks + selected filter</span>
+<span class="kw">final</span> filteredTasksProvider =
+  <span class="cl">Provider</span>&lt;<span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt;&gt;((ref) {
+    <span class="kw">final</span> status = ref.watch(selectedStatusProvider);
+    <span class="cm">// Watch the task list (AsyncValue)</span>
+    <span class="kw">final</span> asyncTasks = ref.watch(taskNotifierProvider);
+    <span class="kw">return</span> asyncTasks.value
+      ?.where((t) => t.status == status)
+      .toList() ?? [];
+  });
+
+<span class="cm">// In widget: just watch filteredTasksProvider</span>
+<span class="cm">// It auto-updates when filter OR task list changes</span></pre></div>
+    <div class="note good"><span>✅</span><div><strong>No context needed</strong> — you can also read Riverpod providers inside repositories, services, and non-widget code by passing <code>ref</code> as a parameter.</div></div>
+  </div>
+
+</div><!-- /riverpod sec-body -->
+
+
+<!-- ═══════════════════════════════════
+     BLOC / CUBIT
+═══════════════════════════════════ -->
+<div class="sec-banner bloc-banner">
+  <span class="num">03</span>
+  <h2>BLoC &amp; Cubit — Explained with Real Examples</h2>
+</div>
+<div class="sec-body">
+
+  <div class="sub">
+    <div class="sub-title">What is BLoC?</div>
+    <div class="explain blc"><strong>BLoC</strong> stands for <em>Business Logic Component</em>. The pattern separates UI from business logic by using <strong>Streams</strong>. The UI sends <strong>Events</strong> → BLoC processes them → emits new <strong>States</strong> → UI rebuilds. <strong>Cubit</strong> is a simpler version of BLoC with no Events — you call methods directly instead.</div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">BLoC vs Cubit — When to use which</div>
+    <table class="cmp">
+      <tr><th></th><th>Cubit</th><th>BLoC</th></tr>
+      <tr><td>Complexity</td><td>Simple state (counter, toggle, form)</td><td>Complex flows with multiple event types</td></tr>
+      <tr><td>Trigger</td><td>Call methods directly</td><td>Add events to the bloc</td></tr>
+      <tr><td>Boilerplate</td><td>Low — just methods + states</td><td>Higher — needs Event classes too</td></tr>
+      <tr><td>Traceability</td><td>Less traceable</td><td>Full event log for debugging</td></tr>
+    </table>
+    <div class="explain blc">Start with <strong>Cubit</strong>. Upgrade to <strong>BLoC</strong> only when you need event history, event transformers (debounce, throttle), or multiple triggers for the same state change.</div>
+  </div>
+
+  <div class="sub">
+    <div class="sub-title">Setup</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">pubspec.yaml</span></div>
+<pre><span class="nt">dependencies</span>:
+  flutter_bloc: ^8.1.5</pre></div>
+  </div>
+
+  <!-- CUBIT -->
+  <div class="sub">
+    <div class="sub-title">Cubit — Real Example: Task List (Simple + Clean)</div>
+    <div class="explain blc">A Cubit has two parts: <strong>State classes</strong> (what the UI displays) and the <strong>Cubit class</strong> (the logic that emits those states). The UI listens with <code>BlocBuilder</code> and rebuilds when state changes.</div>
+    <div class="flow">
+      <span class="fbox" style="background:rgba(245,158,11,.15);color:#fbbf24">UI calls<br>cubit.method()</span>
+      <span class="farr">→</span>
+      <span class="fbox" style="background:rgba(99,102,241,.15);color:#a78bfa">Cubit processes<br>(API call etc.)</span>
+      <span class="farr">→</span>
+      <span class="fbox" style="background:rgba(16,185,129,.15);color:#34d399">emit(NewState)</span>
+      <span class="farr">→</span>
+      <span class="fbox" style="background:rgba(56,189,248,.15);color:#38bdf8">BlocBuilder<br>rebuilds UI</span>
+    </div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">task_state.dart  ← Step 1: Define States</span></div>
+<pre><span class="cm">// Each possible UI state is its own class</span>
+<span class="kw">abstract class</span> <span class="cl">TaskState</span> {}
+
+<span class="cm">// App just started — nothing loaded yet</span>
+<span class="kw">class</span> <span class="cl">TaskInitial</span> <span class="kw">extends</span> <span class="cl">TaskState</span> {}
+
+<span class="cm">// API call in progress — show spinner</span>
+<span class="kw">class</span> <span class="cl">TaskLoading</span> <span class="kw">extends</span> <span class="cl">TaskState</span> {}
+
+<span class="cm">// Data arrived — render the list</span>
+<span class="kw">class</span> <span class="cl">TaskLoaded</span> <span class="kw">extends</span> <span class="cl">TaskState</span> {
+  <span class="kw">final</span> <span class="nt">List</span>&lt;<span class="cl">TaskModel</span>&gt; tasks;
+  <span class="kw">const</span> <span class="cl">TaskLoaded</span>(<span class="kw">this</span>.tasks);
+}
+
+<span class="cm">// Something went wrong — show error</span>
+<span class="kw">class</span> <span class="cl">TaskError</span> <span class="kw">extends</span> <span class="cl">TaskState</span> {
+  <span class="kw">final</span> <span class="nt">String</span> message;
+  <span class="kw">const</span> <span class="cl">TaskError</span>(<span class="kw">this</span>.message);
+}</pre></div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">task_cubit.dart  ← Step 2: Write the Cubit</span></div>
+<pre><span class="kw">import</span> <span class="st">'package:flutter_bloc/flutter_bloc.dart'</span>;
+
+<span class="cm">// Cubit&lt;State&gt; — generic type is the state class above</span>
+<span class="kw">class</span> <span class="cl">TaskCubit</span> <span class="kw">extends</span> <span class="cl">Cubit</span>&lt;<span class="cl">TaskState</span>&gt; {
+  <span class="kw">final</span> _repo = <span class="cl">TaskRepository</span>();
+
+  <span class="cm">// Initial state passed to super constructor</span>
+  <span class="cl">TaskCubit</span>() : <span class="kw">super</span>(<span class="cl">TaskInitial</span>());
+
+  <span class="cm">// ── Fetch: Loading → Loaded or Error ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">fetchTasks</span>() <span class="kw">async</span> {
+    emit(<span class="cl">TaskLoading</span>());         <span class="cm">// tell UI: show spinner</span>
+    <span class="kw">final</span> tasks = <span class="kw">await</span> _repo.getAllTasks();
+    <span class="kw">if</span> (tasks != <span class="kw">null</span>) {
+      emit(<span class="cl">TaskLoaded</span>(tasks));   <span class="cm">// success → render list</span>
+    } <span class="kw">else</span> {
+      emit(<span class="kw">const</span> <span class="cl">TaskError</span>(<span class="st">'Could not load tasks'</span>));
+    }
+  }
+
+  <span class="cm">// ── Add: optimistic + re-fetch ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">addTask</span>(<span class="nt">String</span> title, <span class="nt">String</span> desc) <span class="kw">async</span> {
+    <span class="kw">await</span> _repo.createTask(title, desc);
+    <span class="kw">await</span> fetchTasks(); <span class="cm">// refresh the list</span>
+  }
+
+  <span class="cm">// ── Delete: remove locally for instant feedback ──</span>
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">deleteTask</span>(<span class="nt">String</span> id) <span class="kw">async</span> {
+    <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">TaskLoaded</span>) {
+      <span class="kw">final</span> current = (state <span class="kw">as</span> <span class="cl">TaskLoaded</span>).tasks;
+      <span class="cm">// Emit updated list immediately (no spinner)</span>
+      emit(<span class="cl">TaskLoaded</span>(
+        current.where((t) => t.sId != id).toList()));
+      <span class="kw">await</span> _repo.deleteTask(id);
+    }
+  }
+}</pre></div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">main.dart  ← Step 3: Provide the Cubit</span></div>
+<pre><span class="cm">// BlocProvider wraps the screen (or the whole app)</span>
+<span class="cl">BlocProvider</span>(
+  create: (_) => <span class="cl">TaskCubit</span>()..fetchTasks(),
+  child: <span class="kw">const</span> <span class="cl">TaskScreen</span>(),
+)
+
+<span class="cm">// ── Multiple cubits ──</span>
+<span class="cl">MultiBlocProvider</span>(
+  providers: [
+    <span class="cl">BlocProvider</span>(create: (_) => <span class="cl">TaskCubit</span>()..fetchTasks()),
+    <span class="cl">BlocProvider</span>(create: (_) => <span class="cl">AuthCubit</span>()),
+  ],
+  child: <span class="kw">const</span> <span class="cl">MyApp</span>(),
+)</pre></div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">task_screen.dart  ← Step 4: BlocBuilder in UI</span></div>
+<pre><span class="kw">class</span> <span class="cl">TaskScreen</span> <span class="kw">extends</span> <span class="cl">StatelessWidget</span> {
+  <span class="kw">const</span> <span class="cl">TaskScreen</span>({<span class="kw">super</span>.key});
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+    <span class="kw">return</span> <span class="cl">Scaffold</span>(
+      appBar: <span class="cl">AppBar</span>(title: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Tasks'</span>)),
+      body: <span class="cl">BlocBuilder</span>&lt;<span class="cl">TaskCubit</span>, <span class="cl">TaskState</span>&gt;(
+        <span class="cm">// builder fires every time cubit emits a new state</span>
+        builder: (context, state) {
+          <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">TaskInitial</span>) {
+            <span class="kw">return</span> <span class="kw">const</span> <span class="cl">Center</span>(child: <span class="cl">Text</span>(<span class="st">'Press refresh'</span>));
+          }
+          <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">TaskLoading</span>) {
+            <span class="kw">return</span> <span class="kw">const</span> <span class="cl">Center</span>(
+              child: <span class="cl">CircularProgressIndicator</span>());
+          }
+          <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">TaskError</span>) {
+            <span class="kw">return</span> <span class="cl">Center</span>(child: <span class="cl">Text</span>(state.message));
+          }
+          <span class="cm">// state is TaskLoaded — render data</span>
+          <span class="kw">final</span> tasks = (state <span class="kw">as</span> <span class="cl">TaskLoaded</span>).tasks;
+          <span class="kw">return</span> <span class="cl">ListView</span>.builder(
+            itemCount:   tasks.length,
+            itemBuilder: (ctx, i) => <span class="cl">ListTile</span>(
+              title:    <span class="cl">Text</span>(tasks[i].title ?? <span class="st">''</span>),
+              subtitle: <span class="cl">Text</span>(tasks[i].status ?? <span class="st">''</span>),
+              trailing: <span class="cl">IconButton</span>(
+                icon: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.delete, color: <span class="cl">Colors</span>.red),
+                onPressed: () => context.read&lt;<span class="cl">TaskCubit</span>&gt;()
+                  .deleteTask(tasks[i].sId!),
+              ),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: <span class="cl">FloatingActionButton</span>(
+        onPressed: () =>
+          context.read&lt;<span class="cl">TaskCubit</span>&gt;().fetchTasks(),
+        child: <span class="kw">const</span> <span class="cl">Icon</span>(<span class="cl">Icons</span>.refresh),
+      ),
+    );
+  }
+}
+</pre></div>
+  </div>
+
+  <!-- BlocListener -->
+  <div class="sub">
+    <div class="sub-title">BlocListener &amp; BlocConsumer — Side Effects (Snackbar, Navigate)</div>
+    <div class="explain blc"><code>BlocBuilder</code> rebuilds the UI. <code>BlocListener</code> reacts to state changes for <em>side effects</em> like showing a snackbar, navigating, or playing a sound — it does NOT rebuild the widget tree. <code>BlocConsumer</code> combines both.</div>
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">bloc_listener.dart</span></div>
+<pre><span class="cm">// ── BlocListener: side effects only ──</span>
+<span class="cl">BlocListener</span>&lt;<span class="cl">TaskCubit</span>, <span class="cl">TaskState</span>&gt;(
+  listenWhen: (prev, curr) =>
+    curr <span class="kw">is</span> <span class="cl">TaskError</span>, <span class="cm">// only fire on error</span>
+  listener: (context, state) {
+    <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">TaskError</span>) {
+      <span class="cl">ScaffoldMessenger</span>.of(context).showSnackBar(
+        <span class="cl">SnackBar</span>(content: <span class="cl">Text</span>(state.message),
+          backgroundColor: <span class="cl">Colors</span>.red));
+    }
+  },
+  child: <span class="kw">const</span> <span class="cl">TaskList</span>(),
+)
+
+<span class="cm">// ── BlocConsumer: build UI + listen for side effects ──</span>
+<span class="cl">BlocConsumer</span>&lt;<span class="cl">AuthCubit</span>, <span class="cl">AuthState</span>&gt;(
+  listener: (ctx, state) {
+    <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">AuthLoggedIn</span>) {
+      <span class="cm">// Navigate after login</span>
+      <span class="cl">Navigator</span>.pushReplacementNamed(ctx, <span class="st">'/home'</span>);
+    }
+  },
+  builder: (ctx, state) {
+    <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">AuthLoading</span>)
+      <span class="kw">return</span> <span class="kw">const</span> <span class="cl">CircularProgressIndicator</span>();
+    <span class="kw">return</span> <span class="kw">const</span> <span class="cl">LoginForm</span>();
+  },
+)</pre></div>
+  </div>
+
+  <!-- Full BLoC (with Events) -->
+  <div class="sub">
+    <div class="sub-title">Full BLoC Pattern — With Events (Auth Flow)</div>
+    <div class="explain blc">Full BLoC adds an <strong>Events</strong> layer. Instead of calling cubit methods, the UI adds Events to the bloc. The bloc handles them with <code>on&lt;EventType&gt;</code> handlers. This makes every action <em>traceable</em> and <em>testable</em> — you can log, replay, or debounce events.</div>
+    <div class="flow">
+      <span class="fbox" style="background:rgba(245,158,11,.15);color:#fbbf24">UI add(LoginEvent)</span>
+      <span class="farr">→</span>
+      <span class="fbox" style="background:rgba(124,58,237,.15);color:#c084fc">on&lt;LoginEvent&gt;<br>handler fires</span>
+      <span class="farr">→</span>
+      <span class="fbox" style="background:rgba(16,185,129,.15);color:#34d399">emit(AuthLoaded)</span>
+      <span class="farr">→</span>
+      <span class="fbox" style="background:rgba(56,189,248,.15);color:#38bdf8">BlocBuilder<br>rebuilds</span>
+    </div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">auth_event.dart</span></div>
+<pre><span class="cm">// Events = what the user/system triggers</span>
+<span class="kw">abstract class</span> <span class="cl">AuthEvent</span> {}
+
+<span class="kw">class</span> <span class="cl">LoginRequested</span> <span class="kw">extends</span> <span class="cl">AuthEvent</span> {
+  <span class="kw">final</span> <span class="nt">String</span> email;
+  <span class="kw">final</span> <span class="nt">String</span> password;
+  <span class="cl">LoginRequested</span>({<span class="kw">required this</span>.email, <span class="kw">required this</span>.password});
+}
+
+<span class="kw">class</span> <span class="cl">LogoutRequested</span> <span class="kw">extends</span> <span class="cl">AuthEvent</span> {}
+<span class="kw">class</span> <span class="cl">CheckAuthStatus</span> <span class="kw">extends</span> <span class="cl">AuthEvent</span> {}</pre></div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">auth_state.dart</span></div>
+<pre><span class="kw">abstract class</span> <span class="cl">AuthState</span> {}
+<span class="kw">class</span> <span class="cl">AuthInitial</span>   <span class="kw">extends</span> <span class="cl">AuthState</span> {}
+<span class="kw">class</span> <span class="cl">AuthLoading</span>   <span class="kw">extends</span> <span class="cl">AuthState</span> {}
+<span class="kw">class</span> <span class="cl">AuthLoggedIn</span>  <span class="kw">extends</span> <span class="cl">AuthState</span> {
+  <span class="kw">final</span> <span class="cl">UserModel</span> user;
+  <span class="cl">AuthLoggedIn</span>(<span class="kw">this</span>.user);
+}
+<span class="kw">class</span> <span class="cl">AuthLoggedOut</span> <span class="kw">extends</span> <span class="cl">AuthState</span> {}
+<span class="kw">class</span> <span class="cl">AuthError</span>     <span class="kw">extends</span> <span class="cl">AuthState</span> {
+  <span class="kw">final</span> <span class="nt">String</span> message;
+  <span class="cl">AuthError</span>(<span class="kw">this</span>.message);
+}</pre></div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">auth_bloc.dart</span></div>
+<pre><span class="kw">class</span> <span class="cl">AuthBloc</span> <span class="kw">extends</span> <span class="cl">Bloc</span>&lt;<span class="cl">AuthEvent</span>, <span class="cl">AuthState</span>&gt; {
+  <span class="kw">final</span> _repo = <span class="cl">AuthRepository</span>();
+
+  <span class="cl">AuthBloc</span>() : <span class="kw">super</span>(<span class="cl">AuthInitial</span>()) {
+    <span class="cm">// Register handlers for each event type</span>
+    on&lt;<span class="cl">LoginRequested</span>&gt;(_onLogin);
+    on&lt;<span class="cl">LogoutRequested</span>&gt;(_onLogout);
+    on&lt;<span class="cl">CheckAuthStatus</span>&gt;(_onCheckAuth);
+  }
+
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_onLogin</span>(
+    <span class="cl">LoginRequested</span> event,
+    <span class="cl">Emitter</span>&lt;<span class="cl">AuthState</span>&gt; emit,
+  ) <span class="kw">async</span> {
+    emit(<span class="cl">AuthLoading</span>());
+    <span class="kw">final</span> user = <span class="kw">await</span> _repo.login(event.email, event.password);
+    <span class="kw">if</span> (user != <span class="kw">null</span>) {
+      emit(<span class="cl">AuthLoggedIn</span>(user));
+    } <span class="kw">else</span> {
+      emit(<span class="cl">AuthError</span>(<span class="st">'Wrong email or password'</span>));
+    }
+  }
+
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_onLogout</span>(
+    <span class="cl">LogoutRequested</span> event,
+    <span class="cl">Emitter</span>&lt;<span class="cl">AuthState</span>&gt; emit,
+  ) <span class="kw">async</span> {
+    <span class="kw">await</span> <span class="cl">AuthStorage</span>.logOut();
+    emit(<span class="cl">AuthLoggedOut</span>());
+  }
+
+  <span class="kw">Future</span>&lt;<span class="nt">void</span>&gt; <span class="fn">_onCheckAuth</span>(
+    <span class="cl">CheckAuthStatus</span> event,
+    <span class="cl">Emitter</span>&lt;<span class="cl">AuthState</span>&gt; emit,
+  ) <span class="kw">async</span> {
+    <span class="kw">final</span> token = <span class="kw">await</span> <span class="cl">AuthStorage</span>.getToken();
+    <span class="kw">if</span> (token != <span class="kw">null</span>) {
+      <span class="cm">// token exists → already logged in</span>
+      emit(<span class="cl">AuthLoggedIn</span>(<span class="kw">await</span> <span class="cl">AuthStorage</span>.getUser()));
+    } <span class="kw">else</span> {
+      emit(<span class="cl">AuthLoggedOut</span>());
+    }
+  }
+}</pre></div>
+
+    <div class="cb-wrap"><div class="cb-top"><div class="dots"><span class="d dr"></span><span class="d dy"></span><span class="d dg"></span></div><span class="fn">login_screen.dart — Using the BLoC</span></div>
+<pre><span class="kw">class</span> <span class="cl">LoginScreen</span> <span class="kw">extends</span> <span class="cl">StatelessWidget</span> {
+  <span class="kw">final</span> _emailCtrl = <span class="cl">TextEditingController</span>();
+  <span class="kw">final</span> _passCtrl  = <span class="cl">TextEditingController</span>();
+
+  <span class="kw">@override</span>
+  <span class="cl">Widget</span> <span class="fn">build</span>(<span class="cl">BuildContext</span> context) {
+    <span class="kw">return</span> <span class="cl">BlocConsumer</span>&lt;<span class="cl">AuthBloc</span>, <span class="cl">AuthState</span>&gt;(
+      listener: (ctx, state) {
+        <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">AuthLoggedIn</span>) {
+          <span class="cl">Navigator</span>.pushReplacementNamed(ctx, <span class="st">'/home'</span>);
+        }
+        <span class="kw">if</span> (state <span class="kw">is</span> <span class="cl">AuthError</span>) {
+          <span class="cl">ScaffoldMessenger</span>.of(ctx).showSnackBar(
+            <span class="cl">SnackBar</span>(content: <span class="cl">Text</span>(state.message),
+              backgroundColor: <span class="cl">Colors</span>.red));
+        }
+      },
+      builder: (ctx, state) => <span class="cl">Scaffold</span>(
+        body: <span class="cl">Padding</span>(
+          padding: <span class="kw">const</span> <span class="cl">EdgeInsets</span>.all(<span class="nm">24</span>),
+          child: <span class="cl">Column</span>(children: [
+            <span class="cl">TextField</span>(controller: _emailCtrl,
+              decoration: <span class="kw">const</span> <span class="cl">InputDecoration</span>(labelText: <span class="st">'Email'</span>)),
+            <span class="kw">const</span> <span class="cl">SizedBox</span>(height: <span class="nm">12</span>),
+            <span class="cl">TextField</span>(controller: _passCtrl,
+              obscureText: <span class="kw">true</span>,
+              decoration: <span class="kw">const</span> <span class="cl">InputDecoration</span>(labelText: <span class="st">'Password'</span>)),
+            <span class="kw">const</span> <span class="cl">SizedBox</span>(height: <span class="nm">24</span>),
+            state <span class="kw">is</span> <span class="cl">AuthLoading</span>
+              ? <span class="kw">const</span> <span class="cl">CircularProgressIndicator</span>()
+              : <span class="cl">ElevatedButton</span>(
+                  <span class="cm">// Add event instead of calling a method</span>
+                  onPressed: () => context.read&lt;<span class="cl">AuthBloc</span>&gt;().add(
+                    <span class="cl">LoginRequested</span>(
+                      email:    _emailCtrl.text.trim(),
+                      password: _passCtrl.text.trim())),
+                  child: <span class="kw">const</span> <span class="cl">Text</span>(<span class="st">'Sign In'</span>)),
+          ]),
+        ),
+      ),
+    );
+  }
+}</pre></div>
+  </div>
+
+</div><!-- /bloc sec-body -->
+
+<!-- QUICK RULE -->
+<div style="background:var(--s2);border:1px solid var(--b1);border-radius:12px;padding:18px;margin-bottom:8px">
+  <div style="font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:12px">Which should I use?</div>
+  <table class="cmp">
+    <tr><th>Situation</th><th>Recommended</th></tr>
+    <tr><td>Learning Flutter, first app</td><td style="color:#c084fc">Provider</td></tr>
+    <tr><td>Medium app, clean code, solo dev</td><td style="color:#38bdf8">Riverpod</td></tr>
+    <tr><td>Team project, need traceability</td><td style="color:#fbbf24">BLoC / Cubit</td></tr>
+    <tr><td>Simple toggle / counter</td><td style="color:#fbbf24">Cubit</td></tr>
+    <tr><td>Complex flows (search debounce, multi-event)</td><td style="color:#fbbf24">BLoC</td></tr>
+    <tr><td>Real-time / Firebase data</td><td style="color:#38bdf8">Riverpod StreamProvider</td></tr>
+  </table>
+</div>
+
+</div><!-- /wrap -->
+<footer>Flutter State Management — Provider · Riverpod · Bloc/Cubit · Complete Reference</footer>
+</body>
+</html>

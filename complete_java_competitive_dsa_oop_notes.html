@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Complete Java Notes for Competitive Programming, DSA, and OOP</title>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--text:#172033;--muted:#5d6b82;--primary:#b44b21;--accent:#fff0e8;--border:#e4e8f0;--code:#111827}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}header{background:linear-gradient(135deg,#3d1f16,#c35a2b);color:#fff;padding:56px 24px}header .wrap,main{max-width:1120px;margin:auto}h1{font-size:2.5rem;margin:0 0 10px}.subtitle{max-width:850px;color:#ffe6da}main{padding:28px 20px 60px}nav,section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin:22px 0;box-shadow:0 8px 30px rgba(23,32,51,.05)}nav{margin-top:0}.toc{columns:2;column-gap:36px;padding-left:20px}.toc li{break-inside:avoid;margin:5px 0}a{color:var(--primary);text-decoration:none}h2{color:#7b351d;margin-top:0;border-bottom:2px solid var(--accent);padding-bottom:8px}h3{color:#9b4727;margin-top:28px}pre{background:var(--code);color:#e5e7eb;padding:18px;border-radius:12px;overflow:auto;border:1px solid #263244}code{font-family:Consolas,Monaco,monospace}.note,.tip,.warn{padding:14px 16px;border-radius:10px;margin:14px 0}.note{background:#fff3ec;border-left:4px solid #c35a2b}.tip{background:#edfdf3;border-left:4px solid #1f9d55}.warn{background:#fff7e8;border-left:4px solid #d97706}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}th{background:#fff3ec}footer{text-align:center;color:var(--muted);padding:24px}@media(max-width:700px){.toc{columns:1}h1{font-size:2rem}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Complete Java Notes</h1><p class="subtitle">Beginner-to-advanced Java handbook covering syntax, complete OOP, Collections Framework, competitive programming, data structures, algorithms, JSON parsing, and complete code examples.</p></div></header>
+<main>
+<nav><h2>Table of Contents</h2><ol class="toc">
+<li><a href="#setup">Setup and I/O</a></li><li><a href="#types">Types and parsing</a></li><li><a href="#control">Operators and control flow</a></li><li><a href="#methods">Methods and parameters</a></li><li><a href="#arrays">Arrays and strings</a></li><li><a href="#collections">Collections</a></li><li><a href="#oop">Complete OOP</a></li><li><a href="#advanced-oop">Advanced OOP</a></li><li><a href="#generics">Generics and comparators</a></li><li><a href="#exceptions">Exceptions and files</a></li><li><a href="#streams">Stream API</a></li><li><a href="#complexity">Complexity</a></li><li><a href="#search-sort">Searching and sorting</a></li><li><a href="#linked-list">Linked list</a></li><li><a href="#trees">Trees</a></li><li><a href="#graphs">Graphs</a></li><li><a href="#recursion">Recursion, backtracking, DP</a></li><li><a href="#patterns">CP patterns</a></li><li><a href="#number-theory">Number theory and bits</a></li><li><a href="#advanced-dsa">Advanced DSA</a></li><li><a href="#json">JSON parsing</a></li><li><a href="#template">CP template</a></li><li><a href="#roadmap">Practice roadmap</a></li>
+</ol></nav>
+
+<section id="setup"><h2>1. Java Setup, Input, Output, and Program Structure</h2><p>Java source code is compiled into bytecode and executed by the Java Virtual Machine.</p><pre><code>public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java!");
+    }
+}</code></pre><h3>Scanner input</h3><pre><code>import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+        int age = Integer.parseInt(scanner.nextLine());
+        System.out.println(name + " " + age);
+    }
+}</code></pre><h3>Fast input</h3><pre><code>import java.io.*;
+import java.util.*;
+
+class FastScanner {
+    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private StringTokenizer st;
+
+    String next() throws IOException {
+        while (st == null || !st.hasMoreTokens()) {
+            st = new StringTokenizer(br.readLine());
+        }
+        return st.nextToken();
+    }
+
+    int nextInt() throws IOException { return Integer.parseInt(next()); }
+    long nextLong() throws IOException { return Long.parseLong(next()); }
+}</code></pre></section>
+
+<section id="types"><h2>2. Variables, Data Types, Constants, Parsing, and Casting</h2><table><tr><th>Type</th><th>Use</th></tr><tr><td>int</td><td>Normal integer</td></tr><tr><td>long</td><td>Large integer</td></tr><tr><td>double</td><td>Decimal value</td></tr><tr><td>char</td><td>Single character</td></tr><tr><td>boolean</td><td>true or false</td></tr><tr><td>String</td><td>Text object</td></tr></table><pre><code>int score = 95;
+long population = 8_000_000_000L;
+double price = 149.99;
+char grade = 'A';
+boolean active = true;
+String name = "Nahid";
+
+final double PI = 3.141592653589793;
+static final int MAX_SIZE = 100000;</code></pre><h3>Parsing and casting</h3><pre><code>int number = Integer.parseInt("123");
+long big = Long.parseLong("9999999999");
+double value = Double.parseDouble("12.75");
+String text = String.valueOf(number);
+
+double x = 8.9;
+int y = (int) x;
+double result = (double) 5 / 2;</code></pre></section>
+
+<section id="control"><h2>3. Operators, Conditions, Switch, and Loops</h2><pre><code>int a = 10, b = 3;
+int sum = a + b;
+int remainder = a % b;
+boolean ok = a > b && b > 0;
+int mask = 1 << 3;
+
+if (a > b) {
+    System.out.println("A is larger");
+} else {
+    System.out.println("B is larger or equal");
+}
+
+String result = a > b ? "A" : "B";</code></pre><h3>Switch expression</h3><pre><code>String dayType = switch (day) {
+    case "Friday", "Saturday" -> "Weekend";
+    default -> "Weekday";
+};</code></pre><h3>Loops</h3><pre><code>for (int i = 0; i < 5; i++) System.out.print(i + " ");
+while (n > 0) n--;
+for (int value : numbers) System.out.println(value);</code></pre></section>
+
+<section id="methods"><h2>4. Methods, Parameters, Overloading, and Varargs</h2><pre><code>static int add(int a, int b) {
+    return a + b;
+}
+
+static void printArray(int[] values) {
+    for (int value : values) System.out.print(value + " ");
+}
+
+static int sum(int... values) {
+    int total = 0;
+    for (int value : values) total += value;
+    return total;
+}</code></pre><h3>Method overloading</h3><pre><code>static int add(int a, int b) { return a + b; }
+static double add(double a, double b) { return a + b; }</code></pre><div class="note">Java is pass-by-value. For objects, the copied value is a reference to the same object.</div></section>
+
+<section id="arrays"><h2>5. Arrays, Multidimensional Arrays, Strings, and StringBuilder</h2><pre><code>int[] numbers = {4, 1, 7, 2};
+Arrays.sort(numbers);
+
+int[][] matrix = new int[3][4];
+matrix[1][2] = 10;</code></pre><h3>Strings</h3><pre><code>String text = "competitive";
+System.out.println(text.length());
+System.out.println(text.substring(0, 4));
+System.out.println(text.indexOf("pet"));
+
+char[] chars = text.toCharArray();
+Arrays.sort(chars);
+String sorted = new String(chars);</code></pre><h3>StringBuilder</h3><pre><code>StringBuilder builder = new StringBuilder();
+builder.append("Java").append(' ').append("DSA");
+builder.reverse();
+String result = builder.toString();</code></pre></section>
+
+<section id="collections"><h2>6. Java Collections Framework</h2><h3>ArrayList</h3><pre><code>List<Integer> list = new ArrayList<>();
+list.add(10);
+list.add(20);
+list.add(1, 15);
+list.set(0, 99);
+list.remove(Integer.valueOf(20));
+Collections.sort(list);</code></pre><h3>HashSet and TreeSet</h3><pre><code>Set<Integer> set = new HashSet<>();
+set.add(4);
+set.add(2);
+set.add(4);
+
+TreeSet<Integer> sortedSet = new TreeSet<>(List.of(5, 1, 7, 2));
+Integer floor = sortedSet.floor(4);
+Integer ceiling = sortedSet.ceiling(4);</code></pre><h3>HashMap frequency</h3><pre><code>Map<String, Integer> frequency = new HashMap<>();
+for (String word : words) {
+    frequency.put(word, frequency.getOrDefault(word, 0) + 1);
+}</code></pre><h3>Stack, queue, and heap</h3><pre><code>Deque<Integer> stack = new ArrayDeque<>();
+stack.push(10);
+stack.pop();
+
+Queue<Integer> queue = new ArrayDeque<>();
+queue.offer(10);
+queue.poll();
+
+PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());</code></pre></section>
+
+<section id="oop"><h2>7. Complete Object-Oriented Programming</h2><pre><code>class Product {
+    private String name;
+    private double price;
+
+    Product(String name, double price) {
+        this.name = name;
+        setPrice(price);
+    }
+
+    String getName() { return name; }
+    double getPrice() { return price; }
+
+    void setPrice(double price) {
+        if (price >= 0) this.price = price;
+    }
+
+    void display() {
+        System.out.println(name + ": " + price);
+    }
+}</code></pre><h3>Inheritance and overriding</h3><pre><code>class Animal {
+    void speak() { System.out.println("Animal sound"); }
+}
+
+class Dog extends Animal {
+    @Override
+    void speak() { System.out.println("Bark"); }
+}</code></pre><h3>Abstraction</h3><pre><code>abstract class Shape {
+    abstract double area();
+}
+
+class Rectangle extends Shape {
+    private final double width, height;
+    Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+    @Override
+    double area() { return width * height; }
+}</code></pre><h3>Interface</h3><pre><code>interface Payable {
+    void pay(double amount);
+}
+
+class CardPayment implements Payable {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Paid " + amount);
+    }
+}</code></pre><div class="note"><strong>OOP pillars:</strong> encapsulation, abstraction, inheritance, and polymorphism.</div></section>
+
+<section id="advanced-oop"><h2>8. Advanced OOP: Constructors, Static, Final, Enums, Records</h2><pre><code>class User {
+    String name;
+    int age;
+
+    User(String name) {
+        this(name, 0);
+    }
+
+    User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}</code></pre><h3>Enum</h3><pre><code>enum Priority {
+    LOW(1), MEDIUM(2), HIGH(3);
+
+    private final int level;
+    Priority(int level) { this.level = level; }
+    int getLevel() { return level; }
+}</code></pre><h3>Record</h3><pre><code>record Point(int x, int y) {}
+Point p = new Point(3, 5);</code></pre></section>
+
+<section id="generics"><h2>9. Generics, Comparable, Comparator, and Lambdas</h2><pre><code>class Box<T> {
+    private final T value;
+    Box(T value) { this.value = value; }
+    T get() { return value; }
+}
+
+static <T> void printArray(T[] values) {
+    for (T value : values) System.out.println(value);
+}</code></pre><h3>Comparable</h3><pre><code>class Student implements Comparable<Student> {
+    int marks;
+    Student(int marks) { this.marks = marks; }
+
+    @Override
+    public int compareTo(Student other) {
+        return Integer.compare(this.marks, other.marks);
+    }
+}</code></pre><h3>Comparator</h3><pre><code>students.sort((a, b) -> Integer.compare(b.marks, a.marks));</code></pre></section>
+
+<section id="exceptions"><h2>10. Exception Handling and File Handling</h2><pre><code>try {
+    int result = 10 / divisor;
+} catch (ArithmeticException error) {
+    System.out.println("Cannot divide by zero");
+} finally {
+    System.out.println("Finished");
+}</code></pre><h3>Custom exception</h3><pre><code>class InvalidPriceException extends Exception {
+    InvalidPriceException(String message) {
+        super(message);
+    }
+}</code></pre><h3>Files</h3><pre><code>Path path = Path.of("notes.txt");
+Files.writeString(path, "Java file example");
+String content = Files.readString(path);</code></pre></section>
+
+<section id="streams"><h2>11. Java Stream API</h2><pre><code>List<Integer> numbers = List.of(1, 2, 3, 4, 5, 6);
+
+List<Integer> evenSquares = numbers.stream()
+    .filter(x -> x % 2 == 0)
+    .map(x -> x * x)
+    .toList();
+
+int sum = numbers.stream()
+    .mapToInt(Integer::intValue)
+    .sum();</code></pre><div class="warn">Java Stream API is a collection-processing API, not the same as asynchronous streams in Dart.</div></section>
+
+<section id="complexity"><h2>12. Time and Space Complexity</h2><table><tr><th>Complexity</th><th>Example</th></tr><tr><td>O(1)</td><td>Array access</td></tr><tr><td>O(log n)</td><td>Binary search</td></tr><tr><td>O(n)</td><td>Single traversal</td></tr><tr><td>O(n log n)</td><td>Merge sort</td></tr><tr><td>O(n²)</td><td>Nested loops</td></tr><tr><td>O(2ⁿ)</td><td>Subset recursion</td></tr></table></section>
+
+<section id="search-sort"><h2>13. Searching and Sorting Algorithms</h2><h3>Linear search</h3><pre><code>static int linearSearch(int[] array, int target) {
+    for (int i = 0; i < array.length; i++) {
+        if (array[i] == target) return i;
+    }
+    return -1;
+}</code></pre><h3>Binary search</h3><pre><code>static int binarySearch(int[] array, int target) {
+    int left = 0, right = array.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (array[mid] == target) return mid;
+        if (array[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}</code></pre><h3>Bubble sort</h3><pre><code>static void bubbleSort(int[] array) {
+    for (int i = 0; i < array.length; i++) {
+        for (int j = 0; j + 1 < array.length - i; j++) {
+            if (array[j] > array[j + 1]) {
+                int temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}</code></pre><h3>Merge sort</h3><pre><code>static void mergeSort(int[] a, int l, int r) {
+    if (l >= r) return;
+    int m = l + (r - l) / 2;
+    mergeSort(a, l, m);
+    mergeSort(a, m + 1, r);
+    merge(a, l, m, r);
+}
+
+static void merge(int[] a, int l, int m, int r) {
+    int[] temp = new int[r - l + 1];
+    int i = l, j = m + 1, k = 0;
+    while (i <= m && j <= r) temp[k++] = a[i] <= a[j] ? a[i++] : a[j++];
+    while (i <= m) temp[k++] = a[i++];
+    while (j <= r) temp[k++] = a[j++];
+    for (int x = 0; x < temp.length; x++) a[l + x] = temp[x];
+}</code></pre></section>
+
+<section id="linked-list"><h2>14. Singly Linked List</h2><pre><code>class Node {
+    int data;
+    Node next;
+    Node(int data) { this.data = data; }
+}
+
+class SinglyLinkedList {
+    private Node head;
+
+    void addFirst(int value) {
+        Node node = new Node(value);
+        node.next = head;
+        head = node;
+    }
+
+    void display() {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.data + " -> ");
+            current = current.next;
+        }
+        System.out.println("null");
+    }
+}</code></pre></section>
+
+<section id="trees"><h2>15. Trees and Binary Search Trees</h2><pre><code>class TreeNode {
+    int value;
+    TreeNode left, right;
+    TreeNode(int value) { this.value = value; }
+}
+
+static TreeNode insert(TreeNode root, int value) {
+    if (root == null) return new TreeNode(value);
+    if (value < root.value) root.left = insert(root.left, value);
+    else root.right = insert(root.right, value);
+    return root;
+}
+
+static void inorder(TreeNode root) {
+    if (root == null) return;
+    inorder(root.left);
+    System.out.print(root.value + " ");
+    inorder(root.right);
+}</code></pre></section>
+
+<section id="graphs"><h2>16. Graphs, BFS, and DFS</h2><pre><code>List<List<Integer>> graph = new ArrayList<>();
+for (int i = 0; i < n; i++) graph.add(new ArrayList<>());
+graph.get(0).add(1);
+graph.get(1).add(0);</code></pre><h3>BFS</h3><pre><code>static void bfs(int start, List<List<Integer>> graph) {
+    boolean[] visited = new boolean[graph.size()];
+    Queue<Integer> queue = new ArrayDeque<>();
+    visited[start] = true;
+    queue.offer(start);
+
+    while (!queue.isEmpty()) {
+        int node = queue.poll();
+        System.out.print(node + " ");
+        for (int next : graph.get(node)) {
+            if (!visited[next]) {
+                visited[next] = true;
+                queue.offer(next);
+            }
+        }
+    }
+}</code></pre><h3>DFS</h3><pre><code>static void dfs(int node, List<List<Integer>> graph, boolean[] visited) {
+    visited[node] = true;
+    System.out.print(node + " ");
+    for (int next : graph.get(node)) {
+        if (!visited[next]) dfs(next, graph, visited);
+    }
+}</code></pre></section>
+
+<section id="recursion"><h2>17. Recursion, Backtracking, Greedy, and Dynamic Programming</h2><pre><code>static long factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}</code></pre><h3>Backtracking subsets</h3><pre><code>static void subsets(int index, int[] a, List<Integer> current) {
+    if (index == a.length) {
+        System.out.println(current);
+        return;
+    }
+    subsets(index + 1, a, current);
+    current.add(a[index]);
+    subsets(index + 1, a, current);
+    current.remove(current.size() - 1);
+}</code></pre><h3>Dynamic programming</h3><pre><code>static long fibonacci(int n) {
+    long[] dp = new long[n + 1];
+    if (n >= 1) dp[1] = 1;
+    for (int i = 2; i <= n; i++) dp[i] = dp[i - 1] + dp[i - 2];
+    return dp[n];
+}</code></pre></section>
+
+<section id="patterns"><h2>18. Competitive Programming Patterns</h2><h3>Prefix sum</h3><pre><code>long[] prefix = new long[n + 1];
+for (int i = 0; i < n; i++) prefix[i + 1] = prefix[i] + array[i];
+long rangeSum = prefix[right + 1] - prefix[left];</code></pre><h3>Sliding window</h3><pre><code>long window = 0, best = Long.MIN_VALUE;
+for (int i = 0; i < n; i++) {
+    window += array[i];
+    if (i >= k) window -= array[i - k];
+    if (i >= k - 1) best = Math.max(best, window);
+}</code></pre><h3>Binary search on answer</h3><pre><code>long low = 0, high = 1_000_000_000_000_000_000L, answer = -1;
+while (low <= high) {
+    long mid = low + (high - low) / 2;
+    if (can(mid)) {
+        answer = mid;
+        high = mid - 1;
+    } else {
+        low = mid + 1;
+    }
+}</code></pre></section>
+
+<section id="number-theory"><h2>19. Number Theory and Bit Manipulation</h2><pre><code>static long gcd(long a, long b) {
+    while (b != 0) {
+        long temp = a % b;
+        a = b;
+        b = temp;
+    }
+    return Math.abs(a);
+}
+
+static long lcm(long a, long b) {
+    return Math.abs(a / gcd(a, b) * b);
+}</code></pre><h3>Prime and sieve</h3><pre><code>static boolean isPrime(long n) {
+    if (n < 2) return false;
+    for (long i = 2; i * i <= n; i++) if (n % i == 0) return false;
+    return true;
+}
+
+boolean[] prime = new boolean[n + 1];
+Arrays.fill(prime, true);
+prime[0] = prime[1] = false;
+for (int p = 2; p * p <= n; p++) {
+    if (prime[p]) {
+        for (int multiple = p * p; multiple <= n; multiple += p) {
+            prime[multiple] = false;
+        }
+    }
+}</code></pre><h3>Bits</h3><pre><code>boolean isSet = (mask & (1 << bit)) != 0;
+mask |= (1 << bit);
+mask &= ~(1 << bit);
+mask ^= (1 << bit);
+int count = Integer.bitCount(mask);</code></pre></section>
+
+<section id="advanced-dsa"><h2>20. DSU and Dijkstra</h2><h3>Disjoint Set Union</h3><pre><code>class DSU {
+    int[] parent, size;
+
+    DSU(int n) {
+        parent = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    int find(int x) {
+        if (parent[x] == x) return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    boolean union(int a, int b) {
+        a = find(a); b = find(b);
+        if (a == b) return false;
+        if (size[a] < size[b]) {
+            int t = a; a = b; b = t;
+        }
+        parent[b] = a;
+        size[a] += size[b];
+        return true;
+    }
+}</code></pre><h3>Dijkstra</h3><pre><code>record Edge(int to, int weight) {}
+record State(long distance, int node) implements Comparable<State> {
+    public int compareTo(State other) {
+        return Long.compare(distance, other.distance);
+    }
+}
+
+static long[] dijkstra(int source, List<List<Edge>> graph) {
+    long[] dist = new long[graph.size()];
+    Arrays.fill(dist, Long.MAX_VALUE);
+    PriorityQueue<State> pq = new PriorityQueue<>();
+    dist[source] = 0;
+    pq.offer(new State(0, source));
+
+    while (!pq.isEmpty()) {
+        State current = pq.poll();
+        if (current.distance() != dist[current.node()]) continue;
+        for (Edge edge : graph.get(current.node())) {
+            long next = current.distance() + edge.weight();
+            if (next < dist[edge.to()]) {
+                dist[edge.to()] = next;
+                pq.offer(new State(next, edge.to()));
+            }
+        }
+    }
+    return dist;
+}</code></pre></section>
+
+<section id="json"><h2>21. JSON Parsing and Model Classes</h2><p>Java commonly uses Gson or Jackson for JSON serialization and deserialization.</p><pre><code>class Product {
+    private int id;
+    private String title;
+    private double price;
+
+    public Product() {}
+    public Product(int id, String title, double price) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+    }
+}</code></pre><h3>Gson</h3><pre><code>Gson gson = new Gson();
+String json = "{\"id\":1,\"title\":\"Phone\",\"price\":500}";
+Product product = gson.fromJson(json, Product.class);
+String encoded = gson.toJson(product);</code></pre><h3>List parsing</h3><pre><code>Type type = new TypeToken<List<Product>>() {}.getType();
+List<Product> products = gson.fromJson(jsonArray, type);</code></pre></section>
+
+<section id="template"><h2>22. Competitive Programming Template</h2><pre><code>import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class FastScanner {
+        private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        private StringTokenizer st;
+        String next() throws IOException {
+            while (st == null || !st.hasMoreTokens()) st = new StringTokenizer(br.readLine());
+            return st.nextToken();
+        }
+        int nextInt() throws IOException { return Integer.parseInt(next()); }
+    }
+
+    static void solve(FastScanner fs, StringBuilder out) throws Exception {
+        int n = fs.nextInt();
+        int[] a = new int[n];
+        for (int i = 0; i < n; i++) a[i] = fs.nextInt();
+        Arrays.sort(a);
+        for (int value : a) out.append(value).append(' ');
+        out.append('\n');
+    }
+
+    public static void main(String[] args) throws Exception {
+        FastScanner fs = new FastScanner();
+        StringBuilder out = new StringBuilder();
+        int testCases = fs.nextInt();
+        while (testCases-- > 0) solve(fs, out);
+        System.out.print(out);
+    }
+}</code></pre></section>
+
+<section id="roadmap"><h2>23. Learning and Practice Roadmap</h2><ol><li>Learn syntax, input/output, types, loops, methods, arrays, and strings.</li><li>Practice ArrayList, HashMap, HashSet, Queue, Deque, and PriorityQueue.</li><li>Master OOP, interfaces, abstract classes, generics, and exceptions.</li><li>Implement searching, sorting, linked lists, stacks, queues, trees, and graphs.</li><li>Learn prefix sums, two pointers, sliding windows, binary search on answer, and greedy methods.</li><li>Study recursion, backtracking, dynamic programming, DSU, shortest paths, and MST.</li><li>Solve problems regularly and review time complexity and edge cases.</li></ol><div class="tip"><strong>Practice rule:</strong> implement every algorithm from memory and test empty, duplicate, sorted, reverse-sorted, and boundary inputs.</div></section>
+
+</main><footer>Complete Java Competitive Programming, DSA, and OOP Study Guide</footer>
+</body></html>

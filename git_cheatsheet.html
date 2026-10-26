@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Cheat Sheet</title>
+<style>
+:root{
+  --bg:#0d1117;--s1:#161b22;--s2:#1c2128;--s3:#21262d;
+  --b1:#30363d;--b2:#21262d;
+  --green:#3fb950;--blue:#58a6ff;--orange:#ffa657;
+  --red:#f85149;--purple:#bc8cff;--cyan:#39d353;
+  --yellow:#e3b341;--text:#e6edf3;--text2:#7d8590;--text3:#484f58;
+  --mono:'Cascadia Code','Fira Code','Courier New',monospace;
+  --sans:'Inter','Segoe UI',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:13px;line-height:1.5}
+
+/* TOP BAR */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;
+  background:linear-gradient(90deg,#0d1117 0%,#161b22 50%,#0d1117 100%);
+  border-bottom:1px solid var(--b1);
+  flex-wrap:wrap;gap:10px;
+}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.git-logo{
+  width:36px;height:36px;border-radius:8px;
+  background:linear-gradient(135deg,#f05032,#c0392b);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.topbar h1{font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.5px}
+.topbar h1 span{color:#f87060}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:12px;border:1px solid}
+.b-r{color:#f87060;border-color:rgba(248,112,96,.35);background:rgba(240,80,50,.08)}
+.b-g{color:#3fb950;border-color:rgba(63,185,80,.35);background:rgba(63,185,80,.08)}
+.b-b{color:#58a6ff;border-color:rgba(88,166,255,.35);background:rgba(88,166,255,.08)}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1)}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:780px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
+
+/* SECTION */
+.sec{background:var(--bg);padding:0}
+.sec-head{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px 8px;
+  border-bottom:1px solid var(--b1);
+  position:sticky;top:0;z-index:1;
+}
+.sec-icon{font-size:14px}
+.sec-title{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase}
+.sec-body{padding:10px 14px 14px}
+
+/* COLOR THEMES PER SECTION */
+.s-setup .sec-head{background:#0f1a12}.s-setup .sec-title{color:var(--green)}
+.s-setup .sec-head{border-bottom-color:#1a3020}
+
+.s-core .sec-head{background:#111520}.s-core .sec-title{color:var(--blue)}
+.s-core .sec-head{border-bottom-color:#1a2035}
+
+.s-branch .sec-head{background:#120e1a}.s-branch .sec-title{color:var(--purple)}
+.s-branch .sec-head{border-bottom-color:#201630}
+
+.s-remote .sec-head{background:#141008}.s-remote .sec-title{color:var(--orange)}
+.s-remote .sec-head{border-bottom-color:#2a2010}
+
+.s-undo .sec-head{background:#170c0c}.s-undo .sec-title{color:var(--red)}
+.s-undo .sec-head{border-bottom-color:#2a1515}
+
+.s-stash .sec-head{background:#0c1414}.s-stash .sec-title{color:var(--cyan)}
+.s-stash .sec-head{border-bottom-color:#153030}
+
+.s-merge .sec-head{background:#141010}.s-merge .sec-title{color:var(--yellow)}
+.s-merge .sec-head{border-bottom-color:#2a2010}
+
+.s-log .sec-head{background:#0e0e16}.s-log .sec-title{color:var(--blue)}
+.s-log .sec-head{border-bottom-color:#1a1a30}
+
+.s-tag .sec-head{background:#0f120f}.s-tag .sec-title{color:var(--green)}
+
+.s-adv .sec-head{background:#13100e}.s-adv .sec-title{color:var(--orange)}
+
+.s-alias .sec-head{background:#100d16}.s-alias .sec-title{color:var(--purple)}
+
+.s-flow .sec-head{background:#0c1210}.s-flow .sec-title{color:var(--cyan)}
+
+/* COMMAND ROWS */
+.cmd{
+  display:flex;align-items:baseline;gap:0;
+  padding:4px 0;
+  border-bottom:1px solid var(--b2);
+}
+.cmd:last-child{border-bottom:none}
+.cmd-text{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:#e6edf3;
+  flex-shrink:0;
+  min-width:0;
+  line-height:1.5;
+}
+.cmd-text .pr{color:var(--green);font-weight:700}
+.cmd-text .fl{color:var(--orange)}
+.cmd-text .br{color:#f87060}
+.cmd-text .hl{color:var(--yellow)}
+.cmd-text .gh{color:var(--blue)}
+.cmd-sep{flex:1;border-bottom:1px dotted var(--b1);margin:0 7px;position:relative;top:-4px;min-width:8px}
+.cmd-desc{color:var(--text2);font-size:11px;flex-shrink:0;text-align:right;max-width:140px;line-height:1.4}
+
+/* DANGER CMD */
+.cmd.danger .cmd-text{color:#f87060}
+.cmd.danger .cmd-desc{color:#c04040}
+
+/* NOTE */
+.note{
+  font-size:11px;color:var(--text3);
+  padding:6px 8px;border-radius:5px;
+  margin-top:6px;
+  background:var(--s2);
+  border-left:2px solid;
+  line-height:1.5;
+}
+.note.g{border-color:var(--green);color:#5a8a5a}
+.note.r{border-color:var(--red);color:#8a5a5a}
+.note.b{border-color:var(--blue);color:#5a6a8a}
+.note.y{border-color:var(--yellow);color:#8a7a5a}
+
+/* FLOW SECTION (full width) */
+.flow-section{background:var(--bg);border-top:1px solid var(--b1);padding:14px 20px}
+.flow-title{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.flows{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:780px){.flows{grid-template-columns:1fr}}
+.flow-card{background:var(--s1);border:1px solid var(--b1);border-radius:9px;padding:10px 12px}
+.flow-name{font-size:10.5px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.flow-steps{display:flex;flex-direction:column;gap:3px}
+.fs{display:flex;align-items:baseline;gap:6px}
+.fs-n{font-size:10px;font-weight:800;color:var(--text3);width:14px;flex-shrink:0}
+.fs-cmd{font-family:var(--mono);font-size:11px;color:#c8d6e0;flex:1}
+.fs-cmd .pr{color:var(--green);font-weight:700}
+.fs-cmd .br{color:#f87060}
+.fs-cmd .gh{color:var(--blue)}
+.fs-desc{font-size:10px;color:var(--text3)}
+
+/* FOOTER */
+.foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 20px;
+  border-top:1px solid var(--b1);
+  background:var(--s1);
+  flex-wrap:wrap;gap:6px;
+}
+.foot span{font-size:11px;color:var(--text3)}
+.foot .keys{display:flex;gap:6px;flex-wrap:wrap}
+.key{
+  font-family:var(--mono);font-size:10px;
+  background:var(--s2);border:1px solid var(--b1);
+  color:var(--text2);padding:2px 7px;border-radius:4px;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="git-logo">🔀</div>
+    <h1><span>Git</span> Cheat Sheet</h1>
+  </div>
+  <div class="topbar-right">
+    <span class="badge b-r">Git 2.x</span>
+    <span class="badge b-g">Daily Use</span>
+    <span class="badge b-b">Developer</span>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="grid">
+
+  <!-- ══ SETUP ══ -->
+  <div class="sec s-setup">
+    <div class="sec-head"><span class="sec-icon">⚙️</span><span class="sec-title">Setup & Init</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git --version</span><span class="cmd-sep"></span><span class="cmd-desc">Check Git version</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config --global user.name <span class="hl">"Name"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Set your name</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config --global user.email <span class="hl">"email"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Set your email</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config --global init.defaultBranch main</span><span class="cmd-sep"></span><span class="cmd-desc">Default to main</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config --list</span><span class="cmd-sep"></span><span class="cmd-desc">View all config</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git init</span><span class="cmd-sep"></span><span class="cmd-desc">Init new repo</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git clone <span class="gh">&lt;url&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Clone remote repo</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git clone <span class="gh">&lt;url&gt;</span> <span class="hl">folder</span></span><span class="cmd-sep"></span><span class="cmd-desc">Clone into folder</span></div>
+      <div class="note b">Run config once after installing Git. Email must match your GitHub account.</div>
+    </div>
+  </div>
+
+  <!-- ══ CORE DAILY ══ -->
+  <div class="sec s-core">
+    <div class="sec-head"><span class="sec-icon">📸</span><span class="sec-title">Core — Daily Commands</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git status</span><span class="cmd-sep"></span><span class="cmd-desc">What changed?</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git add .</span><span class="cmd-sep"></span><span class="cmd-desc">Stage all files</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git add <span class="hl">&lt;file&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Stage one file</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git add <span class="hl">-p</span> <span class="hl">&lt;file&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Stage chunks interactively</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git commit <span class="hl">-m</span> <span class="hl">"msg"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Commit staged files</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git commit <span class="hl">-am</span> <span class="hl">"msg"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Stage tracked + commit</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git diff</span><span class="cmd-sep"></span><span class="cmd-desc">Unstaged changes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git diff <span class="hl">--staged</span></span><span class="cmd-sep"></span><span class="cmd-desc">Staged changes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git diff <span class="br">main</span>..<span class="br">feature</span></span><span class="cmd-sep"></span><span class="cmd-desc">Diff between branches</span></div>
+      <div class="note g">feat: · fix: · refactor: · style: · docs: · chore:</div>
+    </div>
+  </div>
+
+  <!-- ══ BRANCHING ══ -->
+  <div class="sec s-branch">
+    <div class="sec-head"><span class="sec-icon">🌿</span><span class="sec-title">Branching</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git branch</span><span class="cmd-sep"></span><span class="cmd-desc">List local branches</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git branch <span class="hl">-a</span></span><span class="cmd-sep"></span><span class="cmd-desc">List all + remote</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git checkout <span class="hl">-b</span> <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Create + switch branch</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git switch <span class="hl">-c</span> <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Create + switch (modern)</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git switch <span class="br">main</span></span><span class="cmd-sep"></span><span class="cmd-desc">Switch branch</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git checkout <span class="br">main</span></span><span class="cmd-sep"></span><span class="cmd-desc">Switch branch (classic)</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git branch <span class="hl">-m</span> <span class="br">new-name</span></span><span class="cmd-sep"></span><span class="cmd-desc">Rename current branch</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git branch <span class="hl">-d</span> <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Delete merged branch</span></div>
+      <div class="cmd danger"><span class="cmd-text"><span class="pr">$</span> git branch <span class="hl">-D</span> <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Force delete branch</span></div>
+      <div class="note y">Name: feature/ fix/ refactor/ release/ hotfix/</div>
+    </div>
+  </div>
+
+  <!-- ══ REMOTE / GITHUB ══ -->
+  <div class="sec s-remote">
+    <div class="sec-head"><span class="sec-icon">☁️</span><span class="sec-title">Remote & GitHub</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git remote <span class="hl">-v</span></span><span class="cmd-sep"></span><span class="cmd-desc">List remotes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git remote add origin <span class="gh">&lt;url&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Link to GitHub</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git remote set-url origin <span class="gh">&lt;url&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Change remote URL</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push <span class="hl">-u</span> origin <span class="br">main</span></span><span class="cmd-sep"></span><span class="cmd-desc">First push + set upstream</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push</span><span class="cmd-sep"></span><span class="cmd-desc">Push current branch</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push origin <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Push specific branch</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git pull</span><span class="cmd-sep"></span><span class="cmd-desc">Fetch + merge</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git pull <span class="hl">--rebase</span></span><span class="cmd-sep"></span><span class="cmd-desc">Pull + rebase</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git fetch</span><span class="cmd-sep"></span><span class="cmd-desc">Download (no merge)</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push origin <span class="hl">--delete</span> <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Delete remote branch</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push <span class="hl">--force-with-lease</span></span><span class="cmd-sep"></span><span class="cmd-desc">Safe force push</span></div>
+    </div>
+  </div>
+
+  <!-- ══ UNDO & FIX ══ -->
+  <div class="sec s-undo">
+    <div class="sec-head"><span class="sec-icon">↩️</span><span class="sec-title">Undo & Fix</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git restore <span class="hl">&lt;file&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Discard file changes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git restore <span class="hl">--staged</span> <span class="hl">&lt;file&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Unstage a file</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git restore .</span><span class="cmd-sep"></span><span class="cmd-desc">Discard ALL changes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git commit <span class="hl">--amend -m</span> <span class="hl">"msg"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Fix last commit msg</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git commit <span class="hl">--amend --no-edit</span></span><span class="cmd-sep"></span><span class="cmd-desc">Add to last commit</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git reset <span class="hl">HEAD~1</span></span><span class="cmd-sep"></span><span class="cmd-desc">Undo commit, keep changes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git reset <span class="hl">--soft HEAD~1</span></span><span class="cmd-sep"></span><span class="cmd-desc">Undo, changes stay staged</span></div>
+      <div class="cmd danger"><span class="cmd-text"><span class="pr">$</span> git reset <span class="hl">--hard HEAD~1</span></span><span class="cmd-sep"></span><span class="cmd-desc">Undo + delete changes ⚠️</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git revert <span class="hl">&lt;hash&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Safe undo (new commit)</span></div>
+      <div class="cmd danger"><span class="cmd-text"><span class="pr">$</span> git clean <span class="hl">-fd</span></span><span class="cmd-sep"></span><span class="cmd-desc">Delete untracked files ⚠️</span></div>
+      <div class="note r">Use revert for pushed commits. Never --hard without being sure.</div>
+    </div>
+  </div>
+
+  <!-- ══ STASH ══ -->
+  <div class="sec s-stash">
+    <div class="sec-head"><span class="sec-icon">📦</span><span class="sec-title">Stash</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash</span><span class="cmd-sep"></span><span class="cmd-desc">Save dirty state</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash push <span class="hl">-m</span> <span class="hl">"wip login"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Stash with label</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash <span class="hl">-u</span></span><span class="cmd-sep"></span><span class="cmd-desc">Include untracked files</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash list</span><span class="cmd-sep"></span><span class="cmd-desc">List all stashes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash pop</span><span class="cmd-sep"></span><span class="cmd-desc">Restore + remove stash</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash apply</span><span class="cmd-sep"></span><span class="cmd-desc">Restore, keep stash</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash apply <span class="hl">stash@{2}</span></span><span class="cmd-sep"></span><span class="cmd-desc">Apply specific stash</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash drop</span><span class="cmd-sep"></span><span class="cmd-desc">Delete top stash</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git stash clear</span><span class="cmd-sep"></span><span class="cmd-desc">Delete all stashes</span></div>
+      <div class="note b">Use stash when switching branches with unfinished work.</div>
+    </div>
+  </div>
+
+  <!-- ══ MERGE & REBASE ══ -->
+  <div class="sec s-merge">
+    <div class="sec-head"><span class="sec-icon">🔀</span><span class="sec-title">Merge & Rebase</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git merge <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Merge into current</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git merge <span class="hl">--no-ff</span> <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Always create merge commit</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git merge <span class="hl">--squash</span> <span class="br">feature/x</span></span><span class="cmd-sep"></span><span class="cmd-desc">Squash all into one commit</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git merge <span class="hl">--abort</span></span><span class="cmd-sep"></span><span class="cmd-desc">Cancel merge</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git rebase <span class="br">main</span></span><span class="cmd-sep"></span><span class="cmd-desc">Replay commits on main</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git rebase <span class="hl">-i HEAD~3</span></span><span class="cmd-sep"></span><span class="cmd-desc">Interactive rebase (3 commits)</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git rebase <span class="hl">--continue</span></span><span class="cmd-sep"></span><span class="cmd-desc">Continue after conflict</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git rebase <span class="hl">--abort</span></span><span class="cmd-sep"></span><span class="cmd-desc">Cancel rebase</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git cherry-pick <span class="hl">&lt;hash&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Copy single commit</span></div>
+      <div class="note r">Never rebase commits already pushed to shared branches.</div>
+    </div>
+  </div>
+
+  <!-- ══ LOG & INSPECT ══ -->
+  <div class="sec s-log">
+    <div class="sec-head"><span class="sec-icon">🔍</span><span class="sec-title">Log & Inspect</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git log</span><span class="cmd-sep"></span><span class="cmd-desc">Full commit history</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git log <span class="hl">--oneline</span></span><span class="cmd-sep"></span><span class="cmd-desc">Compact history</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git log <span class="hl">--oneline --graph --all</span></span><span class="cmd-sep"></span><span class="cmd-desc">Visual branch graph</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git log <span class="hl">-5</span></span><span class="cmd-sep"></span><span class="cmd-desc">Last 5 commits</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git log <span class="hl">--author="Name"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Filter by author</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git log <span class="hl">--since="2 weeks ago"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Filter by date</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git log <span class="hl">-p</span> <span class="hl">&lt;file&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">File change history</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git show <span class="hl">&lt;hash&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Show commit details</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git blame <span class="hl">&lt;file&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Who wrote each line</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git shortlog <span class="hl">-sn</span></span><span class="cmd-sep"></span><span class="cmd-desc">Commits per author</span></div>
+    </div>
+  </div>
+
+  <!-- ══ TAGS ══ -->
+  <div class="sec s-tag">
+    <div class="sec-head"><span class="sec-icon">🏷️</span><span class="sec-title">Tags & Releases</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git tag</span><span class="cmd-sep"></span><span class="cmd-desc">List all tags</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git tag <span class="hl">v1.0.0</span></span><span class="cmd-sep"></span><span class="cmd-desc">Create lightweight tag</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git tag <span class="hl">-a v1.0.0 -m "msg"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Annotated tag</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git tag <span class="hl">-a v1.0.0</span> <span class="hl">&lt;hash&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Tag old commit</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push <span class="hl">--tags</span></span><span class="cmd-sep"></span><span class="cmd-desc">Push all tags</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push origin <span class="hl">v1.0.0</span></span><span class="cmd-sep"></span><span class="cmd-desc">Push one tag</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git tag <span class="hl">-d v1.0.0</span></span><span class="cmd-sep"></span><span class="cmd-desc">Delete local tag</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push origin <span class="hl">--delete v1.0.0</span></span><span class="cmd-sep"></span><span class="cmd-desc">Delete remote tag</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git checkout <span class="hl">v1.0.0</span></span><span class="cmd-sep"></span><span class="cmd-desc">Go to tagged version</span></div>
+      <div class="note g">Tag = snapshot of a release. Use semver: v1.0.0</div>
+    </div>
+  </div>
+
+  <!-- ══ ADVANCED ══ -->
+  <div class="sec s-adv">
+    <div class="sec-head"><span class="sec-icon">⚡</span><span class="sec-title">Advanced</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git reflog</span><span class="cmd-sep"></span><span class="cmd-desc">History of HEAD (recovery)</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git bisect start</span><span class="cmd-sep"></span><span class="cmd-desc">Start binary bug search</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git bisect good / bad</span><span class="cmd-sep"></span><span class="cmd-desc">Mark commit good or bad</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git submodule add <span class="gh">&lt;url&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Add submodule</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git submodule update <span class="hl">--init</span></span><span class="cmd-sep"></span><span class="cmd-desc">Init submodules</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git archive <span class="hl">--format=zip HEAD</span></span><span class="cmd-sep"></span><span class="cmd-desc">Export repo as zip</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git grep <span class="hl">"text"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Search in tracked files</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git gc</span><span class="cmd-sep"></span><span class="cmd-desc">Cleanup / optimize repo</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git worktree add <span class="hl">&lt;path&gt;</span> <span class="br">&lt;branch&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Work on two branches</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git notes add <span class="hl">-m "note"</span> <span class="hl">&lt;hash&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Attach note to commit</span></div>
+    </div>
+  </div>
+
+  <!-- ══ ALIASES ══ -->
+  <div class="sec s-alias">
+    <div class="sec-head"><span class="sec-icon">✂️</span><span class="sec-title">Aliases — Type Less</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.st status</span><span class="cmd-sep"></span><span class="cmd-desc">git st</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.co checkout</span><span class="cmd-sep"></span><span class="cmd-desc">git co</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.br branch</span><span class="cmd-sep"></span><span class="cmd-desc">git br</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.sw switch</span><span class="cmd-sep"></span><span class="cmd-desc">git sw</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.cm <span class="hl">"commit -m"</span></span><span class="cmd-sep"></span><span class="cmd-desc">git cm "msg"</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.ac <span class="hl">"commit -am"</span></span><span class="cmd-sep"></span><span class="cmd-desc">git ac "msg"</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.lg <span class="hl">"log --oneline --graph --all"</span></span><span class="cmd-sep"></span><span class="cmd-desc">git lg</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.undo <span class="hl">"reset HEAD~1"</span></span><span class="cmd-sep"></span><span class="cmd-desc">git undo</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.unstage <span class="hl">"restore --staged"</span></span><span class="cmd-sep"></span><span class="cmd-desc">git unstage</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> alias.last <span class="hl">"log -1 HEAD"</span></span><span class="cmd-sep"></span><span class="cmd-desc">git last</span></div>
+    </div>
+  </div>
+
+  <!-- ══ SSH & GITHUB ══ -->
+  <div class="sec s-remote">
+    <div class="sec-head"><span class="sec-icon">🔑</span><span class="sec-title">SSH & GitHub Auth</span></div>
+    <div class="sec-body">
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> ssh-keygen <span class="hl">-t ed25519 -C "email"</span></span><span class="cmd-sep"></span><span class="cmd-desc">Generate SSH key</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> cat ~/.ssh/id_ed25519.pub</span><span class="cmd-sep"></span><span class="cmd-desc">Copy public key</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> ssh -T git@github.com</span><span class="cmd-sep"></span><span class="cmd-desc">Test GitHub connection</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git remote set-url origin <span class="gh">git@github.com:u/r.git</span></span><span class="cmd-sep"></span><span class="cmd-desc">Switch to SSH</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git remote add upstream <span class="gh">&lt;url&gt;</span></span><span class="cmd-sep"></span><span class="cmd-desc">Add upstream (fork)</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git fetch upstream</span><span class="cmd-sep"></span><span class="cmd-desc">Get upstream changes</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git merge upstream/<span class="br">main</span></span><span class="cmd-sep"></span><span class="cmd-desc">Sync fork with original</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git push <span class="hl">--tags</span></span><span class="cmd-sep"></span><span class="cmd-desc">Push release tags</span></div>
+      <div class="cmd"><span class="cmd-text"><span class="pr">$</span> git config <span class="hl">--global</span> credential.helper store</span><span class="cmd-sep"></span><span class="cmd-desc">Save HTTPS credentials</span></div>
+      <div class="note g">Add public key at: GitHub → Settings → SSH keys</div>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+
+<!-- WORKFLOW FLOWS -->
+<div class="flow-section">
+  <div class="flow-title">⚡ Common Workflows</div>
+  <div class="flows">
+
+    <div class="flow-card">
+      <div class="flow-name">🚀 New Feature</div>
+      <div class="flow-steps">
+        <div class="fs"><span class="fs-n">1</span><span class="fs-cmd"><span class="pr">$</span> git checkout <span class="br">main</span> &amp;&amp; git pull</span></div>
+        <div class="fs"><span class="fs-n">2</span><span class="fs-cmd"><span class="pr">$</span> git checkout -b <span class="br">feature/x</span></span></div>
+        <div class="fs"><span class="fs-n">3</span><span class="fs-cmd">... write code ...</span></div>
+        <div class="fs"><span class="fs-n">4</span><span class="fs-cmd"><span class="pr">$</span> git add . &amp;&amp; git commit -m "feat: ..."</span></div>
+        <div class="fs"><span class="fs-n">5</span><span class="fs-cmd"><span class="pr">$</span> git push -u origin <span class="br">feature/x</span></span></div>
+        <div class="fs"><span class="fs-n">6</span><span class="fs-desc">Open Pull Request on GitHub</span></div>
+        <div class="fs"><span class="fs-n">7</span><span class="fs-desc">Review → Approve → Merge</span></div>
+        <div class="fs"><span class="fs-n">8</span><span class="fs-cmd"><span class="pr">$</span> git checkout <span class="br">main</span> &amp;&amp; git pull</span></div>
+        <div class="fs"><span class="fs-n">9</span><span class="fs-cmd"><span class="pr">$</span> git branch -d <span class="br">feature/x</span></span></div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-name">🔥 Hotfix on Production</div>
+      <div class="flow-steps">
+        <div class="fs"><span class="fs-n">1</span><span class="fs-cmd"><span class="pr">$</span> git checkout <span class="br">main</span> &amp;&amp; git pull</span></div>
+        <div class="fs"><span class="fs-n">2</span><span class="fs-cmd"><span class="pr">$</span> git checkout -b <span class="br">hotfix/crash-fix</span></span></div>
+        <div class="fs"><span class="fs-n">3</span><span class="fs-cmd">... fix the bug ...</span></div>
+        <div class="fs"><span class="fs-n">4</span><span class="fs-cmd"><span class="pr">$</span> git commit -am "fix: resolve crash"</span></div>
+        <div class="fs"><span class="fs-n">5</span><span class="fs-cmd"><span class="pr">$</span> git checkout <span class="br">main</span></span></div>
+        <div class="fs"><span class="fs-n">6</span><span class="fs-cmd"><span class="pr">$</span> git merge <span class="br">hotfix/crash-fix</span></span></div>
+        <div class="fs"><span class="fs-n">7</span><span class="fs-cmd"><span class="pr">$</span> git push &amp;&amp; git tag -a v1.0.1</span></div>
+        <div class="fs"><span class="fs-n">8</span><span class="fs-cmd"><span class="pr">$</span> git push --tags</span></div>
+        <div class="fs"><span class="fs-n">9</span><span class="fs-cmd"><span class="pr">$</span> git branch -d <span class="br">hotfix/crash-fix</span></span></div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-name">🔄 Sync with Teammate</div>
+      <div class="flow-steps">
+        <div class="fs"><span class="fs-n">1</span><span class="fs-cmd"><span class="pr">$</span> git stash</span><span class="fs-desc">— save your WIP</span></div>
+        <div class="fs"><span class="fs-n">2</span><span class="fs-cmd"><span class="pr">$</span> git checkout <span class="br">main</span></span></div>
+        <div class="fs"><span class="fs-n">3</span><span class="fs-cmd"><span class="pr">$</span> git pull</span><span class="fs-desc">— get updates</span></div>
+        <div class="fs"><span class="fs-n">4</span><span class="fs-cmd"><span class="pr">$</span> git checkout <span class="br">feature/x</span></span></div>
+        <div class="fs"><span class="fs-n">5</span><span class="fs-cmd"><span class="pr">$</span> git merge <span class="br">main</span></span><span class="fs-desc">— bring in updates</span></div>
+        <div class="fs"><span class="fs-n">6</span><span class="fs-cmd"><span class="pr">$</span> git stash pop</span><span class="fs-desc">— restore WIP</span></div>
+        <div class="fs"><span class="fs-n">7</span><span class="fs-desc">Resolve conflicts if any</span></div>
+        <div class="fs"><span class="fs-n">8</span><span class="fs-cmd"><span class="pr">$</span> git add . &amp;&amp; git commit</span></div>
+        <div class="fs"><span class="fs-n">9</span><span class="fs-cmd"><span class="pr">$</span> git push</span></div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-name">😱 Undo Pushed Commit</div>
+      <div class="flow-steps">
+        <div class="fs"><span class="fs-n">1</span><span class="fs-cmd"><span class="pr">$</span> git log --oneline</span><span class="fs-desc">— find hash</span></div>
+        <div class="fs"><span class="fs-n">2</span><span class="fs-cmd"><span class="pr">$</span> git revert &lt;hash&gt;</span><span class="fs-desc">— creates undo commit</span></div>
+        <div class="fs"><span class="fs-n">3</span><span class="fs-cmd"><span class="pr">$</span> git push</span><span class="fs-desc">— push the revert</span></div>
+        <div class="fs"><span class="fs-desc" style="color:#8a5a5a">⚠️ NEVER git reset --hard on shared branches</span></div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-name">🗜️ Squash Before PR</div>
+      <div class="flow-steps">
+        <div class="fs"><span class="fs-n">1</span><span class="fs-cmd"><span class="pr">$</span> git log --oneline</span><span class="fs-desc">— count commits</span></div>
+        <div class="fs"><span class="fs-n">2</span><span class="fs-cmd"><span class="pr">$</span> git rebase -i HEAD~4</span><span class="fs-desc">— last 4 commits</span></div>
+        <div class="fs"><span class="fs-n">3</span><span class="fs-desc">Change 'pick' to 's' to squash</span></div>
+        <div class="fs"><span class="fs-n">4</span><span class="fs-desc">Save, write combined message</span></div>
+        <div class="fs"><span class="fs-n">5</span><span class="fs-cmd"><span class="pr">$</span> git push --force-with-lease</span></div>
+      </div>
+    </div>
+
+    <div class="flow-card">
+      <div class="flow-name">🆕 First Repo to GitHub</div>
+      <div class="flow-steps">
+        <div class="fs"><span class="fs-n">1</span><span class="fs-cmd"><span class="pr">$</span> git init</span></div>
+        <div class="fs"><span class="fs-n">2</span><span class="fs-cmd"><span class="pr">$</span> git add . &amp;&amp; git commit -m "init"</span></div>
+        <div class="fs"><span class="fs-n">3</span><span class="fs-desc">Create empty repo on GitHub.com</span></div>
+        <div class="fs"><span class="fs-n">4</span><span class="fs-cmd"><span class="pr">$</span> git remote add origin <span class="gh">&lt;url&gt;</span></span></div>
+        <div class="fs"><span class="fs-n">5</span><span class="fs-cmd"><span class="pr">$</span> git push -u origin main</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">
+  <span>Git Cheat Sheet — Daily Developer Reference</span>
+  <div class="keys">
+    <span class="key">git st</span>
+    <span class="key">git add .</span>
+    <span class="key">git cm "msg"</span>
+    <span class="key">git push</span>
+    <span class="key">git pull</span>
+    <span class="key">git lg</span>
+    <span class="key">git stash</span>
+    <span class="key">git stash pop</span>
+  </div>
+</div>
+
+</body>
+</html>

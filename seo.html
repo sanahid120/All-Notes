@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A beginner-friendly professional SEO audit and optimization tutorial covering keyword research, on-page SEO, technical SEO, structured data, performance, off-page SEO, Search Console, Analytics, reporting, and audit checklists.">
+  <meta name="robots" content="index, follow">
+  <title>Professional SEO Audit & Optimization — Complete Beginner Guide</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #182230;
+      --muted: #5d6878;
+      --primary: #2457d6;
+      --primary-dark: #173b98;
+      --border: #dfe5ee;
+      --soft: #eef4ff;
+      --good: #0b7a53;
+      --warn: #a35a00;
+      --danger: #b42318;
+      --code: #111827;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+    a { color: var(--primary); }
+    .hero {
+      background: linear-gradient(135deg, #12244a, #2457d6);
+      color: #fff;
+      padding: 64px 24px 52px;
+    }
+    .hero-inner, main, footer { max-width: 1120px; margin: auto; }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: .78rem;
+      font-weight: 800;
+      opacity: .82;
+    }
+    h1 { font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1.08; margin: 10px 0 18px; }
+    .hero p { max-width: 850px; font-size: 1.1rem; opacity: .94; }
+    .hero .badge {
+      display: inline-block; padding: 7px 11px; border: 1px solid rgba(255,255,255,.3);
+      border-radius: 999px; margin: 5px 5px 0 0; font-size: .85rem;
+    }
+    main { padding: 28px 18px 70px; }
+    section {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 28px; margin: 20px 0; box-shadow: 0 5px 20px rgba(20,35,60,.04);
+    }
+    h2 { margin-top: 0; font-size: 1.8rem; }
+    h3 { margin-top: 28px; color: #23324a; }
+    h4 { margin-bottom: 8px; }
+    .toc {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 9px;
+      margin-top: 18px;
+    }
+    .toc a {
+      display: block; padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: 10px; text-decoration: none; background: #fff;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card {
+      border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: #fff;
+    }
+    .note, .good, .warn, .danger {
+      border-left: 4px solid; padding: 13px 16px; margin: 16px 0; border-radius: 8px;
+    }
+    .note { border-color: var(--primary); background: var(--soft); }
+    .good { border-color: var(--good); background: #effaf5; }
+    .warn { border-color: var(--warn); background: #fff7ed; }
+    .danger { border-color: var(--danger); background: #fff1f0; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: #eef1f5; padding: 2px 5px; border-radius: 5px; font-size: .92em;
+    }
+    pre {
+      background: var(--code); color: #e8eef8; padding: 18px; border-radius: 10px;
+      overflow-x: auto; font-size: .88rem; line-height: 1.55;
+    }
+    pre code { background: transparent; padding: 0; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { border: 1px solid var(--border); padding: 11px 12px; text-align: left; vertical-align: top; }
+    th { background: #f0f4fa; }
+    .checklist { list-style: none; padding: 0; }
+    .checklist li { margin: 7px 0; }
+    .checklist li::before { content: "☐"; margin-right: 9px; color: var(--primary); font-weight: 700; }
+    .step {
+      display: grid; grid-template-columns: 48px 1fr; gap: 14px; align-items: start; margin: 18px 0;
+    }
+    .step-no {
+      width: 42px; height: 42px; border-radius: 50%; background: var(--primary); color: #fff;
+      display: grid; place-items: center; font-weight: 800;
+    }
+    .pill {
+      display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: .78rem;
+      font-weight: 700; background: #edf2f8; margin: 2px;
+    }
+    .small { color: var(--muted); font-size: .92rem; }
+    footer { padding: 20px 18px 60px; color: var(--muted); }
+    @media (max-width: 680px) {
+      section { padding: 20px; }
+      .step { grid-template-columns: 38px 1fr; }
+      .step-no { width: 36px; height: 36px; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Professional SEO Training Note</div>
+    <h1>SEO Audit & Optimization</h1>
+    <p>
+      A complete, beginner-friendly guide to understanding SEO and performing a professional
+      website audit from keyword research through technical fixes, structured data,
+      performance, off-page SEO, measurement, and reporting.
+    </p>
+    <span class="badge">Beginner → Professional</span>
+    <span class="badge">Technical SEO</span>
+    <span class="badge">On-Page SEO</span>
+    <span class="badge">Off-Page SEO</span>
+    <span class="badge">Audit Workflow</span>
+  </div>
+</header>
+
+<main>
+<section id="toc">
+  <h2>How to Use This Note</h2>
+  <p>
+    Learn the concepts first, then perform the audit in the same order every time.
+    An SEO audit should not be a random list of errors. It should answer:
+    <strong>Can search engines discover the site? Can they understand it? Is the content useful?
+    Is the site technically healthy? Does it earn relevant visibility and traffic?</strong>
+  </p>
+  <div class="toc">
+    <a href="#seo">1. What is SEO?</a>
+    <a href="#search">2. How Search Works</a>
+    <a href="#keywords">3. Keyword Research</a>
+    <a href="#onpage">4. On-Page SEO</a>
+    <a href="#technical">5. Technical SEO</a>
+    <a href="#content">6. Content SEO</a>
+    <a href="#schema">7. Structured Data</a>
+    <a href="#speed">8. Speed & Core Web Vitals</a>
+    <a href="#offpage">9. Off-Page SEO</a>
+    <a href="#tools">10. SEO Tools</a>
+    <a href="#audit">11. Full Audit Process</a>
+    <a href="#report">12. Reporting</a>
+    <a href="#checklist">13. Final Checklist</a>
+  </div>
+</section>
+
+<section id="seo">
+  <h2>1. What Is SEO?</h2>
+  <p>
+    <strong>SEO (Search Engine Optimization)</strong> is the process of improving a website's
+    content, structure, technical accessibility, reputation, and user experience so that
+    search engines can discover, understand, index, and potentially show its pages for
+    relevant searches.
+  </p>
+
+  <div class="grid">
+    <div class="card"><h3>On-Page SEO</h3><p>Optimizing content and page elements such as titles, headings, copy, images, internal links, URLs, and metadata.</p></div>
+    <div class="card"><h3>Technical SEO</h3><p>Making crawling, rendering, indexing, performance, security, mobile usability, canonicalization, and site architecture work correctly.</p></div>
+    <div class="card"><h3>Off-Page SEO</h3><p>Building legitimate authority and visibility through relevant mentions, links, digital PR, partnerships, and useful content distribution.</p></div>
+    <div class="card"><h3>Local SEO</h3><p>Optimizing visibility for location-based searches using accurate business information, local content, reviews, and relevant local signals.</p></div>
+  </div>
+
+  <div class="note">
+    <strong>Important:</strong> SEO is not simply “put keywords everywhere.” Search engines need
+    clear signals, but the primary goal is to create useful pages for people and make those
+    pages technically accessible.
+  </div>
+</section>
+
+<section id="search">
+  <h2>2. How Google Search Works</h2>
+  <p>Think of search as a pipeline:</p>
+  <div class="grid">
+    <div class="card"><h3>1. Crawling</h3><p>Google discovers URLs through links, sitemaps, and other discovery mechanisms and requests resources from the site.</p></div>
+    <div class="card"><h3>2. Rendering</h3><p>For pages that need it, Google processes resources and JavaScript so it can understand the rendered page.</p></div>
+    <div class="card"><h3>3. Indexing</h3><p>Google analyzes the content and decides whether and how a page should be stored in its index.</p></div>
+    <div class="card"><h3>4. Serving</h3><p>For a search query, Google selects and presents relevant results and search features.</p></div>
+  </div>
+  <div class="good">
+    <strong>Audit principle:</strong> A page cannot rank from content quality alone if search engines cannot
+    reliably discover, access, render, or index the important content.
+  </div>
+</section>
+
+<section id="keywords">
+  <h2>3. Keyword Research — Step by Step</h2>
+  <p>
+    Keyword research identifies the language people use when searching for a product, service,
+    problem, brand, or topic. Do not select keywords only because their search volume is high.
+    Relevance, intent, competition, business value, and the ability to satisfy the query matter.
+  </p>
+
+  <h3>3.1 Keyword Types</h3>
+  <table>
+    <tr><th>Type</th><th>Meaning</th><th>Example</th></tr>
+    <tr><td>Short-tail</td><td>Broad, usually short query.</td><td><code>running shoes</code></td></tr>
+    <tr><td>Long-tail</td><td>More specific multi-word query.</td><td><code>best running shoes for beginners</code></td></tr>
+    <tr><td>Informational</td><td>User wants information or an answer.</td><td><code>how to clean leather shoes</code></td></tr>
+    <tr><td>Commercial investigation</td><td>User is comparing options before purchase.</td><td><code>best CRM software for small business</code></td></tr>
+    <tr><td>Transactional</td><td>User is close to taking an action.</td><td><code>buy men's running shoes online</code></td></tr>
+    <tr><td>Navigational</td><td>User is looking for a particular site/brand/page.</td><td><code>nike running shoes</code></td></tr>
+    <tr><td>Branded</td><td>Contains a business or product brand.</td><td><code>Acme web design</code></td></tr>
+    <tr><td>Non-branded</td><td>Does not contain the brand name.</td><td><code>web design agency sylhet</code></td></tr>
+  </table>
+
+  <h3>3.2 Brainstorm Keywords</h3>
+  <ol>
+    <li>Write down the products/services offered.</li>
+    <li>List customer problems and questions.</li>
+    <li>List locations served.</li>
+    <li>List synonyms and alternative terminology.</li>
+    <li>List competitors and their categories/services.</li>
+    <li>Turn each seed topic into specific search phrases.</li>
+  </ol>
+
+  <h3>3.3 Expand and Validate</h3>
+  <p>Useful sources include:</p>
+  <ul>
+    <li>Google Search suggestions and related searches.</li>
+    <li>Google Ads Keyword Planner.</li>
+    <li>Google Trends for seasonality and changing interest.</li>
+    <li>Google Search Console queries after the site has search data.</li>
+    <li>Ubersuggest for keyword ideas and estimated search metrics.</li>
+    <li>Semrush or Ahrefs for broader keyword and competitor research.</li>
+  </ul>
+
+  <h3>3.4 Build a Keyword Map</h3>
+  <p>Map one primary search intent/topic to the page that should satisfy it.</p>
+  <table>
+    <tr><th>URL</th><th>Primary topic</th><th>Intent</th><th>Secondary terms</th><th>Content action</th></tr>
+    <tr><td>/services/web-design/</td><td>web design services</td><td>Commercial</td><td>responsive web design, website design agency</td><td>Improve service page</td></tr>
+    <tr><td>/blog/how-to-choose-hosting/</td><td>how to choose web hosting</td><td>Informational</td><td>hosting checklist, hosting guide</td><td>Create/expand article</td></tr>
+  </table>
+
+  <div class="warn">
+    <strong>Avoid keyword stuffing.</strong> Repeating the same keyword unnaturally can make content
+    worse for users. Write naturally and cover the topic comprehensively.
+  </div>
+</section>
+
+<section id="onpage">
+  <h2>4. On-Page SEO</h2>
+
+  <h3>4.1 Page Title</h3>
+  <p>The <code>&lt;title&gt;</code> helps communicate the page's topic and is commonly used as the title link in search results.</p>
+  <pre><code>&lt;title&gt;Flutter App Development Services | Company Name&lt;/title&gt;</code></pre>
+  <p><strong>Best practice:</strong> make it unique, descriptive, concise, and relevant to the actual page. Do not obsess over an arbitrary character count; search displays are based on available space and can vary.</p>
+
+  <h3>4.2 Meta Description</h3>
+  <pre><code>&lt;meta name="description"
+content="Build fast, responsive Flutter applications with API integration,
+Firebase, and modern mobile UX. Explore our development services."&gt;</code></pre>
+  <p>
+    Meta descriptions can help communicate what a page is about and influence search-result
+    snippets, but Google may generate a different snippet. There is no reliable universal
+    “580–980 pixel” rule that guarantees a particular snippet length. Write a useful,
+    page-specific description and avoid keyword stuffing.
+  </p>
+
+  <h3>4.3 Headings</h3>
+  <ul>
+    <li><strong>H1:</strong> the main topic/title of the page.</li>
+    <li><strong>H2:</strong> major sections.</li>
+    <li><strong>H3:</strong> subsections under an H2.</li>
+  </ul>
+  <pre><code>&lt;h1&gt;Flutter App Development Services&lt;/h1&gt;
+  &lt;h2&gt;Our Flutter Services&lt;/h2&gt;
+    &lt;h3&gt;Android &amp; iOS Development&lt;/h3&gt;
+    &lt;h3&gt;API Integration&lt;/h3&gt;
+  &lt;h2&gt;Why Choose Us?&lt;/h2&gt;</code></pre>
+  <p>Headings are primarily a content-structure and accessibility tool. Do not use heading tags merely to make text visually large.</p>
+
+  <h3>4.4 URL Structure</h3>
+  <p>Prefer readable, stable URLs:</p>
+  <pre><code>Good:  https://example.com/services/flutter-development/
+Poor:  https://example.com/page?id=9382&amp;cat=4&amp;sort=desc</code></pre>
+  <p>Use logical words, avoid unnecessary parameters, and keep URLs consistent.</p>
+
+  <h3>4.5 Image SEO</h3>
+  <pre><code>&lt;img src="/images/flutter-dashboard.webp"
+     alt="Flutter e-commerce dashboard showing product sales"&gt;</code></pre>
+  <ul>
+    <li>Use descriptive <code>alt</code> text when the image conveys information.</li>
+    <li>Use <code>alt=""</code> for purely decorative images when appropriate.</li>
+    <li>Use meaningful filenames where practical.</li>
+    <li>Compress images and use modern formats such as WebP or AVIF when supported.</li>
+    <li>Do not stuff keywords into alt text.</li>
+    <li>Use responsive image techniques such as <code>srcset</code> when useful.</li>
+  </ul>
+
+  <h3>4.6 Internal Linking</h3>
+  <p>
+    Internal links help users navigate and help search engines discover related pages.
+    Use descriptive anchor text rather than repeatedly using “click here.”
+  </p>
+  <pre><code>&lt;a href="/services/flutter-development/"&gt;
+  Flutter app development services
+&lt;/a&gt;</code></pre>
+
+  <h3>4.7 Canonical URL</h3>
+  <pre><code>&lt;link rel="canonical" href="https://example.com/services/flutter-development/"&gt;</code></pre>
+  <p>
+    Canonicalization is used when multiple URLs contain duplicate or very similar content.
+    A canonical is a strong signal, not an absolute command to Google. Redirects are generally
+    a stronger canonicalization signal; sitemap inclusion is weaker.
+  </p>
+</section>
+
+<section id="content">
+  <h2>5. Content SEO</h2>
+  <h3>5.1 People-First Content</h3>
+  <p>
+    Create content because it helps the intended audience, not simply because a keyword has search volume.
+    Strong content should answer the user's need, be accurate, original where appropriate, and demonstrate
+    relevant experience or expertise.
+  </p>
+
+  <h3>5.2 Originality</h3>
+  <ul>
+    <li>Do not copy competitors' text.</li>
+    <li>Do not publish lightly rewritten duplicate content at scale.</li>
+    <li>Add original examples, screenshots, research, comparisons, experience, or analysis where appropriate.</li>
+    <li>Review factual accuracy and update outdated information.</li>
+    <li>Do not write to an arbitrary word count just because someone claims Google prefers that length.</li>
+  </ul>
+
+  <h3>5.3 Content Audit Questions</h3>
+  <ul class="checklist">
+    <li>Does the page satisfy a clear search intent?</li>
+    <li>Is the main topic immediately understandable?</li>
+    <li>Does the page provide information unavailable or poorly explained elsewhere?</li>
+    <li>Is the information accurate and current?</li>
+    <li>Does the page have a clear next step for the user?</li>
+    <li>Are there duplicate or near-duplicate pages competing with each other?</li>
+    <li>Are outdated, thin, or obsolete pages candidates for improvement, consolidation, redirect, or removal?</li>
+  </ul>
+</section>
+
+<section id="technical">
+  <h2>6. Technical SEO</h2>
+
+  <h3>6.1 HTTPS</h3>
+  <p>Use HTTPS for the public website. Make sure HTTP redirects to the preferred HTTPS version and that internal links consistently use HTTPS.</p>
+
+  <h3>6.2 Sitemap.xml</h3>
+  <p>
+    A sitemap lists URLs you want search engines to know about. It is a discovery signal, not a
+    guarantee of crawling or indexing. Include preferred canonical URLs, normally as absolute URLs.
+  </p>
+  <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://example.com/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-09-20&lt;/lastmod&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://example.com/services/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-09-18&lt;/lastmod&gt;
+  &lt;/url&gt;
+&lt;/urlset&gt;</code></pre>
+  <p>Submit it through Google Search Console. You can also reference it in robots.txt.</p>
+
+  <h3>6.3 robots.txt</h3>
+  <pre><code>User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Disallow: /search/
+
+Sitemap: https://example.com/sitemap.xml</code></pre>
+  <div class="danger">
+    <strong>Critical distinction:</strong> robots.txt controls crawling; it is not the preferred
+    method for removing a page from Google's index. A URL can sometimes be indexed even if its
+    content cannot be crawled. For pages that should not appear in search, consider <code>noindex</code>
+    where appropriate, authentication, or removing the content.
+  </div>
+
+  <h3>6.4 Indexability</h3>
+  <p>Check:</p>
+  <ul class="checklist">
+    <li>HTTP status is normally 200 for indexable pages.</li>
+    <li>Important pages are not blocked by robots.txt.</li>
+    <li>Important pages do not have an unintended <code>noindex</code>.</li>
+    <li>Pages are accessible without login when they are intended to be public.</li>
+    <li>Important content is available in the rendered page.</li>
+    <li>Canonical signals are consistent.</li>
+  </ul>
+
+  <h3>6.5 Broken Links & HTTP Status Codes</h3>
+  <table>
+    <tr><th>Status</th><th>Meaning</th><th>Typical SEO action</th></tr>
+    <tr><td>200</td><td>Successful response</td><td>Usually fine.</td></tr>
+    <tr><td>301</td><td>Permanent redirect</td><td>Use when a page has permanently moved.</td></tr>
+    <tr><td>302/307</td><td>Temporary redirect</td><td>Use when the move is temporary.</td></tr>
+    <tr><td>404</td><td>Not found</td><td>Fix internal links; redirect only when there is a genuinely relevant replacement.</td></tr>
+    <tr><td>410</td><td>Gone</td><td>Can be appropriate when content is intentionally and permanently removed.</td></tr>
+    <tr><td>5xx</td><td>Server error</td><td>Investigate urgently for important URLs.</td></tr>
+  </table>
+
+  <h3>6.6 Redirects</h3>
+  <p>
+    When a page has permanently moved, use a server-side permanent redirect such as 301.
+    Avoid long redirect chains such as A → B → C when A could point directly to C.
+  </p>
+
+  <h3>6.7 Large Websites: HTML Sitemap / Important Link Hub</h3>
+  <p>
+    For large sites, useful navigational pages, category hubs, breadcrumbs, and contextual internal
+    links can help users and crawlers discover important content. An HTML sitemap can be useful when
+    it genuinely improves navigation; it is not a substitute for a well-designed information architecture.
+  </p>
+
+  <h3>6.8 Mobile & JavaScript</h3>
+  <p>
+    Test the mobile version carefully. Make sure important content and links are accessible in the
+    mobile experience. JavaScript-heavy sites should be tested with URL Inspection and rendered-page
+    checks rather than assuming that the browser experience is identical to what a crawler can process.
+  </p>
+</section>
+
+<section id="schema">
+  <h2>7. Structured Data / Schema Markup</h2>
+  <p>
+    Structured data is machine-readable information that helps search engines understand the entities
+    and content on a page. It can make pages eligible for certain rich search features, but adding
+    schema does <strong>not guarantee</strong> a rich result.
+  </p>
+
+  <h3>7.1 JSON-LD Example</h3>
+  <pre><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Example Company",
+  "url": "https://example.com",
+  "logo": "https://example.com/logo.png"
+}
+&lt;/script&gt;</code></pre>
+
+  <h3>7.2 Common Schema Types</h3>
+  <div class="grid">
+    <div class="card"><strong>Organization</strong><p>Describes an organization and its relevant details.</p></div>
+    <div class="card"><strong>LocalBusiness</strong><p>Useful for eligible local business information.</p></div>
+    <div class="card"><strong>Product</strong><p>Describes product information for eligible product pages.</p></div>
+    <div class="card"><strong>Article</strong><p>Describes articles, news, and other editorial content where applicable.</p></div>
+    <div class="card"><strong>Recipe</strong><p>For genuine recipe pages containing recipe information.</p></div>
+    <div class="card"><strong>BreadcrumbList</strong><p>Describes breadcrumb navigation.</p></div>
+    <div class="card"><strong>VideoObject</strong><p>Describes video content where the implementation meets Google's requirements.</p></div>
+    <div class="card"><strong>FAQPage</strong><p>Use only when the page genuinely qualifies under Google's current structured-data rules.</p></div>
+  </div>
+
+  <h3>7.3 How to Implement Schema</h3>
+  <ol>
+    <li>Identify what the page actually represents.</li>
+    <li>Choose an appropriate Schema.org type.</li>
+    <li>Use properties that are true and visible/appropriate for the page.</li>
+    <li>Add JSON-LD to the page.</li>
+    <li>Validate using Google's Rich Results Test where applicable.</li>
+    <li>Use Search Console to monitor eligible rich-result reports after deployment.</li>
+    <li>Fix invalid markup and keep structured data synchronized with the visible page.</li>
+  </ol>
+
+  <div class="note">
+    <strong>Tool:</strong> Schema Markup Generator by Merkle can help generate JSON-LD, but generated
+    markup must still be reviewed against the actual page and Google's current eligibility guidelines.
+  </div>
+</section>
+
+<section id="speed">
+  <h2>8. Website Speed & Core Web Vitals</h2>
+
+  <h3>8.1 Core Web Vitals</h3>
+  <p>The current Core Web Vitals set is:</p>
+  <table>
+    <tr><th>Metric</th><th>Measures</th><th>Good target</th></tr>
+    <tr><td><strong>LCP</strong></td><td>Largest Contentful Paint — loading performance</td><td>≤ 2.5 seconds</td></tr>
+    <tr><td><strong>INP</strong></td><td>Interaction to Next Paint — responsiveness/interactivity</td><td>≤ 200 ms</td></tr>
+    <tr><td><strong>CLS</strong></td><td>Cumulative Layout Shift — visual stability</td><td>≤ 0.1</td></tr>
+  </table>
+  <p class="small">Targets are evaluated at the 75th percentile for page loads, segmented by device type.</p>
+
+  <div class="warn">
+    <strong>Correction to older SEO notes:</strong> FID (First Input Delay) is no longer a Core Web Vital.
+    INP replaced FID in the Core Web Vitals set in 2024.
+  </div>
+
+  <h3>8.2 Practical Speed Optimization</h3>
+  <ul class="checklist">
+    <li>Compress oversized images.</li>
+    <li>Serve responsive image dimensions.</li>
+    <li>Use WebP or AVIF where appropriate.</li>
+    <li>Lazy-load below-the-fold images when appropriate.</li>
+    <li>Preload only truly critical resources.</li>
+    <li>Reduce unused CSS and JavaScript.</li>
+    <li>Minify CSS, JavaScript, and HTML where appropriate.</li>
+    <li>Defer or asynchronously load non-critical scripts.</li>
+    <li>Reduce third-party scripts.</li>
+    <li>Use browser caching with appropriate cache headers.</li>
+    <li>Use a CDN when it materially improves delivery.</li>
+    <li>Reduce server response time and database bottlenecks.</li>
+    <li>Prevent layout shifts by reserving dimensions for images, ads, and embeds.</li>
+    <li>Improve JavaScript responsiveness to reduce long main-thread tasks.</li>
+  </ul>
+
+  <h3>8.3 Tools</h3>
+  <ul>
+    <li><strong>Google PageSpeed Insights:</strong> combines lab diagnostics with field/user data when available.</li>
+    <li><strong>Chrome DevTools:</strong> investigate network requests, rendering, JavaScript, and performance.</li>
+    <li><strong>GTmetrix:</strong> useful for waterfall and performance diagnostics.</li>
+    <li><strong>Search Console Core Web Vitals report:</strong> monitor real-user URL groups where data is available.</li>
+  </ul>
+</section>
+
+<section id="social">
+  <h2>9. Open Graph & Social Sharing</h2>
+  <p>
+    Open Graph tags primarily control how a URL is represented when shared on compatible social platforms.
+    They are not a replacement for SEO title/meta tags.
+  </p>
+  <pre><code>&lt;meta property="og:title" content="Flutter App Development Services"&gt;
+&lt;meta property="og:description" content="Build modern Flutter applications..."&gt;
+&lt;meta property="og:type" content="website"&gt;
+&lt;meta property="og:url" content="https://example.com/services/flutter-development/"&gt;
+&lt;meta property="og:image" content="https://example.com/images/share-card.jpg"&gt;</code></pre>
+</section>
+
+<section id="offpage">
+  <h2>10. Off-Page SEO</h2>
+  <p>
+    Off-page SEO focuses on signals and visibility outside your own website. The strongest approach
+    is to earn relevant references because your content, business, research, tools, or services are
+    genuinely useful.
+  </p>
+
+  <h3>10.1 Legitimate Link-Building Ideas</h3>
+  <ul>
+    <li>Create original research, statistics, tools, templates, or useful guides.</li>
+    <li>Publish expert resources that others naturally reference.</li>
+    <li>Build relationships with relevant industry publications and communities.</li>
+    <li>Use digital PR when you have newsworthy data or announcements.</li>
+    <li>Maintain accurate business profiles and relevant directories where they genuinely help users.</li>
+    <li>Distribute presentations, PDFs, or educational resources where the platform is relevant and allowed.</li>
+  </ul>
+
+  <h3>10.2 Backlink Analysis</h3>
+  <p>Use tools such as Semrush, Ahrefs, Google Search Console, and other reputable crawlers to inspect:</p>
+  <ul>
+    <li>Referring domains.</li>
+    <li>Linking pages.</li>
+    <li>Anchor text.</li>
+    <li>Lost/new links.</li>
+    <li>Relevant vs irrelevant links.</li>
+    <li>Suspicious patterns and obvious link schemes.</li>
+  </ul>
+
+  <h3>10.3 Toxic Backlinks & Disavow — Important Nuance</h3>
+  <p>
+    Do not assume every low-quality or strange backlink needs to be disavowed. Google can generally
+    ignore many unnatural links algorithmically. The disavow tool is an advanced feature intended
+    for situations such as a substantial number of artificial/spammy links that have caused or are
+    likely to cause a manual action, especially when those links cannot be removed.
+  </p>
+  <div class="danger">
+    <strong>Do not mass-disavow normal links simply because a third-party tool assigns them a “toxic” score.</strong>
+    Investigate the actual link pattern and Google's guidance before acting.
+  </div>
+</section>
+
+<section id="tools">
+  <h2>11. Essential SEO Tools</h2>
+  <table>
+    <tr><th>Tool</th><th>Primary use</th></tr>
+    <tr><td>Google Search Console</td><td>Indexing, search performance, queries, pages, links, enhancements, Core Web Vitals and troubleshooting.</td></tr>
+    <tr><td>Google Analytics 4</td><td>User behavior, acquisition, engagement, conversions/key events and business measurement.</td></tr>
+    <tr><td>Google Keyword Planner</td><td>Keyword discovery and advertising-oriented keyword estimates.</td></tr>
+    <tr><td>Google Trends</td><td>Relative search interest, seasonality, topic comparisons and trends.</td></tr>
+    <tr><td>Google PageSpeed Insights</td><td>Performance diagnostics and Core Web Vitals data where available.</td></tr>
+    <tr><td>GTmetrix</td><td>Performance testing, waterfall analysis and diagnostics.</td></tr>
+    <tr><td>Ubersuggest</td><td>Keyword ideas, estimated volume, competition and backlink/SEO research.</td></tr>
+    <tr><td>Semrush</td><td>Keyword research, site auditing, backlink analysis, competitor research and visibility tracking.</td></tr>
+    <tr><td>Ahrefs</td><td>Backlink research, keyword research, content and competitor analysis.</td></tr>
+    <tr><td>Rich Results Test</td><td>Validate structured data eligibility for supported Google rich results.</td></tr>
+    <tr><td>Schema Markup Validator</td><td>Validate Schema.org structured data syntax and vocabulary.</td></tr>
+  </table>
+</section>
+
+<section id="audit">
+  <h2>12. Complete Professional Website SEO Audit — Step by Step</h2>
+  <p>Use this workflow for a new client or your own website.</p>
+
+  <div class="step"><div class="step-no">1</div><div><h3>Collect Business Information</h3><p>Understand the business, products/services, locations, target customers, competitors, conversion goals, unique selling points, and current marketing channels.</p></div></div>
+
+  <div class="step"><div class="step-no">2</div><div><h3>Set Up Measurement</h3><p>Verify Google Search Console ownership, confirm the correct property, connect GA4 where appropriate, and record the starting metrics.</p></div></div>
+
+  <div class="step"><div class="step-no">3</div><div><h3>Crawl the Website</h3><p>Use an SEO crawler to collect URLs, status codes, titles, meta descriptions, headings, canonicals, directives, internal links, images, and other technical information.</p></div></div>
+
+  <div class="step"><div class="step-no">4</div><div><h3>Check Indexing</h3><p>Review Search Console's Page Indexing report and inspect representative important URLs. Investigate excluded, blocked, duplicate, redirected, or error URLs.</p></div></div>
+
+  <div class="step"><div class="step-no">5</div><div><h3>Check robots.txt</h3><p>Confirm that important resources/pages are crawlable and that intentionally restricted areas are correctly blocked.</p></div></div>
+
+  <div class="step"><div class="step-no">6</div><div><h3>Check Sitemap</h3><p>Confirm the sitemap exists, is valid, contains preferred URLs, uses absolute URLs, and is submitted in Search Console.</p></div></div>
+
+  <div class="step"><div class="step-no">7</div><div><h3>Audit URL Structure & Canonicals</h3><p>Look for duplicate URL variants, parameters, inconsistent trailing slashes, HTTP/HTTPS issues, www/non-www inconsistencies, incorrect canonicals, and redirect chains.</p></div></div>
+
+  <div class="step"><div class="step-no">8</div><div><h3>Audit On-Page SEO</h3><p>Review titles, descriptions, H1s/H2s, content quality, URLs, image alt text, internal links, breadcrumbs, and search intent alignment.</p></div></div>
+
+  <div class="step"><div class="step-no">9</div><div><h3>Perform Keyword & Content Gap Analysis</h3><p>Map existing pages to target topics. Find important queries that competitors satisfy but the site does not, then prioritize pages to improve or create.</p></div></div>
+
+  <div class="step"><div class="step-no">10</div><div><h3>Audit Structured Data</h3><p>Check whether relevant schema is implemented accurately. Validate it and make sure it matches visible content.</p></div></div>
+
+  <div class="step"><div class="step-no">11</div><div><h3>Audit Performance</h3><p>Check LCP, INP, CLS, server response time, image weight, JavaScript, CSS, third-party scripts, caching, mobile performance, and real-user data where available.</p></div></div>
+
+  <div class="step"><div class="step-no">12</div><div><h3>Audit Internal Linking</h3><p>Find orphan pages, important pages with weak internal link support, broken internal links, excessive links, and opportunities to connect related content.</p></div></div>
+
+  <div class="step"><div class="step-no">13</div><div><h3>Audit Backlinks</h3><p>Review referring domains, relevance, anchor text, lost links, suspicious patterns, and important links pointing to broken/redirected pages.</p></div></div>
+
+  <div class="step"><div class="step-no">14</div><div><h3>Check Local SEO if Applicable</h3><p>Verify business name, address, phone, service area, business profile information, location pages, reviews, and local structured data where relevant.</p></div></div>
+
+  <div class="step"><div class="step-no">15</div><div><h3>Prioritize Fixes</h3><p>Do not present 200 errors with equal importance. Prioritize by impact, confidence, effort, business value, and dependencies.</p></div></div>
+
+  <div class="step"><div class="step-no">16</div><div><h3>Implement & Validate</h3><p>Fix the highest-impact issues, test the changes, crawl again, inspect important URLs, validate schema, and monitor Search Console.</p></div></div>
+
+  <div class="step"><div class="step-no">17</div><div><h3>Report & Repeat</h3><p>Compare before/after data and maintain a recurring SEO monitoring cycle. SEO is an ongoing process, not a one-time checkbox.</p></div></div>
+</section>
+
+<section id="audit-matrix">
+  <h2>13. SEO Audit Issue Matrix</h2>
+  <table>
+    <tr><th>Issue</th><th>Severity</th><th>Why it matters</th><th>Typical fix</th></tr>
+    <tr><td>Important page blocked by robots.txt</td><td>Critical</td><td>Can prevent crawling.</td><td>Correct the rule and retest.</td></tr>
+    <tr><td>Important page has noindex</td><td>Critical</td><td>Prevents indexing.</td><td>Remove unintended noindex.</td></tr>
+    <tr><td>5xx on important URLs</td><td>Critical</td><td>Search engines/users may not access content.</td><td>Fix hosting/server/application error.</td></tr>
+    <tr><td>Wrong canonical</td><td>High</td><td>Can consolidate signals toward the wrong URL.</td><td>Correct canonical/redirect/sitemap/internal-link signals.</td></tr>
+    <tr><td>Broken internal links</td><td>Medium/High</td><td>Hurts navigation and discovery.</td><td>Update or remove links.</td></tr>
+    <tr><td>Duplicate titles</td><td>Medium</td><td>Makes page topics less distinct.</td><td>Write unique descriptive titles.</td></tr>
+    <tr><td>Missing alt text</td><td>Low/Medium</td><td>Accessibility and image understanding can suffer.</td><td>Add meaningful alt text where appropriate.</td></tr>
+    <tr><td>Oversized images</td><td>Medium/High</td><td>Can slow loading.</td><td>Resize, compress, modern format, responsive delivery.</td></tr>
+    <tr><td>Long redirect chain</td><td>Medium</td><td>Creates unnecessary requests and complexity.</td><td>Redirect directly to final URL.</td></tr>
+    <tr><td>Thin/low-value page</td><td>Context-dependent</td><td>May not satisfy users or search intent.</td><td>Improve, consolidate, redirect, or remove when appropriate.</td></tr>
+  </table>
+</section>
+
+<section id="report">
+  <h2>14. Professional SEO Audit Report Format</h2>
+  <p>A good report should be understandable to both developers and business owners.</p>
+
+  <h3>Recommended Report Structure</h3>
+  <ol>
+    <li><strong>Executive summary</strong> — major findings and business impact.</li>
+    <li><strong>Website overview</strong> — pages, platform, market, audience, goals.</li>
+    <li><strong>Technical SEO</strong> — crawlability, indexability, sitemap, robots, canonicals, status codes.</li>
+    <li><strong>On-page SEO</strong> — titles, descriptions, headings, URLs, images, internal links.</li>
+    <li><strong>Content</strong> — quality, intent, duplication, gaps, opportunities.</li>
+    <li><strong>Performance</strong> — Core Web Vitals and speed findings.</li>
+    <li><strong>Structured data</strong> — current markup, errors, opportunities.</li>
+    <li><strong>Off-page</strong> — backlinks and authority observations.</li>
+    <li><strong>Analytics/Search Console</strong> — visibility, traffic, CTR, queries, landing pages.</li>
+    <li><strong>Prioritized action plan</strong> — what to fix first and who should do it.</li>
+    <li><strong>Measurement plan</strong> — KPIs and review frequency.</li>
+  </ol>
+
+  <h3>Issue Template</h3>
+  <table>
+    <tr><th>Field</th><th>Example</th></tr>
+    <tr><td>Issue</td><td>Important service page is blocked by robots.txt</td></tr>
+    <tr><td>URL(s)</td><td>https://example.com/services/</td></tr>
+    <tr><td>Severity</td><td>Critical</td></tr>
+    <tr><td>Evidence</td><td>Crawler + robots.txt test + URL Inspection</td></tr>
+    <tr><td>Impact</td><td>Google may be unable to crawl the page.</td></tr>
+    <tr><td>Recommendation</td><td>Remove the unintended Disallow rule and retest.</td></tr>
+    <tr><td>Owner</td><td>Developer / SEO</td></tr>
+    <tr><td>Status</td><td>Open / In progress / Fixed / Verified</td></tr>
+  </table>
+</section>
+
+<section id="checklist">
+  <h2>15. Complete SEO Audit Checklist</h2>
+
+  <h3>Business & Strategy</h3>
+  <ul class="checklist">
+    <li>Business goals documented</li>
+    <li>Target audience documented</li>
+    <li>Target locations documented</li>
+    <li>Products/services documented</li>
+    <li>Competitors identified</li>
+    <li>Primary conversion actions identified</li>
+  </ul>
+
+  <h3>Keyword Research</h3>
+  <ul class="checklist">
+    <li>Seed keywords collected</li>
+    <li>Search intent classified</li>
+    <li>Relevant keyword variations collected</li>
+    <li>Search demand/volume reviewed using appropriate tools</li>
+    <li>Keyword difficulty/competition considered</li>
+    <li>Keywords mapped to pages</li>
+    <li>Content gaps identified</li>
+  </ul>
+
+  <h3>On-Page</h3>
+  <ul class="checklist">
+    <li>Unique titles</li>
+    <li>Useful meta descriptions</li>
+    <li>Clear H1 and logical headings</li>
+    <li>Readable SEO-friendly URLs</li>
+    <li>Search intent satisfied</li>
+    <li>Original useful content</li>
+    <li>Descriptive image alt text where needed</li>
+    <li>Strong contextual internal links</li>
+    <li>Canonical URLs reviewed</li>
+    <li>Open Graph tags reviewed</li>
+  </ul>
+
+  <h3>Technical</h3>
+  <ul class="checklist">
+    <li>HTTPS working correctly</li>
+    <li>HTTP → HTTPS handled correctly</li>
+    <li>Preferred host/domain version is consistent</li>
+    <li>robots.txt reviewed</li>
+    <li>XML sitemap reviewed</li>
+    <li>Sitemap submitted in Search Console</li>
+    <li>Indexability checked</li>
+    <li>No accidental noindex</li>
+    <li>No important pages blocked</li>
+    <li>Broken links fixed</li>
+    <li>Redirect chains minimized</li>
+    <li>404/5xx errors investigated</li>
+    <li>Mobile experience checked</li>
+    <li>JavaScript rendering checked where relevant</li>
+  </ul>
+
+  <h3>Structured Data</h3>
+  <ul class="checklist">
+    <li>Relevant schema types identified</li>
+    <li>JSON-LD implemented accurately</li>
+    <li>Rich Results Test checked</li>
+    <li>Search Console enhancement reports monitored</li>
+    <li>Structured data matches visible page content</li>
+  </ul>
+
+  <h3>Performance</h3>
+  <ul class="checklist">
+    <li>LCP checked</li>
+    <li>INP checked</li>
+    <li>CLS checked</li>
+    <li>Image sizes optimized</li>
+    <li>CSS/JS optimized</li>
+    <li>Third-party scripts reviewed</li>
+    <li>Caching reviewed</li>
+    <li>CDN evaluated</li>
+    <li>Server response time reviewed</li>
+    <li>Mobile performance reviewed</li>
+  </ul>
+
+  <h3>Off-Page</h3>
+  <ul class="checklist">
+    <li>Backlink profile reviewed</li>
+    <li>Relevant referring domains identified</li>
+    <li>Lost links reviewed</li>
+    <li>Anchor text patterns reviewed</li>
+    <li>Suspicious link patterns investigated</li>
+    <li>Disavow considered only when genuinely appropriate</li>
+    <li>Legitimate link/PR opportunities documented</li>
+  </ul>
+
+  <h3>Measurement</h3>
+  <ul class="checklist">
+    <li>Search Console verified</li>
+    <li>GA4 configured where appropriate</li>
+    <li>Organic clicks tracked</li>
+    <li>Organic impressions tracked</li>
+    <li>CTR tracked</li>
+    <li>Queries tracked</li>
+    <li>Landing pages tracked</li>
+    <li>Conversions/key events tracked</li>
+    <li>Core Web Vitals monitored</li>
+    <li>Changes documented for future comparison</li>
+  </ul>
+</section>
+
+<section id="workflow">
+  <h2>16. A Practical 30-Day SEO Learning & Execution Plan</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Days 1–5: Foundations</h3>
+      <p>Learn crawling, indexing, ranking, search intent, keywords, URLs, titles, headings, descriptions, canonicalization, robots.txt, and sitemaps.</p>
+    </div>
+    <div class="card">
+      <h3>Days 6–10: On-Page</h3>
+      <p>Practice keyword mapping, page optimization, internal linking, image SEO, content audits, and competitor/content-gap research.</p>
+    </div>
+    <div class="card">
+      <h3>Days 11–15: Technical</h3>
+      <p>Practice crawling a site, reading HTTP status codes, fixing redirects, checking indexability, testing mobile pages, and understanding JavaScript SEO.</p>
+    </div>
+    <div class="card">
+      <h3>Days 16–20: Performance & Schema</h3>
+      <p>Practice PageSpeed Insights, DevTools, Core Web Vitals, image optimization, JSON-LD, Rich Results Test, and Search Console enhancement reports.</p>
+    </div>
+    <div class="card">
+      <h3>Days 21–25: Off-Page</h3>
+      <p>Learn backlink analysis, referring domains, link relevance, digital PR, link schemes, and the appropriate use of Google's disavow tool.</p>
+    </div>
+    <div class="card">
+      <h3>Days 26–30: Full Audit</h3>
+      <p>Choose a real website you are authorized to audit. Produce a complete report, prioritize issues, implement fixes where possible, recrawl, and document results.</p>
+    </div>
+  </div>
+</section>
+
+<section id="references">
+  <h2>17. Recommended Official References</h2>
+  <p>Use official documentation for rules that change over time.</p>
+  <ul>
+    <li><a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide" target="_blank" rel="noopener">Google Search Central — SEO Starter Guide</a></li>
+    <li><a href="https://developers.google.com/search/docs/crawling-indexing" target="_blank" rel="noopener">Google Search Central — Crawling & Indexing</a></li>
+    <li><a href="https://developers.google.com/search/docs/crawling-indexing/robots/intro" target="_blank" rel="noopener">Google — robots.txt documentation</a></li>
+    <li><a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap" target="_blank" rel="noopener">Google — Build and Submit a Sitemap</a></li>
+    <li><a href="https://developers.google.com/search/docs/crawling-indexing/canonicalization" target="_blank" rel="noopener">Google — Canonicalization</a></li>
+    <li><a href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" target="_blank" rel="noopener">Google — Structured Data</a></li>
+    <li><a href="https://web.dev/articles/vitals" target="_blank" rel="noopener">web.dev — Web Vitals</a></li>
+    <li><a href="https://search.google.com/search-console" target="_blank" rel="noopener">Google Search Console</a></li>
+    <li><a href="https://pagespeed.web.dev/" target="_blank" rel="noopener">Google PageSpeed Insights</a></li>
+    <li><a href="https://gtmetrix.com/" target="_blank" rel="noopener">GTmetrix</a></li>
+    <li><a href="https://www.ubersuggest.com/" target="_blank" rel="noopener">Ubersuggest</a></li>
+    <li><a href="https://www.semrush.com/" target="_blank" rel="noopener">Semrush</a></li>
+    <li><a href="https://schema.org/" target="_blank" rel="noopener">Schema.org</a></li>
+    <li><a href="https://technicalseo.com/tools/schema-markup-generator/" target="_blank" rel="noopener">Merkle — Schema Markup Generator</a></li>
+  </ul>
+</section>
+
+<section id="quick-reference">
+  <h2>18. One-Page SEO Audit Workflow</h2>
+  <p><strong>Business → Keywords → Crawl → Indexing → Technical → On-Page → Content → Internal Links → Schema → Speed → Backlinks → Analytics/Search Console → Fix → Recrawl → Report → Monitor.</strong></p>
+  <div class="note">
+    <strong>Golden rule:</strong> Do not optimize for a checklist score. Optimize the website so that
+    search engines can access and understand genuinely useful content, while users can quickly accomplish
+    what they came to the site to do.
+  </div>
+</section>
+</main>
+
+<footer>
+  <p><strong>SEO Audit & Optimization — Professional Beginner Guide</strong></p>
+  <p class="small">
+    Prepared as a learning and working reference. Search engine documentation and product interfaces
+    change over time, so verify current implementation details in official Google documentation before
+    making high-impact changes.
+  </p>
+</footer>
+</body>
+</html>

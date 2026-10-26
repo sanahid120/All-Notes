@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Tech Developer Roadmap — S. A. Nahid</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:        #0A0F1E;
+    --bg2:       #0F1629;
+    --bg3:       #141C35;
+    --card:      #111827;
+    --border:    #1E2D4A;
+    --blue:      #3B82F6;
+    --teal:      #06B6D4;
+    --green:     #10B981;
+    --amber:     #F59E0B;
+    --red:       #EF4444;
+    --purple:    #8B5CF6;
+    --pink:      #EC4899;
+    --text:      #E2E8F0;
+    --muted:     #64748B;
+    --sub:       #94A3B8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0A0F1E 0%, #0D1B3E 50%, #0A1628 100%);
+    padding: 70px 40px 60px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.3);
+    color: var(--blue);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 16px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #FFFFFF 0%, #93C5FD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 16px;
+    color: var(--sub);
+    max-width: 560px;
+    margin: 0 auto 30px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 800; color: var(--blue); }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* NAV */
+  nav {
+    background: rgba(15,22,41,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 14px 14px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  nav a:hover { color: var(--text); border-bottom-color: var(--blue); }
+
+  /* LAYOUT */
+  .container { max-width: 1000px; margin: 0 auto; padding: 0 30px; }
+  section { padding: 60px 0 20px; }
+
+  .section-header {
+    margin-bottom: 36px;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .section-sub { color: var(--sub); font-size: 15px; }
+
+  /* PHASE CARD */
+  .phase {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .phase::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--accent, var(--blue));
+    border-radius: 4px 0 0 4px;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .phase-num {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800;
+    background: rgba(59,130,246,0.15);
+    color: var(--blue);
+    flex-shrink: 0;
+  }
+  .phase-title { font-size: 18px; font-weight: 700; color: #fff; }
+  .phase-duration {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.2);
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  /* GRID */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media(max-width:700px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+  /* TOPIC CARD */
+  .topic {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .topic-icon { font-size: 22px; margin-bottom: 8px; }
+  .topic-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .topic-items { list-style: none; }
+  .topic-items li {
+    font-size: 13px;
+    color: var(--sub);
+    padding: 3px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .topic-items li::before { content: '→'; color: var(--blue); flex-shrink: 0; font-size: 11px; margin-top: 2px; }
+
+  /* ROUTINE TABLE */
+  .routine-table { width: 100%; border-collapse: collapse; }
+  .routine-table th {
+    background: var(--bg3);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .routine-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--sub);
+    vertical-align: top;
+  }
+  .routine-table tr:last-child td { border-bottom: none; }
+  .routine-table tr:hover td { background: rgba(59,130,246,0.04); }
+  .day-label {
+    font-weight: 700;
+    color: var(--blue);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .task-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 2px 2px 0;
+  }
+
+  /* RESOURCE CARD */
+  .resource {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .resource-icon {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .resource-name { font-size: 14px; font-weight: 700; color: #fff; }
+  .resource-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .resource-link { font-size: 12px; color: var(--blue); margin-top: 4px; }
+
+  /* ROADMAP STEPS */
+  .step-list { list-style: none; }
+  .step-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .step-content-desc { font-size: 13px; color: var(--sub); }
+
+  /* JOB BOARD CARDS */
+  .jobboard {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .jobboard-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .jobboard-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .jobboard-desc { font-size: 12px; color: var(--sub); margin-bottom: 8px; }
+  .jobboard-url { font-size: 12px; color: var(--blue); font-family: 'JetBrains Mono', monospace; }
+
+  /* ALERT */
+  .alert {
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    border: 1px solid;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 20px; flex-shrink: 0; }
+  .alert-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .alert-body { font-size: 13px; }
+  .alert-blue { background: rgba(59,130,246,0.08); border-color: rgba(59,130,246,0.25); color: #93C5FD; }
+  .alert-amber { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); color: #FCD34D; }
+  .alert-green { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: #6EE7B7; }
+
+  /* CODE */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(59,130,246,0.1);
+    color: var(--teal);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; }
+  .checklist li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--sub);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist li::before {
+    content: '☐';
+    color: var(--blue);
+    flex-shrink: 0;
+    font-size: 16px;
+    line-height: 1.2;
+  }
+  .checklist li span { color: #fff; font-weight: 600; }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer strong { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Complete Developer Roadmap</div>
+  <h1>From Flutter Dev<br>to Big Tech Engineer</h1>
+  <p>A personal, structured guide for A. S. Asfakunnobi Nahid — from where you are now to Google, Meta, Microsoft and beyond.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Phases</div></div>
+    <div class="stat"><div class="stat-num">18</div><div class="stat-label">Months</div></div>
+    <div class="stat"><div class="stat-num">500+</div><div class="stat-label">LeetCode Problems</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Potential</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#phase">📋 Phases</a>
+  <a href="#routine">⏰ Daily Routine</a>
+  <a href="#dsa">🧠 DSA Guide</a>
+  <a href="#languages">💻 Languages</a>
+  <a href="#interview">🎯 Interview Prep</a>
+  <a href="#apply">📨 Application</a>
+  <a href="#jobs">💼 Job Boards</a>
+  <a href="#checklist">✅ Checklist</a>
+</nav>
+
+<div class="container">
+
+  <!-- PHASE OVERVIEW -->
+  <section id="phase">
+    <div class="section-header">
+      <div class="section-eyebrow">The Journey</div>
+      <div class="section-title">Your 18-Month Roadmap</div>
+      <div class="section-sub">Six phases — from strengthening your foundations to landing offers at top companies.</div>
+    </div>
+
+    <div class="alert alert-blue">
+      <div class="alert-icon">💡</div>
+      <div>
+        <div class="alert-title">Where you are right now</div>
+        <div class="alert-body">You already have Flutter, Java, Firebase, REST APIs, Clean Architecture, and 5+ real projects. That puts you ahead of most beginners. Now it is time to build the computer science depth that big tech requires.</div>
+      </div>
+    </div>
+
+    <!-- Phase 1 -->
+    <div class="phase" style="--accent: #3B82F6;">
+      <div class="phase-header">
+        <div class="phase-num" style="background:rgba(59,130,246,0.15);color:#3B82F6;">1</div>
+        <div class="phase-title">Strengthen CS Foundations</div>
+        <div class="phase-duration">Month 1 – 2</div>
+      </div>
+      <div class="grid3">
+        <div class="topic">
+          <div class="topic-icon">📐</div>
+          <div class="topic-title">Data Structures</div>
+          <ul class="topic-items">
+            <li>Arrays & Strings</li>
+            <li>Linked Lists (singly & doubly)</li>
+            <li>Stacks & Queues</li>
+            <li>Hash Maps & Hash Sets</li>
+            <li>Trees & Binary Trees</li>
+            <li>Heaps (min/max)</li>
+            <li>Graphs (adjacency list)</li>
+          </ul>
+        </div>
+        <div class="topic">
+          <div class="topic-icon">⚡</div>
+          <div class="topic-title">Algorithms</div>
+          <ul class="topic-items">
+            <li>Binary Search</li>
+            <li>Two Pointers</li>
+            <li>Sliding Window</li>
+            <li>Recursion & Backtracking</li>
+            <li>BFS & DFS</li>
+            <li>Sorting algorithms</li>
+            <li>Greedy approach</li>
+          </ul>
+        </div>
+        <div class="topic">
+          <div class="topic-icon">📊</div>
+          <div class="topic-title">Complexity</div>
+          <ul class="topic-items">
+            <li>Big O notation</li>
+            <li>Time complexity analysis</li>
+            <li>Space complexity</li>
+            <li>Best / worst / average case</li>
+            <li>Amortized analysis</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:16px;" class="alert alert-amber">
+        <div class="alert-icon">🎯</div>
+        <div><div class="alert-title">Goal by end of Phase 1</div><div class="alert-body">Solve 80 LeetCode Easy problems in Java. Understand every data structure from scratch without looking it up.</div></div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase" style="--accent: #06B6D4;">
+      <div class="phase-header">
+        <div class="phase-num" style="background:rgba(6,182,212,0.15);color:#06B6D4;">2</div>
+        <div class="phase-title">Deepen Problem Solving</div>
+        <div class="phase-duration">Month 3 – 6</div>
+      </div>
+      <div class="grid2">
+        <div class="topic">
+          <div class="topic-icon">🔁</div>
+          <div class="topic-title">Advanced Topics</div>
+          <ul class="topic-items">
+            <li>Dynamic Programming (DP)</li>
+            <li>Trie data structure</li>
+            <li>Union Find / Disjoint Set</li>
+            <li>Segment Trees (basics)</li>
+            <li>Topological Sort</li>
+            <li>Shortest path (Dijkstra, Bellman-Ford)</li>
+            <li>Bit manipulation</li>
+          </ul>
+        </div>
+        <div class="topic">
+          <div class="topic-icon">🏋️</div>
+          <div class="topic-title">LeetCode Practice</div>
+          <ul class="topic-items">
+            <li>Solve 2-3 problems daily</li>
+            <li>Focus on Medium difficulty</li>
+            <li>NeetCode 150 list</li>
+            <li>Review solutions after solving</li>
+            <li>Re-do wrong problems after 1 week</li>
+            <li>Track patterns, not solutions</li>
+            <li>Total target: 200+ problems</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top:16px;" class="alert alert-green">
+        <div class="alert-icon">✅</div>
+        <div><div class="alert-title">Goal by end of Phase 2</div><div class="alert-body">Solve 200+ LeetCode problems (mostly Medium). Complete NeetCode 150 list. Understand Dynamic Programming patterns.</div></div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase" style="--accent: #8B5CF6;">
+      <div class="phase-header">
+        <div class="phase-num" style="background:rgba(139,92,246,0.15);color:#8B5CF6;">3</div>
+        <div class="phase-title">Learn Python + System Design Basics</div>
+        <div class="phase-duration">Month 5 – 8</div>
+      </div>
+      <div class="grid2">
+        <div class="topic">
+          <div class="topic-icon">🐍</div>
+          <div class="topic-title">Python for Interviews</div>
+          <ul class="topic-items">
+            <li>Python syntax (2-3 weeks)</li>
+            <li>Lists, dicts, sets, tuples</li>
+            <li>List comprehensions</li>
+            <li>Lambda, map, filter</li>
+            <li>collections module</li>
+            <li>heapq, deque, Counter</li>
+            <li>Switch to Python on LeetCode</li>
+          </ul>
+        </div>
+        <div class="topic">
+          <div class="topic-icon">🏗️</div>
+          <div class="topic-title">System Design Basics</div>
+          <ul class="topic-items">
+            <li>Client-server architecture</li>
+            <li>SQL vs NoSQL databases</li>
+            <li>Caching (Redis basics)</li>
+            <li>Load balancers</li>
+            <li>REST API design principles</li>
+            <li>Horizontal vs vertical scaling</li>
+            <li>CAP theorem basics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="phase" style="--accent: #10B981;">
+      <div class="phase-header">
+        <div class="phase-num" style="background:rgba(16,185,129,0.15);color:#10B981;">4</div>
+        <div class="phase-title">Hard Problems + Mock Interviews</div>
+        <div class="phase-duration">Month 9 – 13</div>
+      </div>
+      <div class="grid3">
+        <div class="topic">
+          <div class="topic-icon">🔥</div>
+          <div class="topic-title">LeetCode Hard</div>
+          <ul class="topic-items">
+            <li>Attempt 1 Hard per week</li>
+            <li>Google tag problems</li>
+            <li>Meta tag problems</li>
+            <li>Microsoft tag problems</li>
+            <li>Target: 350-500 total solved</li>
+          </ul>
+        </div>
+        <div class="topic">
+          <div class="topic-icon">🎭</div>
+          <div class="topic-title">Mock Interviews</div>
+          <ul class="topic-items">
+            <li>Pramp (free)</li>
+            <li>Interviewing.io</li>
+            <li>LeetCode mock tests</li>
+            <li>Time yourself strictly</li>
+            <li>Practice talking out loud</li>
+          </ul>
+        </div>
+        <div class="topic">
+          <div class="topic-icon">🗣️</div>
+          <div class="topic-title">Communication</div>
+          <ul class="topic-items">
+            <li>Think aloud while solving</li>
+            <li>Clarify problem before coding</li>
+            <li>Discuss trade-offs</li>
+            <li>Handle hints gracefully</li>
+            <li>Explain time/space complexity</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 5 -->
+    <div class="phase" style="--accent: #F59E0B;">
+      <div class="phase-header">
+        <div class="phase-num" style="background:rgba(245,158,11,0.15);color:#F59E0B;">5</div>
+        <div class="phase-title">Behavioural + Portfolio + Open Source</div>
+        <div class="phase-duration">Month 12 – 16</div>
+      </div>
+      <div class="grid2">
+        <div class="topic">
+          <div class="topic-icon">🧑‍💼</div>
+          <div class="topic-title">Behavioural (STAR Method)</div>
+          <ul class="topic-items">
+            <li>Prepare 10 STAR stories</li>
+            <li>Leadership experience</li>
+            <li>Conflict resolution</li>
+            <li>Handling failure</li>
+            <li>Working under pressure</li>
+            <li>Biggest achievement</li>
+            <li>Why this company?</li>
+          </ul>
+        </div>
+        <div class="topic">
+          <div class="topic-icon">🌐</div>
+          <div class="topic-title">Portfolio & Open Source</div>
+          <ul class="topic-items">
+            <li>Polish GitHub profile</li>
+            <li>README for every project</li>
+            <li>Contribute to 1-2 open source repos</li>
+            <li>Build one impressive side project</li>
+            <li>Write 1-2 technical blog posts</li>
+            <li>LinkedIn: post weekly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 6 -->
+    <div class="phase" style="--accent: #EC4899;">
+      <div class="phase-header">
+        <div class="phase-num" style="background:rgba(236,72,153,0.15);color:#EC4899;">6</div>
+        <div class="phase-title">Apply, Interview, Land the Offer</div>
+        <div class="phase-duration">Month 16 – 18+</div>
+      </div>
+      <ul class="step-list">
+        <li class="step-item">
+          <div class="step-dot" style="background:rgba(236,72,153,0.15);color:#EC4899;">1</div>
+          <div><div class="step-content-title">Referrals first</div><div class="step-content-desc">LinkedIn message people working at target companies. A referral multiplies your chances by 5-10x over a cold application.</div></div>
+        </li>
+        <li class="step-item">
+          <div class="step-dot" style="background:rgba(236,72,153,0.15);color:#EC4899;">2</div>
+          <div><div class="step-content-title">Apply broadly</div><div class="step-content-desc">Apply to 50-100 companies, not 5. Big tech is competitive — volume plus quality is the strategy.</div></div>
+        </li>
+        <li class="step-item">
+          <div class="step-dot" style="background:rgba(236,72,153,0.15);color:#EC4899;">3</div>
+          <div><div class="step-content-title">Interview rounds</div><div class="step-content-desc">Phone screen → Technical screen (1-2 coding rounds) → Virtual Onsite (3-5 rounds: coding, system design, behavioural) → Offer.</div></div>
+        </li>
+        <li class="step-item">
+          <div class="step-dot" style="background:rgba(236,72,153,0.15);color:#EC4899;">4</div>
+          <div><div class="step-content-title">Negotiate everything</div><div class="step-content-desc">Never accept the first offer. Base salary, equity (stocks), signing bonus, and remote flexibility are all negotiable.</div></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- DAILY ROUTINE -->
+  <section id="routine">
+    <div class="section-header">
+      <div class="section-eyebrow">Discipline</div>
+      <div class="section-title">Daily & Weekly Routine</div>
+      <div class="section-sub">Consistency beats intensity. Follow this every day and results compound.</div>
+    </div>
+
+    <div class="alert alert-amber">
+      <div class="alert-icon">⏰</div>
+      <div><div class="alert-title">The 2-hour daily rule</div><div class="alert-body">You do not need 8 hours a day. 2 focused, distraction-free hours every single day will outperform 8 scattered hours. Phone off. One task at a time.</div></div>
+    </div>
+
+    <div class="phase" style="--accent:#06B6D4; padding: 0; overflow:hidden;">
+      <table class="routine-table" style="width:100%">
+        <thead>
+          <tr>
+            <th style="width:120px;">Day</th>
+            <th>Morning (1 hr)</th>
+            <th>Evening (1 hr)</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="day-label">Monday</div></td>
+            <td>LeetCode — 1 new Medium problem</td>
+            <td>Review yesterday's solution + NeetCode video</td>
+            <td><span class="task-tag" style="background:rgba(59,130,246,0.15);color:#3B82F6;">DSA</span></td>
+          </tr>
+          <tr>
+            <td><div class="day-label">Tuesday</div></td>
+            <td>LeetCode — 1 new Medium problem</td>
+            <td>Study the pattern (DP / Graph / etc.) from that problem</td>
+            <td><span class="task-tag" style="background:rgba(59,130,246,0.15);color:#3B82F6;">DSA</span></td>
+          </tr>
+          <tr>
+            <td><div class="day-label">Wednesday</div></td>
+            <td>LeetCode — 1 Easy (warm up) + 1 Medium</td>
+            <td>System Design reading (1 chapter — Alex Xu book)</td>
+            <td><span class="task-tag" style="background:rgba(139,92,246,0.15);color:#8B5CF6;">Design</span></td>
+          </tr>
+          <tr>
+            <td><div class="day-label">Thursday</div></td>
+            <td>LeetCode — 1 new Medium problem</td>
+            <td>Redo 2-3 problems you got wrong this week</td>
+            <td><span class="task-tag" style="background:rgba(59,130,246,0.15);color:#3B82F6;">DSA</span> <span class="task-tag" style="background:rgba(16,185,129,0.15);color:#10B981;">Review</span></td>
+          </tr>
+          <tr>
+            <td><div class="day-label">Friday</div></td>
+            <td>LeetCode — 1 Hard attempt (no time limit)</td>
+            <td>Behavioural prep — write or refine 1 STAR story</td>
+            <td><span class="task-tag" style="background:rgba(245,158,11,0.15);color:#F59E0B;">Hard</span></td>
+          </tr>
+          <tr>
+            <td><div class="day-label">Saturday</div></td>
+            <td>Mock interview (Pramp or self-timed LeetCode)</td>
+            <td>Flutter / personal project work</td>
+            <td><span class="task-tag" style="background:rgba(236,72,153,0.15);color:#EC4899;">Mock</span></td>
+          </tr>
+          <tr>
+            <td><div class="day-label">Sunday</div></td>
+            <td>Weekly review — count solved, plan next week</td>
+            <td>Rest, read tech articles, LinkedIn post</td>
+            <td><span class="task-tag" style="background:rgba(6,182,212,0.15);color:#06B6D4;">Review</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- DSA GUIDE -->
+  <section id="dsa">
+    <div class="section-header">
+      <div class="section-eyebrow">Core Skill</div>
+      <div class="section-title">DSA Study Order</div>
+      <div class="section-sub">Learn in this exact order. Do not skip ahead.</div>
+    </div>
+    <div class="grid2">
+      <div>
+        <div class="phase" style="--accent:#3B82F6; padding:20px 24px; margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:700;color:#3B82F6;margin-bottom:8px;">WEEK 1-2</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;">Arrays & Hashing</div>
+          <ul class="topic-items">
+            <li>Two Sum, Contains Duplicate</li>
+            <li>Anagram, Group Anagrams</li>
+            <li>Top K Frequent Elements</li>
+            <li>Product of Array Except Self</li>
+          </ul>
+        </div>
+        <div class="phase" style="--accent:#06B6D4; padding:20px 24px; margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:700;color:#06B6D4;margin-bottom:8px;">WEEK 3-4</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;">Two Pointers & Sliding Window</div>
+          <ul class="topic-items">
+            <li>Valid Palindrome</li>
+            <li>3Sum, Container With Most Water</li>
+            <li>Longest Substring Without Repeat</li>
+            <li>Minimum Window Substring</li>
+          </ul>
+        </div>
+        <div class="phase" style="--accent:#8B5CF6; padding:20px 24px; margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:700;color:#8B5CF6;margin-bottom:8px;">WEEK 5-6</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;">Stack & Linked List</div>
+          <ul class="topic-items">
+            <li>Valid Parentheses</li>
+            <li>Daily Temperatures</li>
+            <li>Reverse Linked List</li>
+            <li>Merge Two Sorted Lists</li>
+          </ul>
+        </div>
+        <div class="phase" style="--accent:#10B981; padding:20px 24px; margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:700;color:#10B981;margin-bottom:8px;">WEEK 7-9</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;">Trees & Binary Search</div>
+          <ul class="topic-items">
+            <li>Invert Binary Tree</li>
+            <li>Maximum Depth of Tree</li>
+            <li>Lowest Common Ancestor</li>
+            <li>Binary Search, Search in Rotated Array</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="phase" style="--accent:#F59E0B; padding:20px 24px; margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:700;color:#F59E0B;margin-bottom:8px;">WEEK 10-12</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;">Graphs & Heaps</div>
+          <ul class="topic-items">
+            <li>Number of Islands</li>
+            <li>Clone Graph</li>
+            <li>Course Schedule (Topo Sort)</li>
+            <li>Kth Largest Element (Heap)</li>
+          </ul>
+        </div>
+        <div class="phase" style="--accent:#EC4899; padding:20px 24px; margin-bottom:12px;">
+          <div style="font-size:12px;font-weight:700;color:#EC4899;margin-bottom:8px;">WEEK 13-18</div>
+          <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;">Dynamic Programming</div>
+          <ul class="topic-items">
+            <li>Climbing Stairs, House Robber</li>
+            <li>Coin Change, Longest Common Subsequence</li>
+            <li>0/1 Knapsack</li>
+            <li>Word Break, Edit Distance</li>
+            <li>Longest Increasing Subsequence</li>
+          </ul>
+        </div>
+        <div class="alert alert-blue" style="margin-top:4px;">
+          <div class="alert-icon">📌</div>
+          <div>
+            <div class="alert-title">Use NeetCode.io</div>
+            <div class="alert-body">NeetCode organises LeetCode problems by pattern with free video explanations. Follow their roadmap exactly — it is the best free resource available.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- LANGUAGES -->
+  <section id="languages">
+    <div class="section-header">
+      <div class="section-eyebrow">Tech Stack</div>
+      <div class="section-title">Languages to Learn & Order</div>
+      <div class="section-sub">You do not need many languages. You need a few, known deeply.</div>
+    </div>
+    <div class="grid3">
+      <div class="jobboard">
+        <div style="font-size:28px;margin-bottom:8px;">☕</div>
+        <div class="jobboard-name">Java</div>
+        <div class="jobboard-tag" style="background:rgba(16,185,129,0.15);color:#10B981;">Master first</div>
+        <div class="jobboard-desc">You already know it. Deepen Collections, Generics, OOP design. Use for all LeetCode in Phase 1-2. Accepted at every big tech company.</div>
+      </div>
+      <div class="jobboard">
+        <div style="font-size:28px;margin-bottom:8px;">🐍</div>
+        <div class="jobboard-name">Python</div>
+        <div class="jobboard-tag" style="background:rgba(59,130,246,0.15);color:#3B82F6;">Learn in Month 5</div>
+        <div class="jobboard-desc">Takes 2-3 weeks to learn after Java. Shorter code in interviews. Great for data roles at big tech. Switch LeetCode to Python after learning.</div>
+      </div>
+      <div class="jobboard">
+        <div style="font-size:28px;margin-bottom:8px;">🎯</div>
+        <div class="jobboard-name">Kotlin</div>
+        <div class="jobboard-tag" style="background:rgba(139,92,246,0.15);color:#8B5CF6;">Optional later</div>
+        <div class="jobboard-desc">Modern Android/backend. Google uses it heavily. Learn after Java is solid — transition is easy since Kotlin runs on JVM.</div>
+      </div>
+      <div class="jobboard">
+        <div style="font-size:28px;margin-bottom:8px;">⚡</div>
+        <div class="jobboard-name">C++</div>
+        <div class="jobboard-tag" style="background:rgba(245,158,11,0.15);color:#F59E0B;">Competitive prog</div>
+        <div class="jobboard-desc">Used heavily in competitive programming. Fastest runtime. Learn only if targeting system-level or competitive programming paths.</div>
+      </div>
+      <div class="jobboard">
+        <div style="font-size:28px;margin-bottom:8px;">🌐</div>
+        <div class="jobboard-name">JavaScript</div>
+        <div class="jobboard-tag" style="background:rgba(100,116,139,0.15);color:#94A3B8;">If frontend roles</div>
+        <div class="jobboard-desc">Only learn if targeting frontend engineering (React) at big tech. Not needed for mobile or backend interview paths.</div>
+      </div>
+      <div class="jobboard">
+        <div style="font-size:28px;margin-bottom:8px;">💙</div>
+        <div class="jobboard-name">Dart / Flutter</div>
+        <div class="jobboard-tag" style="background:rgba(6,182,212,0.15);color:#06B6D4;">Keep for income</div>
+        <div class="jobboard-desc">Not used in big tech interviews but keeps you employed while preparing. Keep building Flutter projects for income and portfolio.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- INTERVIEW PREP -->
+  <section id="interview">
+    <div class="section-header">
+      <div class="section-eyebrow">The Real Test</div>
+      <div class="section-title">Interview Preparation</div>
+      <div class="section-sub">Big tech interviews have a formula. Learn the formula.</div>
+    </div>
+
+    <div class="grid2" style="margin-bottom:20px;">
+      <div class="phase" style="--accent:#3B82F6; padding:24px;">
+        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:12px;">📞 Phone Screen Round</div>
+        <ul class="topic-items">
+          <li>30-45 minutes with a recruiter</li>
+          <li>General background questions</li>
+          <li>Why this company?</li>
+          <li>Walk through your resume</li>
+          <li>1 easy coding problem sometimes</li>
+          <li>Prepare 60-second self-intro</li>
+        </ul>
+      </div>
+      <div class="phase" style="--accent:#06B6D4; padding:24px;">
+        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:12px;">💻 Technical Screen Round</div>
+        <ul class="topic-items">
+          <li>45-60 minutes on shared editor</li>
+          <li>1-2 Medium LeetCode problems</li>
+          <li>Think aloud the entire time</li>
+          <li>Clarify before you code</li>
+          <li>Test with examples after coding</li>
+          <li>Discuss time/space complexity</li>
+        </ul>
+      </div>
+      <div class="phase" style="--accent:#8B5CF6; padding:24px;">
+        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:12px;">🏢 Virtual Onsite (3-5 Rounds)</div>
+        <ul class="topic-items">
+          <li>2-3 coding rounds (Medium/Hard)</li>
+          <li>1 system design round (junior: lighter)</li>
+          <li>1 behavioural round (STAR)</li>
+          <li>Full day — stay energised</li>
+          <li>Ask good questions at end of each round</li>
+        </ul>
+      </div>
+      <div class="phase" style="--accent:#10B981; padding:24px;">
+        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:12px;">🌟 STAR Method (Behavioural)</div>
+        <ul class="topic-items">
+          <li><strong style="color:#fff;">S</strong>ituation — set the scene briefly</li>
+          <li><strong style="color:#fff;">T</strong>ask — what was your responsibility</li>
+          <li><strong style="color:#fff;">A</strong>ction — what YOU specifically did</li>
+          <li><strong style="color:#fff;">R</strong>esult — measurable outcome</li>
+          <li>Prepare 10 stories covering different situations</li>
+          <li>Use your Flutter projects as examples</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic" style="padding:24px;">
+      <div class="topic-title" style="font-size:15px;margin-bottom:12px;">🗣️ Questions to prepare answers for</div>
+      <div class="grid2">
+        <ul class="topic-items">
+          <li>Tell me about yourself</li>
+          <li>Why do you want to work here?</li>
+          <li>Tell me about a challenging project</li>
+          <li>Describe a time you failed</li>
+          <li>Tell me about a conflict with a teammate</li>
+        </ul>
+        <ul class="topic-items">
+          <li>What is your greatest achievement?</li>
+          <li>How do you handle tight deadlines?</li>
+          <li>Tell me about a time you showed leadership</li>
+          <li>What are your strengths and weaknesses?</li>
+          <li>Where do you see yourself in 5 years?</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- APPLICATION PROCESS -->
+  <section id="apply">
+    <div class="section-header">
+      <div class="section-eyebrow">Getting In</div>
+      <div class="section-title">Application Process</div>
+      <div class="section-sub">How to find, apply, and follow up on job openings the smart way.</div>
+    </div>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-dot" style="background:rgba(59,130,246,0.15);color:#3B82F6;font-weight:800;">1</div>
+        <div>
+          <div class="step-content-title">Build your application profile first</div>
+          <div class="step-content-desc">Before applying anywhere — clean up your GitHub (every project needs a README), update LinkedIn with all projects and skills, and prepare a 1-page ATS-friendly CV. You already have a strong Flutter CV from our sessions — use that.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-dot" style="background:rgba(6,182,212,0.15);color:#06B6D4;font-weight:800;">2</div>
+        <div>
+          <div class="step-content-title">Find the job opening</div>
+          <div class="step-content-desc">Check the company careers page directly (careers.google.com, metacareers.com, careers.microsoft.com). Also check LinkedIn Jobs, Glassdoor, and Levels.fyi for roles. Set up email alerts so new roles land in your inbox the day they open.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-dot" style="background:rgba(139,92,246,0.15);color:#8B5CF6;font-weight:800;">3</div>
+        <div>
+          <div class="step-content-title">Get a referral if possible</div>
+          <div class="step-content-desc">Search LinkedIn for people who work at your target company. Send a short, respectful message asking if they would refer you. A referral increases your chance of getting an interview by 5-10x. Most people are willing to help if you are polite and prepared.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-dot" style="background:rgba(16,185,129,0.15);color:#10B981;font-weight:800;">4</div>
+        <div>
+          <div class="step-content-title">Tailor your application for each role</div>
+          <div class="step-content-desc">Read the job description carefully. Use keywords from it in your CV and cover email. If they mention Kotlin — put Kotlin. If they mention cross-platform — highlight Flutter and CraftyBay. ATS systems scan for keywords before a human sees your CV.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-dot" style="background:rgba(245,158,11,0.15);color:#F59E0B;font-weight:800;">5</div>
+        <div>
+          <div class="step-content-title">Follow up after applying</div>
+          <div class="step-content-desc">If you hear nothing after 1-2 weeks, send one polite follow-up email or LinkedIn message to the recruiter. Keep it short: "I applied for [role] on [date] and remain very interested. I wanted to check if my application was received." One follow-up is professional. Two is too many.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-dot" style="background:rgba(236,72,153,0.15);color:#EC4899;font-weight:800;">6</div>
+        <div>
+          <div class="step-content-title">Negotiate the offer</div>
+          <div class="step-content-desc">When you get an offer — never accept immediately. Say "Thank you, I am excited. Can I have a few days to review?" Then research market rates on Levels.fyi and Glassdoor, and ask for more. Base salary, equity, signing bonus, and remote options are all negotiable. The worst they can say is no.</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <hr>
+
+  <!-- JOB BOARDS -->
+  <section id="jobs">
+    <div class="section-header">
+      <div class="section-eyebrow">Where to Look</div>
+      <div class="section-title">Job Boards & Circulars</div>
+      <div class="section-sub">Organised by purpose — local, remote, and big tech specific.</div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:#3B82F6;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;">🇧🇩 Bangladesh — Local & Remote</div>
+      <div class="grid2">
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(59,130,246,0.15);">💼</div>
+          <div>
+            <div class="resource-name">BDJobs</div>
+            <div class="resource-desc">Largest Bangladesh job board. Filter IT + Flutter + CSE roles. Set daily email alerts.</div>
+            <div class="resource-link">bdjobs.com</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(6,182,212,0.15);">🔧</div>
+          <div>
+            <div class="resource-name">BDTechJobs</div>
+            <div class="resource-desc">Tech-specific Bangladesh board. 16+ active Flutter positions. Updated daily.</div>
+            <div class="resource-link">bdtechjobs.com/flutter-jobs</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(139,92,246,0.15);">🔗</div>
+          <div>
+            <div class="resource-name">LinkedIn Jobs BD</div>
+            <div class="resource-desc">14+ Flutter jobs in Bangladesh today. Easy Apply feature. Set alerts for "Flutter developer Bangladesh".</div>
+            <div class="resource-link">linkedin.com/jobs</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(245,158,11,0.15);">📱</div>
+          <div>
+            <div class="resource-name">Facebook Groups</div>
+            <div class="resource-desc">Search: "Sylhet IT Jobs", "Bangladesh Developer Jobs", "Dev for Hire BD", "Flutter Bangladesh".</div>
+            <div class="resource-link">facebook.com/groups</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:#10B981;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;">🌍 Worldwide Remote — Free to Apply</div>
+      <div class="grid2">
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(16,185,129,0.15);">🚀</div>
+          <div>
+            <div class="resource-name">RemoteOK</div>
+            <div class="resource-desc">Best for Flutter & dev roles worldwide. No signup needed. Updated every few hours.</div>
+            <div class="resource-link">remoteok.com/remote-flutter-jobs</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(16,185,129,0.15);">🌱</div>
+          <div>
+            <div class="resource-name">Wellfound (AngelList)</div>
+            <div class="resource-desc">Startup jobs worldwide. Direct contact with founders. Startups hire junior talent more openly.</div>
+            <div class="resource-link">wellfound.com</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(16,185,129,0.15);">📋</div>
+          <div>
+            <div class="resource-name">DailyRemote</div>
+            <div class="resource-desc">1,258+ VA and developer roles open. Bangladesh eligible. Entry-level filter available.</div>
+            <div class="resource-link">dailyremote.com/remote-jobs-in-bangladesh</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(16,185,129,0.15);">🎯</div>
+          <div>
+            <div class="resource-name">Arc.dev</div>
+            <div class="resource-desc">Vetted developer roles. Has a Bangladesh page. Take one skills test, get matched to companies.</div>
+            <div class="resource-link">arc.dev/en-bd/remote-jobs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:13px;font-weight:700;color:#EC4899;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.08em;">🏆 Big Tech — Direct Careers Pages</div>
+      <div class="grid3">
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(236,72,153,0.15);">🔍</div>
+          <div>
+            <div class="resource-name">Google Careers</div>
+            <div class="resource-link">careers.google.com</div>
+            <div class="resource-desc" style="margin-top:4px;">Filter: Software Engineer, Mobile, New Grad</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(236,72,153,0.15);">📘</div>
+          <div>
+            <div class="resource-name">Meta Careers</div>
+            <div class="resource-link">metacareers.com</div>
+            <div class="resource-desc" style="margin-top:4px;">Filter: Mobile Engineer, New Grad 2026</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(236,72,153,0.15);">🪟</div>
+          <div>
+            <div class="resource-name">Microsoft Careers</div>
+            <div class="resource-link">careers.microsoft.com</div>
+            <div class="resource-desc" style="margin-top:4px;">Filter: Software Engineer, Mobile, Entry Level</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(236,72,153,0.15);">📦</div>
+          <div>
+            <div class="resource-name">Amazon Jobs</div>
+            <div class="resource-link">amazon.jobs</div>
+            <div class="resource-desc" style="margin-top:4px;">Filter: SDE New Grad, Mobile Development</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(236,72,153,0.15);">🍎</div>
+          <div>
+            <div class="resource-name">Apple Jobs</div>
+            <div class="resource-link">jobs.apple.com</div>
+            <div class="resource-desc" style="margin-top:4px;">Filter: iOS, Mobile, Software Engineer</div>
+          </div>
+        </div>
+        <div class="resource">
+          <div class="resource-icon" style="background:rgba(236,72,153,0.15);">💹</div>
+          <div>
+            <div class="resource-name">Levels.fyi</div>
+            <div class="resource-link">levels.fyi/jobs</div>
+            <div class="resource-desc" style="margin-top:4px;">Real salary data + job listings from big tech</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- RESOURCES -->
+  <section>
+    <div class="section-header">
+      <div class="section-eyebrow">Tools</div>
+      <div class="section-title">Essential Resources</div>
+    </div>
+    <div class="grid3">
+      <div class="resource">
+        <div class="resource-icon" style="background:rgba(245,158,11,0.15);">🧩</div>
+        <div>
+          <div class="resource-name">NeetCode.io</div>
+          <div class="resource-desc">Best free DSA roadmap. 150 curated problems with video solutions. Start here.</div>
+          <div class="resource-link">neetcode.io</div>
+        </div>
+      </div>
+      <div class="resource">
+        <div class="resource-icon" style="background:rgba(59,130,246,0.15);">⚡</div>
+        <div>
+          <div class="resource-name">LeetCode</div>
+          <div class="resource-desc">The main DSA practice platform. Free tier is enough. Do company-tagged problems before interviews.</div>
+          <div class="resource-link">leetcode.com</div>
+        </div>
+      </div>
+      <div class="resource">
+        <div class="resource-icon" style="background:rgba(139,92,246,0.15);">📖</div>
+        <div>
+          <div class="resource-name">System Design Interview (Book)</div>
+          <div class="resource-desc">Alex Xu — the go-to book for system design prep. Read Chapter 1-8 first.</div>
+          <div class="resource-link">Search: "System Design Interview Alex Xu"</div>
+        </div>
+      </div>
+      <div class="resource">
+        <div class="resource-icon" style="background:rgba(16,185,129,0.15);">🎭</div>
+        <div>
+          <div class="resource-name">Pramp</div>
+          <div class="resource-desc">Free mock interviews with real people. Timed. Great for practicing thinking out loud.</div>
+          <div class="resource-link">pramp.com</div>
+        </div>
+      </div>
+      <div class="resource">
+        <div class="resource-icon" style="background:rgba(6,182,212,0.15);">📺</div>
+        <div>
+          <div class="resource-name">ByteByteGo (YouTube)</div>
+          <div class="resource-desc">System design explained visually. Free on YouTube. Watch alongside the Alex Xu book.</div>
+          <div class="resource-link">youtube.com/@ByteByteGo</div>
+        </div>
+      </div>
+      <div class="resource">
+        <div class="resource-icon" style="background:rgba(245,158,11,0.15);">💰</div>
+        <div>
+          <div class="resource-name">Levels.fyi</div>
+          <div class="resource-desc">Real salary data from big tech employees. Use before negotiating any offer.</div>
+          <div class="resource-link">levels.fyi</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr>
+
+  <!-- CHECKLIST -->
+  <section id="checklist">
+    <div class="section-header">
+      <div class="section-eyebrow">Action Items</div>
+      <div class="section-title">Your Starting Checklist</div>
+      <div class="section-sub">Do these this week before anything else.</div>
+    </div>
+    <div class="phase" style="--accent:#10B981;">
+      <ul class="checklist">
+        <li><span>Create a LeetCode account</span> — solve your first Easy problem today in Java</li>
+        <li><span>Bookmark NeetCode.io</span> — start their Arrays & Hashing section</li>
+        <li><span>Clean up GitHub profile</span> — add READMEs to CraftyBay, HayChat, Task Manager</li>
+        <li><span>Update LinkedIn</span> — add all projects, Flutter skills, Ostad course</li>
+        <li><span>Set a daily 2-hour study block</span> — same time every day, phone off</li>
+        <li><span>Join Flutter Bangladesh Facebook group</span> — stay updated on local opportunities</li>
+        <li><span>Set BDJobs alert</span> — "Flutter Developer" + Sylhet/Remote, daily email</li>
+        <li><span>Set LinkedIn job alert</span> — "Flutter Developer" Bangladesh + Worldwide Remote</li>
+        <li><span>Write your 60-second self-introduction</span> — practice saying it out loud</li>
+        <li><span>Read the first chapter of System Design Interview</span> — build your design foundation</li>
+        <li><span>Finish the Ostad Flutter course</span> — adds a real certification to your CV</li>
+        <li><span>Apply to Appifylab Sylhet</span> — best local Flutter employer, strong match for your skills</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-green" style="margin-top:20px;">
+      <div class="alert-icon">🚀</div>
+      <div>
+        <div class="alert-title">Final thought</div>
+        <div class="alert-body">You already have the hardest thing — real projects, real code, and real experience. Most people only have tutorials. The gap between where you are and Google is not talent. It is consistent, focused preparation over the next 12-18 months. One LeetCode problem a day. Every day. That is it.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Built for <strong>A. S. Asfakunnobi Nahid</strong> — Flutter Developer → Big Tech Engineer &nbsp;·&nbsp; Keep building. Keep learning. 🚀
+</footer>
+
+</body>
+</html>

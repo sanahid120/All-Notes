@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Complete Flutter Firebase Professional Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#5c687d;--primary:#e56b00;--secondary:#1667d9;--soft:#fff3df;--border:#dfe6ef;--code:#111827;--ok:#087f5b;--warn:#bd6b00}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 Inter,Segoe UI,Arial,sans-serif}header{background:linear-gradient(135deg,#10213f,#1667d9 58%,#f39b22);color:#fff;padding:62px 22px}.wrap,main{max-width:1180px;margin:auto}h1{font-size:2.7rem;line-height:1.15;margin:0 0 12px}header p{max-width:920px;color:#e7efff;font-size:1.08rem}main{padding:28px 18px 70px}nav,section{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 28px rgba(16,33,63,.06)}nav{padding:24px;margin-bottom:24px}.toc{columns:2;column-gap:42px;padding-left:22px}.toc li{break-inside:avoid;margin:6px 0}a{color:var(--secondary);text-decoration:none}section{padding:28px;margin:22px 0}h2{margin-top:0;color:#173f79;border-bottom:2px solid #eaf0fb;padding-bottom:9px}h3{color:#24589e;margin-top:28px}pre{background:var(--code);color:#e5e7eb;padding:18px;border-radius:12px;overflow:auto;border:1px solid #263244}code{font-family:Consolas,Monaco,monospace}.note,.tip,.warning,.danger{padding:14px 16px;border-radius:10px;margin:15px 0}.note{background:#edf4ff;border-left:4px solid var(--secondary)}.tip{background:#eafbf5;border-left:4px solid var(--ok)}.warning{background:#fff7e6;border-left:4px solid var(--warn)}.danger{background:#fff0f0;border-left:4px solid #c92a2a}table{width:100%;border-collapse:collapse;margin:15px 0}th,td{border:1px solid var(--border);padding:10px;vertical-align:top;text-align:left}th{background:#edf3ff}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}.card{border:1px solid var(--border);border-radius:12px;background:#fbfdff;padding:16px}.badge{display:inline-block;padding:2px 9px;border-radius:999px;background:var(--soft);color:#925000;font-size:.85rem}footer{text-align:center;color:var(--muted);padding:26px}@media(max-width:760px){.toc{columns:1}h1{font-size:2rem}section{padding:20px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><span class="badge">Updated August 2026</span><h1>Complete Flutter Firebase Notes</h1><p>A beginner-to-professional offline handbook covering FlutterFire setup, email, Google and phone authentication, verification, password recovery, Firestore and Realtime Database CRUD, streams, queries, transactions, Cloud Storage, image uploads, profiles, rules, App Check, architecture, emulators, testing and production practices.</p></div></header>
+<main>
+<nav><h2>Table of Contents</h2><ol class="toc">
+<li><a href="#overview">Firebase overview</a></li><li><a href="#setup">Updated setup</a></li><li><a href="#platform">Platform checklist</a></li><li><a href="#auth">Authentication architecture</a></li><li><a href="#email">Email authentication</a></li><li><a href="#verify">Verification and reset</a></li><li><a href="#google">Google sign-in</a></li><li><a href="#phone">Phone OTP</a></li><li><a href="#profile">User profile</a></li><li><a href="#firestore-model">Firestore modeling</a></li><li><a href="#firestore-crud">Firestore CRUD</a></li><li><a href="#firestore-streams">Firestore streams</a></li><li><a href="#queries">Queries and pagination</a></li><li><a href="#transactions">Transactions and batches</a></li><li><a href="#rtdb">Realtime Database modeling</a></li><li><a href="#rtdb-crud">Realtime Database CRUD</a></li><li><a href="#rtdb-streams">Realtime streams and presence</a></li><li><a href="#storage">Storage CRUD</a></li><li><a href="#images">Image and profile uploads</a></li><li><a href="#rules">Security rules</a></li><li><a href="#claims">Claims and App Check</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#emulators">Emulators and testing</a></li><li><a href="#performance">Performance and cost</a></li><li><a href="#errors">Errors and troubleshooting</a></li><li><a href="#checklist">Production checklist</a></li><li><a href="#sources">Official references</a></li>
+</ol></nav>
+<section id="overview"><h2>1. Firebase and FlutterFire Overview</h2><p>Firebase is a backend platform for authentication, databases, storage, analytics, crash reporting, notifications, remote configuration, functions, app integrity and local emulation. FlutterFire is the official set of Flutter plugins used to access Firebase products.</p><div class="grid"><div class="card"><strong>Authentication</strong><br>Email, phone, Google, Apple, anonymous users, provider linking and session streams.</div><div class="card"><strong>Cloud Firestore</strong><br>Document database with realtime listeners, offline cache, compound queries, transactions and batches.</div><div class="card"><strong>Realtime Database</strong><br>Realtime JSON tree suited to chat, presence and rapidly changing shared state.</div><div class="card"><strong>Cloud Storage</strong><br>User-generated images, documents, audio and videos.</div></div></section>
+<section id="setup"><h2>2. Updated FlutterFire Project Setup</h2><pre><code>flutter doctor
+npm install -g firebase-tools
+firebase login
+dart pub global activate flutterfire_cli
+
+flutter create firebase_pro_app
+cd firebase_pro_app
+flutterfire configure
+
+flutter pub add firebase_core firebase_auth cloud_firestore
+flutter pub add firebase_database firebase_storage
+flutter pub add image_picker uuid</code></pre><p><code>flutterfire configure</code> registers selected platform apps and generates <code>lib/firebase_options.dart</code>. Run it again when adding a platform or Firebase service requiring native configuration.</p><h3>Initialize Firebase</h3><pre><code>import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'firebase_options.dart';
+
+Future&lt;void&gt; main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const MyApp());
+}</code></pre></section>
+<section id="platform"><h2>3. Platform Configuration Checklist</h2><table><tr><th>Platform</th><th>Important setup</th></tr><tr><td>Android</td><td>Correct package name, SHA-1/SHA-256 for Google and phone auth, supported minimum SDK, release fingerprints.</td></tr><tr><td>iOS</td><td>Correct bundle ID, URL schemes and provider capabilities, APNs where required.</td></tr><tr><td>Web</td><td>Authorized domains, popup or redirect behavior, appropriate Storage CORS when needed.</td></tr></table><pre><code>cd android
+./gradlew signingReport
+
+# Windows:
+gradlew signingReport</code></pre><div class="warning">Google and phone sign-in can work in debug but fail in release if release fingerprints are missing.</div></section>
+<section id="auth"><h2>4. Authentication Architecture and Auth State</h2><p>Firebase Auth owns identity. Store extra profile fields in Firestore or Realtime Database using the Firebase UID as the key.</p><pre><code>FirebaseAuth.instance.authStateChanges();
+FirebaseAuth.instance.idTokenChanges();
+FirebaseAuth.instance.userChanges();</code></pre><table><tr><th>Stream</th><th>Use</th></tr><tr><td>authStateChanges</td><td>Sign-in and sign-out routing.</td></tr><tr><td>idTokenChanges</td><td>Also responds to ID token and custom-claim refreshes.</td></tr><tr><td>userChanges</td><td>Also responds to user profile updates and reloads.</td></tr></table><h3>Auth gate</h3><pre><code>class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder&lt;User?&gt;(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return snapshot.data == null
+            ? const SignInScreen()
+            : const HomeScreen();
+      },
+    );
+  }
+}</code></pre></section>
+<section id="email"><h2>5. Email and Password Authentication</h2><p>Enable Email/Password under Firebase Console → Authentication → Sign-in method.</p><pre><code>Future&lt;UserCredential&gt; register({
+  required String email,
+  required String password,
+}) {
+  return FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: email.trim(),
+    password: password,
+  );
+}
+
+Future&lt;UserCredential&gt; signIn({
+  required String email,
+  required String password,
+}) {
+  return FirebaseAuth.instance.signInWithEmailAndPassword(
+    email: email.trim(),
+    password: password,
+  );
+}
+
+Future&lt;void&gt; signOut() =&gt;
+    FirebaseAuth.instance.signOut();</code></pre><h3>Error mapping</h3><pre><code>String authMessage(FirebaseAuthException e) {
+  return switch (e.code) {
+    'invalid-email' =&gt; 'Invalid email address.',
+    'weak-password' =&gt; 'Choose a stronger password.',
+    'email-already-in-use' =&gt; 'Email is already registered.',
+    'invalid-credential' =&gt; 'Email or password is incorrect.',
+    'too-many-requests' =&gt; 'Too many attempts. Try later.',
+    _ =&gt; e.message ?? 'Authentication failed.',
+  };
+}</code></pre></section>
+<section id="verify"><h2>6. Email Verification, Reset, Reauthentication and Deletion</h2><pre><code>final user = FirebaseAuth.instance.currentUser;
+
+if (user != null &amp;&amp; !user.emailVerified) {
+  await user.sendEmailVerification();
+}
+
+await FirebaseAuth.instance.currentUser?.reload();
+final verified = FirebaseAuth.instance.currentUser?.emailVerified ?? false;
+
+await FirebaseAuth.instance.sendPasswordResetEmail(
+  email: email.trim(),
+);</code></pre><h3>Reauthenticate before sensitive changes</h3><pre><code>final user = FirebaseAuth.instance.currentUser!;
+final credential = EmailAuthProvider.credential(
+  email: user.email!,
+  password: currentPassword,
+);
+
+await user.reauthenticateWithCredential(credential);
+await user.updatePassword(newPassword);
+
+// Or after reauthentication:
+await user.delete();</code></pre><div class="warning">Changing password, email or deleting an account may throw <code>requires-recent-login</code>.</div></section>
+<section id="google"><h2>7. Google Authentication</h2><p>Enable Google under Authentication → Sign-in method and complete Android, iOS and web provider configuration.</p><pre><code>Future&lt;UserCredential&gt; signInWithGoogle() async {
+  final provider = GoogleAuthProvider();
+
+  if (kIsWeb) {
+    return FirebaseAuth.instance.signInWithPopup(provider);
+  }
+
+  return FirebaseAuth.instance.signInWithProvider(provider);
+}</code></pre><h3>Link Google to an existing user</h3><pre><code>final user = FirebaseAuth.instance.currentUser!;
+await user.linkWithProvider(GoogleAuthProvider());</code></pre><div class="note">Linking providers keeps one Firebase UID. Handle <code>account-exists-with-different-credential</code> by signing in with the existing provider and linking afterward.</div></section>
+<section id="phone"><h2>8. Phone Authentication and SMS OTP</h2><pre><code>String? verificationId;
+
+Future&lt;void&gt; sendOtp(String phoneNumber) async {
+  await FirebaseAuth.instance.verifyPhoneNumber(
+    phoneNumber: phoneNumber,
+    timeout: const Duration(seconds: 60),
+    verificationCompleted: (credential) async {
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    },
+    verificationFailed: (e) {
+      throw Exception(authMessage(e));
+    },
+    codeSent: (id, resendToken) {
+      verificationId = id;
+    },
+    codeAutoRetrievalTimeout: (id) {
+      verificationId = id;
+    },
+  );
+}
+
+Future&lt;UserCredential&gt; verifyOtp(String code) {
+  final id = verificationId;
+  if (id == null) throw StateError('Request OTP first.');
+
+  final credential = PhoneAuthProvider.credential(
+    verificationId: id,
+    smsCode: code.trim(),
+  );
+  return FirebaseAuth.instance.signInWithCredential(credential);
+}</code></pre><h3>Web phone auth</h3><pre><code>final confirmation = await FirebaseAuth.instance
+    .signInWithPhoneNumber(phoneNumber);
+final result = await confirmation.confirm(smsCode);</code></pre><div class="danger">SMS is not phishing-resistant. Add rate limiting, abuse monitoring, rules and App Check.</div></section>
+<section id="profile"><h2>9. Complete User Profile Model</h2><pre><code>class AppUser {
+  final String uid;
+  final String email;
+  final String displayName;
+  final String? photoUrl;
+  final String role;
+  final DateTime createdAt;
+
+  const AppUser({
+    required this.uid,
+    required this.email,
+    required this.displayName,
+    required this.photoUrl,
+    required this.role,
+    required this.createdAt,
+  });
+
+  factory AppUser.fromFirestore(
+    DocumentSnapshot&lt;Map&lt;String, dynamic&gt;&gt; doc,
+  ) {
+    final data = doc.data()!;
+    return AppUser(
+      uid: doc.id,
+      email: data['email'] as String? ?? '',
+      displayName: data['displayName'] as String? ?? '',
+      photoUrl: data['photoUrl'] as String?,
+      role: data['role'] as String? ?? 'customer',
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate()
+          ?? DateTime.now(),
+    );
+  }
+}</code></pre><h3>Create profile after registration</h3><pre><code>final credential = await register(
+  email: email,
+  password: password,
+);
+final user = credential.user!;
+
+await FirebaseFirestore.instance
+    .collection('users')
+    .doc(user.uid)
+    .set({
+  'email': user.email,
+  'displayName': name.trim(),
+  'photoUrl': null,
+  'role': 'customer',
+  'createdAt': FieldValue.serverTimestamp(),
+  'updatedAt': FieldValue.serverTimestamp(),
+});</code></pre></section>
+<section id="firestore-model"><h2>10. Firestore Data Modeling</h2><pre><code>users/{uid}
+products/{productId}
+categories/{categoryId}
+orders/{orderId}
+orders/{orderId}/items/{itemId}
+reviews/{reviewId}
+carts/{uid}/items/{productId}</code></pre><ul><li>Store immutable snapshots for order items, including purchase price and title.</li><li>Use server timestamps.</li><li>Do not store unlimited arrays in a single document.</li><li>Use subcollections or separate collections for growing lists.</li><li>Duplicate small display fields when it reduces repeated reads.</li></ul></section>
+<section id="firestore-crud"><h2>11. Cloud Firestore CRUD</h2><pre><code>final doc = FirebaseFirestore.instance
+    .collection('products')
+    .doc();
+
+await doc.set({
+  'id': doc.id,
+  'title': 'Wireless Mouse',
+  'price': 29.99,
+  'stock': 40,
+  'isActive': true,
+  'createdAt': FieldValue.serverTimestamp(),
+  'updatedAt': FieldValue.serverTimestamp(),
+});
+
+final one = await doc.get();
+final all = await FirebaseFirestore.instance
+    .collection('products')
+    .get();
+
+await doc.update({
+  'price': 24.99,
+  'updatedAt': FieldValue.serverTimestamp(),
+});
+
+await doc.set(
+  {'description': 'Updated'},
+  SetOptions(merge: true),
+);
+
+await doc.delete();</code></pre><div class="warning">Deleting a document does not automatically delete its subcollections or Storage files.</div></section>
+<section id="firestore-streams"><h2>12. Firestore Streams and StreamBuilder</h2><pre><code>Stream&lt;List&lt;Product&gt;&gt; watchProducts() {
+  return FirebaseFirestore.instance
+      .collection('products')
+      .where('isActive', isEqualTo: true)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) =&gt; snapshot.docs
+          .map(Product.fromFirestore)
+          .toList());
+}</code></pre><pre><code>StreamBuilder&lt;List&lt;Product&gt;&gt;(
+  stream: repository.watchProducts(),
+  builder: (context, snapshot) {
+    if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+    }
+    if (!snapshot.hasData) {
+      return const CircularProgressIndicator();
+    }
+
+    final products = snapshot.data!;
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (_, index) =&gt;
+          ListTile(title: Text(products[index].title)),
+    );
+  },
+)</code></pre></section>
+<section id="queries"><h2>13. Firestore Queries, Indexes, Pagination and Counts</h2><pre><code>final query = FirebaseFirestore.instance
+    .collection('products')
+    .where('categoryId', isEqualTo: categoryId)
+    .where('isActive', isEqualTo: true)
+    .where('price', isGreaterThanOrEqualTo: minPrice)
+    .orderBy('price')
+    .limit(20);</code></pre><pre><code>where('status', isEqualTo: 'paid')
+where('stock', isGreaterThan: 0)
+where('categoryId', whereIn: categoryIds)
+where('tags', arrayContains: 'featured')
+where('tags', arrayContainsAny: selectedTags)</code></pre><h3>Cursor pagination</h3><pre><code>Query&lt;Map&lt;String, dynamic&gt;&gt; query =
+    FirebaseFirestore.instance
+        .collection('products')
+        .orderBy('createdAt', descending: true)
+        .limit(20);
+
+if (lastDocument != null) {
+  query = query.startAfterDocument(lastDocument);
+}
+
+final page = await query.get();
+final nextCursor = page.docs.isEmpty ? null : page.docs.last;</code></pre><h3>Count</h3><pre><code>final result = await FirebaseFirestore.instance
+    .collection('orders')
+    .where('status', isEqualTo: 'paid')
+    .count()
+    .get();
+final total = result.count;</code></pre><div class="note">Compound queries can require composite indexes. Firebase normally provides a direct index-creation link in the error.</div></section>
+<section id="transactions"><h2>14. Transactions, Batched Writes and Atomic Fields</h2><pre><code>await FirebaseFirestore.instance.runTransaction((tx) async {
+  final ref = FirebaseFirestore.instance
+      .collection('products')
+      .doc(productId);
+  final snapshot = await tx.get(ref);
+  final stock = snapshot.data()?['stock'] as int? ?? 0;
+
+  if (stock &lt; quantity) throw StateError('Insufficient stock');
+
+  tx.update(ref, {
+    'stock': stock - quantity,
+    'updatedAt': FieldValue.serverTimestamp(),
+  });
+});</code></pre><pre><code>final batch = FirebaseFirestore.instance.batch();
+batch.set(orderRef, orderData);
+batch.update(cartRef, {'checkedOut': true});
+batch.set(auditRef, {
+  'type': 'order_created',
+  'createdAt': FieldValue.serverTimestamp(),
+});
+await batch.commit();</code></pre><pre><code>FieldValue.increment(1)
+FieldValue.arrayUnion(['featured'])
+FieldValue.arrayRemove(['old'])
+FieldValue.delete()</code></pre></section>
+<section id="rtdb"><h2>15. Realtime Database Modeling</h2><p>Realtime Database stores a JSON tree. Keep it flat because reading a parent also retrieves its child data and rules apply hierarchically.</p><pre><code>{
+  "users": { "uid1": { "name": "Nahid" } },
+  "messages": {
+    "chat1": {
+      "message1": {
+        "senderId": "uid1",
+        "text": "Hello",
+        "createdAt": 1710000000000
+      }
+    }
+  },
+  "userChats": { "uid1": { "chat1": true } }
+}</code></pre></section>
+<section id="rtdb-crud"><h2>16. Realtime Database CRUD</h2><pre><code>final database = FirebaseDatabase.instance;
+final productsRef = database.ref('products');
+
+final newRef = productsRef.push();
+await newRef.set({
+  'id': newRef.key,
+  'title': 'Keyboard',
+  'price': 45.0,
+  'stock': 20,
+  'createdAt': ServerValue.timestamp,
+});
+
+final snapshot = await productsRef.get();
+
+await productsRef.child(productId).update({
+  'price': 39.0,
+  'updatedAt': ServerValue.timestamp,
+});
+
+await productsRef.child(productId).remove();</code></pre><h3>Atomic multi-location update</h3><pre><code>await FirebaseDatabase.instance.ref().update({
+  'orders/$orderId': orderData,
+  'userOrders/$uid/$orderId': true,
+});</code></pre></section>
+<section id="rtdb-streams"><h2>17. Realtime Streams, Queries, Offline and Presence</h2><pre><code>Stream&lt;List&lt;Product&gt;&gt; watchProducts() {
+  return productsRef.onValue.map((event) {
+    final raw = event.snapshot.value;
+    if (raw is! Map) return &lt;Product&gt;[];
+
+    return raw.entries.map((entry) {
+      final map = Map&lt;String, dynamic&gt;.from(entry.value as Map);
+      return Product.fromJson(map);
+    }).toList();
+  });
+}</code></pre><pre><code>final query = productsRef
+    .orderByChild('price')
+    .startAt(20)
+    .endAt(100)
+    .limitToFirst(20);
+
+query.onChildAdded.listen((event) {});
+query.onChildChanged.listen((event) {});
+query.onChildRemoved.listen((event) {});</code></pre><h3>Offline and presence</h3><pre><code>FirebaseDatabase.instance.setPersistenceEnabled(true);
+final messagesRef = FirebaseDatabase.instance.ref('messages/$chatId');
+messagesRef.keepSynced(true);
+
+final connectedRef = FirebaseDatabase.instance.ref('.info/connected');
+connectedRef.onValue.listen((event) async {
+  final connected = event.snapshot.value as bool? ?? false;
+  if (!connected) return;
+
+  final statusRef = FirebaseDatabase.instance.ref('status/$uid');
+  await statusRef.onDisconnect().set({
+    'state': 'offline',
+    'lastChanged': ServerValue.timestamp,
+  });
+  await statusRef.set({
+    'state': 'online',
+    'lastChanged': ServerValue.timestamp,
+  });
+});</code></pre></section>
+<section id="storage"><h2>18. Cloud Storage CRUD and Progress</h2><div class="danger"><strong>Pricing note:</strong> Cloud Storage for Firebase may require the Blaze pay-as-you-go plan. Confirm current bucket and pricing requirements before selecting it for a free-only app.</div><pre><code>Future&lt;String&gt; uploadFile(File file, String uid) async {
+  final name = '${DateTime.now().microsecondsSinceEpoch}.jpg';
+  final ref = FirebaseStorage.instance
+      .ref('users/$uid/uploads/$name');
+
+  final task = ref.putFile(
+    file,
+    SettableMetadata(contentType: 'image/jpeg'),
+  );
+
+  task.snapshotEvents.listen((snapshot) {
+    final progress = snapshot.totalBytes == 0
+        ? 0.0
+        : snapshot.bytesTransferred / snapshot.totalBytes;
+    debugPrint('${(progress * 100).toStringAsFixed(1)}%');
+  });
+
+  final snapshot = await task;
+  return snapshot.ref.getDownloadURL();
+}</code></pre><pre><code>final metadata = await ref.getMetadata();
+final url = await ref.getDownloadURL();
+
+await ref.updateMetadata(SettableMetadata(
+  contentType: 'image/jpeg',
+  customMetadata: {'ownerId': uid},
+));
+
+final result = await FirebaseStorage.instance
+    .ref('users/$uid/uploads')
+    .list(const ListOptions(maxResults: 100));
+
+await FirebaseStorage.instance.refFromURL(downloadUrl).delete();</code></pre><div class="note">Use paginated <code>list()</code> for large directories. Avoid <code>listAll()</code> because it buffers all results.</div></section>
+<section id="images"><h2>19. Image Picker, Profile Image and Multiple Uploads</h2><pre><code>final picked = await ImagePicker().pickImage(
+  source: ImageSource.gallery,
+  imageQuality: 82,
+  maxWidth: 1600,
+);
+if (picked == null) return;</code></pre><h3>Complete profile photo update</h3><pre><code>Future&lt;String&gt; updateProfilePhoto() async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) throw StateError('Not signed in');
+
+  final picked = await ImagePicker().pickImage(
+    source: ImageSource.gallery,
+    imageQuality: 82,
+    maxWidth: 1600,
+  );
+  if (picked == null) throw StateError('Cancelled');
+
+  final extension = picked.name.split('.').last.toLowerCase();
+  final ref = FirebaseStorage.instance
+      .ref('profile_images/${user.uid}/avatar.$extension');
+
+  await ref.putFile(
+    File(picked.path),
+    SettableMetadata(
+      contentType: 'image/$extension',
+      customMetadata: {'ownerId': user.uid},
+    ),
+  );
+
+  final url = await ref.getDownloadURL();
+  await user.updatePhotoURL(url);
+
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uid)
+      .set({
+    'photoUrl': url,
+    'updatedAt': FieldValue.serverTimestamp(),
+  }, SetOptions(merge: true));
+
+  return url;
+}</code></pre><h3>Multiple product images</h3><pre><code>Future&lt;List&lt;String&gt;&gt; uploadProductImages(
+  String productId,
+  List&lt;XFile&gt; files,
+) async {
+  final urls = &lt;String&gt;[];
+  for (var i = 0; i &lt; files.length; i++) {
+    final file = files[i];
+    final ref = FirebaseStorage.instance
+        .ref('products/$productId/${i}_${file.name}');
+    await ref.putFile(File(file.path));
+    urls.add(await ref.getDownloadURL());
+  }
+  return urls;
+}</code></pre></section>
+<section id="rules"><h2>20. Security Rules</h2><h3>Firestore</h3><pre><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function owns(uid) {
+      return signedIn() &amp;&amp; request.auth.uid == uid;
+    }
+
+    match /users/{uid} {
+      allow read, update, delete: if owns(uid);
+      allow create: if owns(uid)
+        &amp;&amp; request.resource.data.role == 'customer';
+    }
+
+    match /products/{id} {
+      allow read: if resource.data.isActive == true;
+      allow write: if signedIn()
+        &amp;&amp; request.auth.token.admin == true;
+    }
+
+    match /orders/{id} {
+      allow create: if signedIn()
+        &amp;&amp; request.resource.data.userId == request.auth.uid;
+      allow read: if signedIn()
+        &amp;&amp; resource.data.userId == request.auth.uid;
+      allow update, delete: if false;
+    }
+  }
+}</code></pre><h3>Realtime Database</h3><pre><code>{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null &amp;&amp; auth.uid == $uid",
+        ".write": "auth != null &amp;&amp; auth.uid == $uid"
+      }
+    }
+  }
+}</code></pre><h3>Storage</h3><pre><code>rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /profile_images/{uid}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        &amp;&amp; request.auth.uid == uid
+        &amp;&amp; request.resource.size &lt; 5 * 1024 * 1024
+        &amp;&amp; request.resource.contentType.matches('image/.*');
+    }
+  }
+}</code></pre><div class="danger">Rules are the real authorization boundary. Hiding an admin button in Flutter does not secure data.</div></section>
+<section id="claims"><h2>21. Custom Claims, App Check and Trusted Backend Work</h2><p>Set roles such as admin only from a trusted server using the Admin SDK. Never set them from Flutter client code.</p><pre><code>await FirebaseAuth.instance.currentUser?.getIdToken(true);
+final result = await FirebaseAuth.instance
+    .currentUser
+    ?.getIdTokenResult();
+final isAdmin = result?.claims?['admin'] == true;</code></pre><p>App Check helps reject unauthorized clients. It supplements—but never replaces—security rules.</p><ul><li>Assign roles/custom claims on a trusted backend.</li><li>Create payment intents and verify webhooks on a backend.</li><li>Send privileged notifications from trusted code.</li><li>Perform cross-user administration with Admin SDK.</li><li>Keep service-account keys and private secrets out of Flutter.</li></ul></section>
+<section id="architecture"><h2>22. Professional Architecture</h2><pre><code>lib/
+  app/
+    app.dart
+    router.dart
+  core/
+    errors/
+    firebase/
+    utils/
+  features/
+    authentication/
+      data/
+      domain/
+      presentation/
+    profile/
+      data/
+      domain/
+      presentation/
+    products/
+      data/
+      domain/
+      presentation/
+    orders/
+      data/
+      domain/
+      presentation/</code></pre><pre><code>abstract interface class ProductRepository {
+  Stream&lt;List&lt;Product&gt;&gt; watchProducts();
+  Future&lt;Product?&gt; getProduct(String id);
+  Future&lt;void&gt; createProduct(Product product);
+  Future&lt;void&gt; updateProduct(Product product);
+  Future&lt;void&gt; deleteProduct(String id);
+}</code></pre><div class="tip">Inject Firebase instances through constructors. Keep Firebase SDK code out of widgets.</div></section>
+<section id="emulators"><h2>23. Emulator Suite and Testing</h2><pre><code>firebase init emulators
+firebase emulators:start</code></pre><pre><code>Future&lt;void&gt; connectToEmulators() async {
+  const host = '10.0.2.2'; // Android emulator
+
+  await FirebaseAuth.instance.useAuthEmulator(host, 9099);
+  FirebaseFirestore.instance.useFirestoreEmulator(host, 8080);
+  FirebaseDatabase.instance.useDatabaseEmulator(host, 9000);
+  await FirebaseStorage.instance.useStorageEmulator(host, 9199);
+}</code></pre><p>Use <code>localhost</code> for desktop/web and the machine LAN IP for a physical device.</p><ul><li>Unit-test repositories.</li><li>Test security rules in emulators.</li><li>Integration-test registration, login, profile creation and checkout.</li><li>Test offline, permission-denied and partial-upload failures.</li></ul></section>
+<section id="performance"><h2>24. Offline, Performance and Cost Control</h2><ul><li>Use realtime listeners only where realtime behavior matters.</li><li>Paginate large Firestore queries and Storage listings.</li><li>Listen at the narrowest Realtime Database path.</li><li>Add RTDB <code>.indexOn</code> rules for queried fields.</li><li>Compress and resize images before upload.</li><li>Store the Storage path as well as the download URL.</li><li>Delete replaced or orphaned files.</li><li>Avoid unlimited arrays and oversized Firestore documents.</li><li>Use server timestamps, transactions and batches for critical state.</li></ul></section>
+<section id="errors"><h2>25. Error Handling and Common Problems</h2><pre><code>try {
+  await repository.createProduct(product);
+} on FirebaseException catch (e, stackTrace) {
+  debugPrint('Firebase ${e.code}: ${e.message}');
+  debugPrintStack(stackTrace: stackTrace);
+  rethrow;
+}</code></pre><table><tr><th>Problem</th><th>Likely cause</th></tr><tr><td>Google auth fails in release</td><td>Release SHA fingerprint or provider setup missing.</td></tr><tr><td>Phone auth fails</td><td>Number format, verification setup, quota, fingerprints or unsupported environment.</td></tr><tr><td>Firestore permission denied</td><td>Rules do not match auth, path or document fields.</td></tr><tr><td>Query requires index</td><td>Create the suggested composite index.</td></tr><tr><td>Storage permission denied</td><td>Auth, rules, MIME/size restriction or billing requirement.</td></tr><tr><td>Profile document missing</td><td>Auth succeeded but profile creation failed; make onboarding retryable.</td></tr></table></section>
+<section id="checklist"><h2>26. Production Checklist</h2><ul><li>Separate development, staging and production projects.</li><li>Configure each platform and environment with FlutterFire CLI.</li><li>Add debug and release fingerprints.</li><li>Enable only required auth providers.</li><li>Require email verification where needed.</li><li>Deploy restrictive, tested rules.</li><li>Enable App Check after monitoring legitimate traffic.</li><li>Use transactions for inventory and money-related state.</li><li>Use a backend for payments and privileged actions.</li><li>Plan account deletion across Auth, databases and Storage.</li><li>Monitor quotas, billing, crash reports and performance.</li></ul></section>
+<section id="sources"><h2>27. Official Documentation References</h2><p>This guide follows official Firebase documentation available in August 2026, including Flutter setup, Authentication, Firestore queries and transactions, Realtime Database CRUD/offline/presence, Cloud Storage operations, security rules and the Emulator Suite.</p><p>Official documentation root: <code>https://firebase.google.com/docs</code></p></section>
+</main><footer>Complete Flutter Firebase Professional Study Guide • Updated August 2026</footer>
+</body></html>

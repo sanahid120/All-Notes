@@ -8,7 +8,7 @@
     :root {
       --bg: #f7f8fb;
       --card: #ffffff;
-      --text: #1f2937;
+      --text: #1f2937; 
       --muted: #6b7280;
       --primary: #0f766e;
       --primary-soft: #ccfbf1;
@@ -90,13 +90,13 @@
       pre { white-space: pre-wrap; word-break: break-word; }
     }
   </style>
-</head>
-<body>
+<style>.site-nav{position:sticky;top:0;z-index:999;background:#101b31;color:#fff;padding:10px max(18px,calc((100% - 1100px)/2));display:flex;align-items:center;justify-content:space-between;font:600 13px/1.4 system-ui,sans-serif;box-shadow:0 4px 16px #0002}.site-nav a{color:inherit;text-decoration:none}.site-nav .site-brand{font-size:16px;font-weight:800;letter-spacing:-.4px}.site-nav .site-brand span{color:#74e2ce}.site-nav .site-links{display:flex;gap:18px;color:#c7d1e3}.site-nav a:hover{color:#7de1cf}@media(max-width:520px){.site-nav .site-links{gap:10px;font-size:11px}}</style></head>
+<body><nav class="site-nav"><a class="site-brand" href="index.html">Dev<span>Notes</span></a><div class="site-links"><a href="index.html">Tutorial library</a><a href="index.html#roadmap">Learning path</a><a href="#top">Back to top ↑</a></div></nav>
 <header id="top">
   <div class="wrap">
     <span class="badge">Beginner → Advanced</span>
     <h1>Complete Dart Notes</h1>
-    <p>A practical Dart study guide covering syntax, input/output, parsing, null safety, collections, OOP, asynchronous programming, JSON, generics, linked lists, stacks, queues, searching, sorting, and Flutter's FutureBuilder.</p>
+    <p>A practical Dart study guide covering language fundamentals, null safety, collections, OOP, asynchronous programming, algorithms, modern Dart features, testing, and Flutter state management.</p>
   </div>
 </header>
 
@@ -131,6 +131,10 @@
       <a href="#sorting">25. Sorting</a>
       <a href="#complexity">26. Time Complexity</a>
       <a href="#mini-project">27. Complete Mini Project</a>
+      <a href="#modern-dart-topics">28. Records, Patterns, and Switch</a>
+      <a href="#extensions-enums">29. Extensions and Enums</a>
+      <a href="#isolates">30. Isolates</a>
+      <a href="#testing-dart">31. Testing Dart</a>
     </div>
   </nav>
 
@@ -1659,6 +1663,66 @@ void main() {
   print(repository.exportJson());
 }</code></pre>
     <a class="back" href="#top">↑ Back to top</a>
+  </section>
+  <section id="modern-dart-topics">
+    <h2>28. Modern Dart: Records, Patterns, and Switch Expressions</h2>
+    <p>Records let a function return several values without creating a one-off class. Pattern matching makes those values easy to inspect.</p>
+    <pre><code>({String name, int age}) profile() => (name: 'Mina', age: 24);
+
+void main() {
+  final (name: person, age: years) = profile();
+  print('$person is $years');
+
+  final label = switch (years) {
+    &lt; 13 =&gt; 'child',
+    &lt; 20 =&gt; 'teenager',
+    _ =&gt; 'adult',
+  };
+  print(label);
+}</code></pre>
+    <div class="note">Use records for lightweight grouped values. Prefer a named class when the value needs behavior, validation, or a stable public API.</div>
+  </section>
+  <section id="extensions-enums">
+    <h2>29. Extension Methods and Enums</h2>
+    <p>Extensions add convenient operations to an existing type without changing its source. Enhanced enums can carry fields and methods.</p>
+    <pre><code>extension StringChecks on String {
+  bool get isEmailLike =&gt; contains('@') &amp;&amp; contains('.');
+}
+
+enum OrderStatus {
+  pending('Waiting'), shipped('On the way'), delivered('Complete');
+  const OrderStatus(this.label);
+  final String label;
+}
+
+void main() {
+  print('a@b.com'.isEmailLike);
+  print(OrderStatus.shipped.label);
+}</code></pre>
+  </section>
+  <section id="isolates">
+    <h2>30. Isolates and When to Use Them</h2>
+    <p>Dart isolates have separate memory and communicate by messages. Use <code>Isolate.run</code> for CPU-heavy work that would otherwise block a Flutter frame; ordinary asynchronous I/O does not usually need an isolate.</p>
+    <pre><code>import 'dart:isolate';
+
+Future&lt;int&gt; calculateInBackground(List&lt;int&gt; values) {
+  return Isolate.run(() =&gt; values.fold(0, (sum, value) =&gt; sum + value));
+}</code></pre>
+    <div class="warning">Keep isolate inputs and outputs simple and transferable. For very large jobs or persistent workers, learn ports and isolate lifecycle management.</div>
+  </section>
+  <section id="testing-dart">
+    <h2>31. Testing Dart Code</h2>
+    <p>Keep business logic in small functions and test expected results with the <code>package:test</code> library.</p>
+    <pre><code>import 'package:test/test.dart';
+
+int total(List&lt;int&gt; values) =&gt; values.fold(0, (a, b) =&gt; a + b);
+
+void main() {
+  test('total adds every value', () {
+    expect(total([2, 3, 5]), 10);
+  });
+}</code></pre>
+    <p>Run tests with <code>dart test</code>. Add tests for empty input, boundary values, invalid data, and errors as well as the happy path.</p>
   </section>
 </main>
 
